@@ -1,5 +1,5 @@
 title: Seok's Blog
-author: Seok
+author: Seok05
 email: sinsulee435@gmail.com
 description: > # this means to ignore newlines until "show_exerpts:"
   Write an awesome description for your new site here. You can edit this
@@ -51,7 +51,8 @@ plainwhite:
 # - about.md
 
 # Build settings
-theme: plainwhite
+#theme: plainwhite
+remote_theme: plainwhite
 
 plugins:
   - jekyll-seo-tag
