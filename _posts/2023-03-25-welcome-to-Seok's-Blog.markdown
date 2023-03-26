@@ -24,3 +24,11 @@ print_hi('Tom')
 
 
 [github]: https://github.com/Seok05
+
+<script src="https://utteranc.es/client.js"
+        repo="Seok05/Seok05.github.io"
+        issue-term="url"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
