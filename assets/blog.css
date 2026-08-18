@@ -17,6 +17,8 @@
   --accent: #4f46e5;
   --accent-soft: #eef0fe;
   --graphite: #6b7280;
+  --warm: #b45309;
+  --warm-soft: #fdf3e3;
   --code-bg: #f1f3f6;
   --measure: 43rem;
 }
@@ -33,6 +35,8 @@
     --accent: #9b95ff;
     --accent-soft: #1b1d3a;
     --graphite: #98a2b3;
+    --warm: #e8a04c;
+    --warm-soft: #2a2015;
     --code-bg: #171c23;
   }
 }
@@ -84,19 +88,36 @@ body {
 }
 
 .site-name {
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
   color: var(--ink);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
-.site-name svg {
+.site-name .avatar-sm {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--rule);
   display: block;
-  color: var(--graphite);
+}
+
+.site-name .tagline {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 520px) {
+  .site-name .tagline {
+    display: none;
+  }
 }
 
 .site-nav {
@@ -124,6 +145,35 @@ main {
 .intro {
   padding-bottom: 2.75rem;
   border-bottom: 1px solid var(--rule);
+  display: flex;
+  gap: 2.2rem;
+  align-items: flex-start;
+}
+
+.intro-text {
+  min-width: 0;
+}
+
+.avatar-hero {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 3px solid var(--warm);
+  box-shadow: 0 0 0 6px var(--warm-soft);
+  margin-top: 0.4rem;
+}
+
+@media (max-width: 640px) {
+  .intro {
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+  .avatar-hero {
+    width: 96px;
+    height: 96px;
+  }
 }
 
 .intro h1 {
@@ -150,7 +200,7 @@ main {
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--graphite);
+  color: var(--warm);
 }
 
 .post-list {
@@ -212,6 +262,105 @@ main {
   font-size: 0.71rem;
   font-weight: 600;
   letter-spacing: 0.01em;
+}
+
+/* ── 카테고리 ────────────────────────────────────────────── */
+
+.cat-head {
+  margin: 3rem 0 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem 0.9rem;
+}
+
+.cat-head h2 {
+  margin: 0;
+  font-size: 1.22rem;
+  font-weight: 800;
+  letter-spacing: -0.028em;
+}
+
+.cat-head .cat-count {
+  font-size: 0.8rem;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.cat-desc {
+  margin: 0 0 1.4rem;
+  font-size: 0.94rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.chip-cat {
+  display: inline-block;
+  padding: 0.18rem 0.62rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+a.chip-cat:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.cat-soon {
+  margin-top: 1.1rem;
+  font-size: 0.83rem;
+  color: var(--faint);
+}
+
+/* ── 저자 카드 (포스트 푸터) ─────────────────────────────── */
+
+.author-card {
+  margin-top: 3rem;
+  padding: 1.25rem 1.4rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  display: flex;
+  gap: 1.1rem;
+  align-items: center;
+}
+
+.author-card img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--warm);
+}
+
+.author-card .who {
+  margin: 0 0 0.2rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.author-card p {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.author-card a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.author-card a:hover {
+  text-decoration: underline;
 }
 
 /* ── 본문 ────────────────────────────────────────────────── */

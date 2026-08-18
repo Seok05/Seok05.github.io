@@ -3,40 +3,31 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>얕은 데이터 노트</title>
+    <title>Seok Lab — 연구하면서, 사업합니다</title>
     <meta
       name="description"
-      content="관측이 며칠치뿐일 때 무엇을 말할 수 있고 무엇을 말하면 안 되는가 — 중고 전기차 시세 데이터를 다루며 배운 것들을 정리한 학습 노트."
+      content="연구하듯 사업하는 Seok의 기록. 서비스를 만들며 부딪힌 문제를 실험과 데이터로 파고들고, 그 과정에서 내린 결정들을 남깁니다."
     />
-    <meta property="og:title" content="얕은 데이터 노트" />
+    <meta property="og:title" content="Seok Lab — 연구하면서, 사업합니다" />
     <meta
       property="og:description"
-      content="관측이 며칠치뿐일 때 무엇을 말할 수 있고 무엇을 말하면 안 되는가."
+      content="서비스를 만들며 부딪힌 문제를 실험과 데이터로 파고드는 기록."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://seok05.github.io/assets/profile.png" />
     <link rel="stylesheet" href="assets/blog.css" />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 22h6v-6h6v-5h6V6h6' fill='none' stroke='%236b7280' stroke-width='3' stroke-linejoin='round'/%3E%3Ccircle cx='28' cy='6' r='3' fill='%234f46e5'/%3E%3C/svg%3E"
-    />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
   </head>
   <body>
     <header class="site-header">
       <div class="wrap">
         <a class="site-name" href="./">
-          <svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true">
-            <path
-              d="M4 22h6v-6h6v-5h6V6h6"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="3"
-              stroke-linejoin="round"
-            />
-          </svg>
-          얕은 데이터 노트
+          <img class="avatar-sm" src="assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 사업합니다</span>
         </a>
         <nav class="site-nav">
-          <a href="#글">글</a>
+          <a href="#evalue">사업 · EValue</a>
           <a href="#소개">소개</a>
         </nav>
       </div>
@@ -45,21 +36,41 @@
     <main>
       <div class="wrap">
         <section class="intro">
-          <p class="eyebrow">학습 노트</p>
-          <h1>관측이 18일치뿐일 때, 그래프를 그려도 되는가</h1>
-          <p>
-            중고 전기차 시세 데이터를 매일 모아 가치를 견주는 서비스를 만들고 있습니다. 매물
-            수천 건, 관측은 겨우 몇 주치. 이 조합이 계속 같은 질문을 던졌습니다 —
-            <strong>지금 가진 데이터로 어디까지 말해도 되는가.</strong>
-          </p>
-          <p>
-            숨기면 정직하지만 아무것도 전하지 못합니다. 다 보여주면 없는 확신을 팔게 됩니다. 그
-            사이에서 내린 결정들과, 그때 새로 배운 통계·설계·배포를 기록해 둡니다. 잘 되지 않은
-            것도 함께 적었습니다.
-          </p>
+          <img
+            class="avatar-hero"
+            src="assets/profile.png"
+            alt="Seok 프로필 일러스트 — 밤에 배터리와 리포트를 들여다보는 연구자"
+            width="132"
+            height="132"
+          />
+          <div class="intro-text">
+            <p class="eyebrow">Seok Lab</p>
+            <h1>연구하면서, 사업합니다</h1>
+            <p>
+              안녕하세요, Seok입니다. 서비스를 만들다 보면 매일 결정할 게 생깁니다 — 이 숫자를
+              화면에 내보내도 되는지, 이 데이터로 이런 문장을 써도 되는지. 저는 그걸 감으로
+              정하는 대신 <strong>실험하고, 재고, 기록하면서</strong> 정합니다.
+            </p>
+            <p>
+              이 블로그는 그 과정의 공개 연구 노트입니다. 잘된 결정만 골라 쓰지 않고, 틀렸던
+              기본값과 아직 못 푼 문제도 함께 적습니다. 사업은 논문과 달라서 마감이 있고, 그래서
+              "완벽한 답" 대신 <strong>"지금 말할 수 있는 만큼만 말하는 법"</strong>을 계속 배우는
+              중입니다.
+            </p>
+          </div>
         </section>
 
-        <section id="글">
+        <section id="evalue">
+          <div class="cat-head">
+            <span class="chip-cat">사업 · EValue</span>
+            <h2>중고 전기차, 값을 어떻게 매길 것인가</h2>
+            <span class="cat-count">글 6</span>
+          </div>
+          <p class="cat-desc">
+            지금 만들고 있는 서비스 <strong>EValue</strong>는 중고 전기차 매물을 매일 지켜보며
+            "이 값이 괜찮은 값인지"를 데이터로 견주는 도구입니다. 매물은 수천 건인데 관측은 몇
+            주치 — 이 얕은 데이터에서 정직하게 말하는 법을 붙들고 씨름한 기록입니다.
+          </p>
           <ul class="post-list">
             <li>
               <a href="posts/graph-first.html">
@@ -135,17 +146,20 @@
               </a>
             </li>
           </ul>
+          <p class="cat-soon">카테고리는 계속 늘어납니다 — 다음 실험이 쌓이는 대로.</p>
         </section>
 
         <section id="소개" style="margin-top: 3.5rem">
-          <h2 style="font-size: 1.1rem; margin-bottom: 0.8rem">이 노트에 대해</h2>
+          <h2 style="font-size: 1.1rem; margin-bottom: 0.8rem">소개</h2>
           <p style="color: var(--ink-soft); margin-bottom: 1.1rem">
-            데이터를 모아 판단을 만드는 일을 합니다. 이 노트의 글은 특정 제품 이야기가 아니라,
-            그 과정에서 마주친 문제와 해법을 일반화해 정리한 것입니다. 수집 대상이나 실제 매물
-            데이터는 다루지 않습니다.
+            데이터를 모아 판단을 만드는 일을 합니다. 연구자의 방식(가설, 측정, 반증)으로 사업의
+            문제를 풀어 보고, 그게 실제로 통했는지까지 적는 것이 이 블로그의 규칙입니다. 글마다
+            마지막에 <strong>"남긴 규칙"</strong> 한 줄을 남깁니다 — 같은 실수를 두 번 하지 않기
+            위한 저만의 실험 노트 관습입니다.
           </p>
           <p style="color: var(--ink-soft)">
-            도해는 전부 직접 그렸고, 예시로 든 숫자는 설명을 위한 것입니다.
+            도해는 전부 직접 그렸고, 예시로 든 숫자는 설명을 위한 것입니다. 글에 대한 이야기는
+            <a href="https://github.com/Seok05" style="color: var(--accent)">GitHub</a>으로 주세요.
           </p>
         </section>
       </div>
@@ -153,8 +167,8 @@
 
     <footer class="site-footer">
       <div class="wrap">
-        <p>얕은 데이터 노트 · 2026</p>
-        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다.</p>
+        <p>Seok Lab · 연구하면서, 사업합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
       </div>
     </footer>
   </body>
