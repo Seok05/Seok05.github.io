@@ -68,9 +68,188 @@ body {
 
 .wrap {
   width: 100%;
-  max-width: var(--measure);
+  max-width: 1024px;
   margin: 0 auto;
   padding: 0 1.25rem;
+}
+
+.layout {
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 236px;
+  gap: 3.2rem;
+  align-items: start;
+}
+
+.content {
+  min-width: 0;
+  max-width: var(--measure);
+}
+
+/* ── 사이드바 — 프로필 + 카테고리 ── */
+
+.sidebar {
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.profile-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 1.5rem 1.25rem 1.35rem;
+  text-align: center;
+}
+
+.profile-card img {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid var(--warm);
+  box-shadow: 0 0 0 5px var(--warm-soft);
+  margin-bottom: 0.85rem;
+}
+
+.profile-card .p-name {
+  margin: 0 0 0.35rem;
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.profile-card .p-bio {
+  margin: 0 0 0.8rem;
+  font-size: 0.83rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.profile-card .p-link {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+
+.profile-card .p-link:hover {
+  border-color: var(--accent);
+}
+
+.cat-box {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 1.1rem 0.6rem 0.7rem;
+}
+
+.cat-box .cat-title {
+  margin: 0 0 0.5rem;
+  padding: 0 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--faint);
+}
+
+.cat-box ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cat-box li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.52rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.cat-box li a:hover {
+  background: var(--secondary, var(--code-bg));
+  color: var(--ink);
+}
+
+.cat-box li a.on {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.cat-box li a .n {
+  font-size: 0.76rem;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.cat-box li a.on .n {
+  color: var(--accent);
+}
+
+@media (max-width: 880px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+  /* 모바일: 사이드바가 본문 위로 — 프로필은 가로형, 카테고리는 칩 줄 */
+  .sidebar {
+    position: static;
+    order: -1;
+  }
+  .profile-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-align: left;
+    padding: 1rem 1.1rem;
+  }
+  .profile-card img {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+  .profile-card .p-bio {
+    margin-bottom: 0.3rem;
+  }
+  .profile-card .p-link {
+    display: none;
+  }
+  .cat-box {
+    padding: 0.55rem 0.6rem;
+  }
+  .cat-box .cat-title {
+    display: none;
+  }
+  .cat-box ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .cat-box li a {
+    padding: 0.32rem 0.7rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-size: 0.8rem;
+  }
+  .cat-box li a.on {
+    border-color: transparent;
+  }
 }
 
 .site-header {
@@ -203,9 +382,36 @@ main {
   color: var(--warm);
 }
 
+.list-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin: 0.4rem 0 1.2rem;
+}
+
+.list-head h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.028em;
+}
+
+.list-head .n {
+  font-size: 0.82rem;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.list-desc {
+  margin: -0.5rem 0 1.3rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .post-list {
   list-style: none;
-  margin: 2.5rem 0 0;
+  margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;

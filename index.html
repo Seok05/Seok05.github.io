@@ -6,12 +6,12 @@
     <title>Seok Lab — 연구하면서, 사업합니다</title>
     <meta
       name="description"
-      content="연구하듯 사업하는 Seok의 기록. 서비스를 만들며 부딪힌 문제를 실험과 데이터로 파고들고, 그 과정에서 내린 결정들을 남깁니다."
+      content="연구하듯 사업하는 Seok의 블로그. 서비스를 만들며 부딪힌 문제와 배터리 연구 기록."
     />
     <meta property="og:title" content="Seok Lab — 연구하면서, 사업합니다" />
     <meta
       property="og:description"
-      content="서비스를 만들며 부딪힌 문제를 실험과 데이터로 파고드는 기록."
+      content="서비스를 만들며 부딪힌 문제와 배터리 연구 기록."
     />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://seok05.github.io/assets/profile.png" />
@@ -27,52 +27,34 @@
           <span class="tagline">연구하면서, 사업합니다</span>
         </a>
         <nav class="site-nav">
-          <a href="#evalue">사업 · EValue</a>
-          <a href="#소개">소개</a>
+          <a href="https://github.com/Seok05">GitHub</a>
         </nav>
       </div>
     </header>
 
     <main>
-      <div class="wrap">
-        <section class="intro">
-          <img
-            class="avatar-hero"
-            src="assets/profile.png"
-            alt="Seok 프로필 일러스트 — 밤에 배터리와 리포트를 들여다보는 연구자"
-            width="132"
-            height="132"
-          />
-          <div class="intro-text">
-            <p class="eyebrow">Seok Lab</p>
-            <h1>연구하면서, 사업합니다</h1>
-            <p>
-              안녕하세요, Seok입니다. 서비스를 만들다 보면 매일 결정할 게 생깁니다 — 이 숫자를
-              화면에 내보내도 되는지, 이 데이터로 이런 문장을 써도 되는지. 저는 그걸 감으로
-              정하는 대신 <strong>실험하고, 재고, 기록하면서</strong> 정합니다.
-            </p>
-            <p>
-              이 블로그는 그 과정의 공개 연구 노트입니다. 잘된 결정만 골라 쓰지 않고, 틀렸던
-              기본값과 아직 못 푼 문제도 함께 적습니다. 사업은 논문과 달라서 마감이 있고, 그래서
-              "완벽한 답" 대신 <strong>"지금 말할 수 있는 만큼만 말하는 법"</strong>을 계속 배우는
-              중입니다.
-            </p>
+      <div class="layout">
+        <section class="content">
+          <div class="list-head">
+            <h1 id="list-title">전체 글</h1>
+            <span class="n" id="list-count"></span>
           </div>
-        </section>
+          <p class="list-desc" id="list-desc" hidden></p>
 
-        <section id="evalue">
-          <div class="cat-head">
-            <span class="chip-cat">사업 · EValue</span>
-            <h2>중고 전기차, 값을 어떻게 매길 것인가</h2>
-            <span class="cat-count">글 6</span>
-          </div>
-          <p class="cat-desc">
-            지금 만들고 있는 서비스 <strong>EValue</strong>는 중고 전기차 매물을 매일 지켜보며
-            "이 값이 괜찮은 값인지"를 데이터로 견주는 도구입니다. 매물은 수천 건인데 관측은 몇
-            주치 — 이 얕은 데이터에서 정직하게 말하는 법을 붙들고 씨름한 기록입니다.
-          </p>
-          <ul class="post-list">
-            <li>
+          <ul class="post-list" id="posts">
+            <li data-cat="battery">
+              <a href="posts/battery-soh-range.html">
+                <h2>배터리 건강, 왜 숫자 하나로 말하면 안 될까</h2>
+                <p>
+                  중고 전기차에서 제일 궁금한 건 결국 배터리인데, 열화는 두 갈래로 오고 그중
+                  절반은 기록에 안 남습니다. 실측을 모아 곡선을 맞춰 보고 알게 된 것들.
+                </p>
+                <div class="meta-row">
+                  <span class="tag">연구 · 배터리</span><span>2026.08.18</span>
+                </div>
+              </a>
+            </li>
+            <li data-cat="evalue">
               <a href="posts/graph-first.html">
                 <h2>데이터가 얕아도 그래프는 그린다 — 표현과 해석을 갈랐다</h2>
                 <p>
@@ -80,11 +62,11 @@
                   그리고, 추세를 말하는 문장만 표본이 감당할 때 붙이기로 했습니다.
                 </p>
                 <div class="meta-row">
-                  <span class="tag">설계 원칙</span><span>2026.08.18</span>
+                  <span class="tag">사업 · EValue</span><span>2026.08.18</span>
                 </div>
               </a>
             </li>
-            <li>
+            <li data-cat="evalue">
               <a href="posts/theil-sen.html">
                 <h2>하루가 튀어도 흔들리지 않는 추세선 — Theil–Sen 회귀</h2>
                 <p>
@@ -92,11 +74,11 @@
                   쓰는 방법을 배우고, 왜 이게 우리 데이터에 맞는지 테스트로 확인했습니다.
                 </p>
                 <div class="meta-row">
-                  <span class="tag">통계</span><span>2026.08.18</span>
+                  <span class="tag">사업 · EValue</span><span>2026.08.18</span>
                 </div>
               </a>
             </li>
-            <li>
+            <li data-cat="evalue">
               <a href="posts/price-band.html">
                 <h2>"적정가"라는 단어를 버렸다</h2>
                 <p>
@@ -105,11 +87,11 @@
                   줄였습니다.
                 </p>
                 <div class="meta-row">
-                  <span class="tag">데이터 정직성</span><span>2026.08.18</span>
+                  <span class="tag">사업 · EValue</span><span>2026.08.18</span>
                 </div>
               </a>
             </li>
-            <li>
+            <li data-cat="evalue">
               <a href="posts/cohort-fallback.html">
                 <h2>표본이 부족할 때 무엇을 먼저 포기할까 — 폴백 사다리</h2>
                 <p>
@@ -117,11 +99,11 @@
                   포기하면서 그 사실을 화면에 드러내는 5단 구조를 만들었습니다.
                 </p>
                 <div class="meta-row">
-                  <span class="tag">모델 설계</span><span>2026.08.18</span>
+                  <span class="tag">사업 · EValue</span><span>2026.08.18</span>
                 </div>
               </a>
             </li>
-            <li>
+            <li data-cat="evalue">
               <a href="posts/sold-day-attribution.html">
                 <h2>수집이 하루 빠지면 통계가 거짓말을 한다 — 소진일 귀속</h2>
                 <p>
@@ -129,11 +111,11 @@
                   "평균 며칠 만에 팔리는가"를 한쪽으로 계속 밀어냅니다.
                 </p>
                 <div class="meta-row">
-                  <span class="tag">편향</span><span>2026.08.18</span>
+                  <span class="tag">사업 · EValue</span><span>2026.08.18</span>
                 </div>
               </a>
             </li>
-            <li>
+            <li data-cat="evalue">
               <a href="posts/laptop-to-server.html">
                 <h2>노트북을 24시간 서버로 만들어 본 기록</h2>
                 <p>
@@ -141,27 +123,36 @@
                   root 소유였습니다. 고정 주소 하나를 얻기까지의 삽질과, 결국 배운 한 가지.
                 </p>
                 <div class="meta-row">
-                  <span class="tag">배포</span><span>2026.08.18</span>
+                  <span class="tag">사업 · EValue</span><span>2026.08.18</span>
                 </div>
               </a>
             </li>
           </ul>
-          <p class="cat-soon">카테고리는 계속 늘어납니다 — 다음 실험이 쌓이는 대로.</p>
         </section>
 
-        <section id="소개" style="margin-top: 3.5rem">
-          <h2 style="font-size: 1.1rem; margin-bottom: 0.8rem">소개</h2>
-          <p style="color: var(--ink-soft); margin-bottom: 1.1rem">
-            데이터를 모아 판단을 만드는 일을 합니다. 연구자의 방식(가설, 측정, 반증)으로 사업의
-            문제를 풀어 보고, 그게 실제로 통했는지까지 적는 것이 이 블로그의 규칙입니다. 글마다
-            마지막에 <strong>"남긴 규칙"</strong> 한 줄을 남깁니다 — 같은 실수를 두 번 하지 않기
-            위한 저만의 실험 노트 관습입니다.
-          </p>
-          <p style="color: var(--ink-soft)">
-            도해는 전부 직접 그렸고, 예시로 든 숫자는 설명을 위한 것입니다. 글에 대한 이야기는
-            <a href="https://github.com/Seok05" style="color: var(--accent)">GitHub</a>으로 주세요.
-          </p>
-        </section>
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하듯 사업합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="./" data-cat="all">전체보기 <span class="n">7</span></a></li>
+              <li><a href="./?cat=evalue" data-cat="evalue">사업 · EValue <span class="n">6</span></a></li>
+              <li><a href="./?cat=battery" data-cat="battery">연구 · 배터리 <span class="n">1</span></a></li>
+            </ul>
+          </nav>
+        </aside>
       </div>
     </main>
 
@@ -171,5 +162,44 @@
         <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
       </div>
     </footer>
+
+    <script>
+      // 카테고리 필터 — 사이드바에서 고르면 목록만 바뀐다(페이지 이동 없음, URL로 공유 가능)
+      (function () {
+        var CATS = {
+          all: { name: "전체 글", desc: "" },
+          evalue: {
+            name: "사업 · EValue",
+            desc:
+              "지금 만들고 있는 서비스 EValue — 중고 전기차 매물을 매일 지켜보며 값을 견주는 도구 — 를 만들며 부딪힌 문제와 결정의 기록.",
+          },
+          battery: {
+            name: "연구 · 배터리",
+            desc: "전기차의 심장인 배터리를 실험실과 데이터 양쪽에서 들여다본 기록.",
+          },
+        };
+        var cat = new URLSearchParams(location.search).get("cat") || "all";
+        if (!CATS[cat]) cat = "all";
+
+        var items = document.querySelectorAll("#posts > li");
+        var shown = 0;
+        items.forEach(function (li) {
+          var on = cat === "all" || li.dataset.cat === cat;
+          li.style.display = on ? "" : "none";
+          if (on) shown++;
+        });
+
+        document.getElementById("list-title").textContent = CATS[cat].name;
+        document.getElementById("list-count").textContent = shown + "개의 글";
+        var desc = document.getElementById("list-desc");
+        if (CATS[cat].desc) {
+          desc.textContent = CATS[cat].desc;
+          desc.hidden = false;
+        }
+        document.querySelectorAll(".cat-box a").forEach(function (a) {
+          if (a.dataset.cat === cat) a.classList.add("on");
+        });
+      })();
+    </script>
   </body>
 </html>

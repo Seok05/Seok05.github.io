@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>배터리 건강, 왜 숫자 하나로 말하면 안 될까 · Seok Lab</title>
+    <meta
+      name="description"
+      content="SOH는 왜 점이 아니라 범위인가 — 달력 열화와 사이클 열화, 제곱근 곡선 적합, 그리고 기록에 안 남는 절반의 변수들."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 사업합니다</span>
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <a class="chip-cat" href="../?cat=battery">연구 · 배터리</a><span class="tag">SOH</span><span>2026.08.18</span>
+            </div>
+            <h1>배터리 건강, 왜 숫자 하나로 말하면 안 될까</h1>
+            <p class="lede">
+              중고 전기차를 볼 때 다들 제일 궁금해하는 게 배터리입니다. "이 차 배터리 몇 %예요?"라는
+              질문에 저도 숫자 하나로 답하고 싶었습니다. 실측 데이터를 수백 건 모아 곡선을 맞춰 보고
+              나서, 그게 왜 안 되는지를 알게 됐습니다.
+            </p>
+          </div>
+
+          <h2>SOH라는 숫자</h2>
+          <p>
+            배터리 건강은 보통 <strong>SOH</strong>(State of Health)로 말합니다. 정의는 단순합니다 —
+            지금 배터리가 담을 수 있는 용량을 신품 용량으로 나눈 비율. 100%에서 출발해 세월과 사용에
+            따라 내려갑니다. 제조사 보증도 이 숫자에 걸려 있어서, 보증 기간 안에 일정 기준(통상 70%)
+            아래로 떨어지면 무상 수리 대상이 됩니다.
+          </p>
+          <p>
+            문제는 이 숫자를 <strong>직접 재려면 차를 만져야 한다</strong>는 것입니다. 진단기를 물리거나,
+            완충-완방을 돌려 봐야 합니다. 중고차를 사기 전 단계에서는 대부분 불가능합니다. 그래서
+            "차령과 주행거리만으로 SOH를 얼마나 맞출 수 있나"가 실질적인 질문이 됩니다.
+          </p>
+
+          <h2>열화는 두 갈래로 온다</h2>
+          <p>
+            배터리는 두 가지 이유로 늙습니다.
+          </p>
+          <ul>
+            <li>
+              <strong>달력 열화</strong> — 쓰지 않아도 시간이 흐르면 진행됩니다. 온도가 높을수록,
+              완충 상태로 오래 세워둘수록 빨라집니다. 주차장에 서 있기만 한 차도 늙습니다.
+            </li>
+            <li>
+              <strong>사이클 열화</strong> — 충전과 방전을 반복하며 쌓입니다. 깊게 쓸수록(0%까지
+              쓰고 100%까지 채우기), 급속충전 비중이 높을수록 부담이 큽니다.
+            </li>
+          </ul>
+          <p>
+            여기서 첫 번째 벽을 만납니다. 차령과 주행거리는 기록에 남지만, <strong>보관 온도·충전
+            습관·급속 비율은 어디에도 안 남습니다.</strong> 열화를 결정하는 변수의 절반쯤이 관측
+            불가능한 것입니다.
+          </p>
+
+          <h2>곡선을 맞춰 보니 — 직선이 아니었다</h2>
+          <p>
+            실측 SOH가 붙은 차량 데이터를 수백 건 모아, 차령·주행거리와 SOH의 관계를 적합해
+            봤습니다. 가장 먼저 배운 것: <strong>열화는 직선이 아닙니다.</strong>
+          </p>
+          <p>
+            리튬이온 배터리는 초기에 전극 표면에 보호막(SEI)이 만들어지면서 용량이 비교적 빠르게
+            깎이고, 막이 안정되면 완만해집니다. 이 물리 때문에 열화 곡선은 시간의
+            <strong>제곱근</strong>(√t) 꼴에 가깝습니다. 직선으로 적합하면 새 차 구간에서는 열화를
+            얕보고, 오래된 차 구간에서는 실제보다 훨씬 나쁘게 예측합니다. 실제로 선형 모델의 잔차를
+            보면 차령 축을 따라 한쪽으로 휘어 있었습니다 — 모델이 틀렸다는 신호입니다.
+          </p>
+
+          <figure>
+            <div class="fig-scroll"><svg viewBox="0 0 640 270" role="img" aria-label="제곱근 열화 곡선과 실측 산포, 추정 밴드">
+              <!-- 축 -->
+              <line x1="56" y1="220" x2="600" y2="220" class="svg-stroke-rule" stroke-width="1" />
+              <line x1="56" y1="36" x2="56" y2="220" class="svg-stroke-rule" stroke-width="1" />
+              <text class="svg-label-sm svg-faint" x="600" y="238" text-anchor="end">차령·사용량 →</text>
+              <text class="svg-label-sm svg-faint" x="50" y="44" text-anchor="end">SOH</text>
+
+              <!-- 추정 밴드 (잔차 폭) -->
+              <path
+                d="M56 52 C 160 74, 300 92, 596 118 L 596 158 C 300 128, 160 106, 56 76 Z"
+                class="svg-fill-accent"
+                opacity="0.1"
+              />
+              <!-- 제곱근 중심 곡선 -->
+              <path
+                d="M56 64 C 160 90, 300 110, 596 138"
+                fill="none"
+                class="svg-stroke-accent"
+                stroke-width="2.2"
+              />
+              <!-- 선형 비교선 -->
+              <line
+                x1="56"
+                y1="60"
+                x2="596"
+                y2="196"
+                class="svg-stroke-graphite"
+                stroke-width="1.5"
+                stroke-dasharray="6 4"
+              />
+              <text class="svg-label-sm svg-muted" x="470" y="196">직선 가정(과대 예측)</text>
+              <text class="svg-label-sm" x="470" y="120" style="fill: var(--accent); font-weight: 700">
+                √t 곡선 + 잔차 밴드
+              </text>
+
+              <!-- 실측 점 산포 -->
+              <g class="svg-fill-graphite" opacity="0.55">
+                <circle cx="120" cy="70" r="3" />
+                <circle cx="150" cy="84" r="3" />
+                <circle cx="185" cy="76" r="3" />
+                <circle cx="215" cy="97" r="3" />
+                <circle cx="255" cy="88" r="3" />
+                <circle cx="300" cy="108" r="3" />
+                <circle cx="330" cy="96" r="3" />
+                <circle cx="370" cy="118" r="3" />
+                <circle cx="410" cy="105" r="3" />
+                <circle cx="450" cy="128" r="3" />
+                <circle cx="495" cy="112" r="3" />
+                <circle cx="540" cy="136" r="3" />
+                <circle cx="565" cy="150" r="3" />
+              </g>
+              <text class="svg-label-sm svg-muted" x="330" y="252" text-anchor="middle">
+                같은 차령·주행에서도 실측이 위아래로 퍼진다 — 이 산포가 "기록에 안 남는 절반"이다
+              </text>
+            </svg></div>
+            <figcaption>
+              실측 점들(설명용 예시)은 곡선 위아래로 퍼집니다. 곡선은 "평균적으로 이쯤"을 말할 뿐이고,
+              퍼진 폭이 곧 우리가 모르는 사용 습관의 크기입니다. 그래서 추정은 밴드(범위)로만 정직할
+              수 있습니다.
+            </figcaption>
+          </figure>
+
+          <h2>남는 산포가 진짜 답이었다</h2>
+          <p>
+            곡선을 제곱근으로 바꾸고, 차종별로 계수를 따로 두고(배터리 화학 조성이 다르면 늙는 속도도
+            다릅니다), 표본이 얇은 차종은 조성 단위로 묶어 보정했습니다. 그렇게 해도 <strong>같은
+            차령·주행거리에서 실측 SOH는 몇 %p씩 퍼져 있었습니다.</strong>
+          </p>
+          <p>
+            처음엔 이 산포를 "모델이 아직 부족한 것"으로 여겼습니다. 그런데 생각해 보면 이건 부족함이
+            아니라 <strong>정보</strong>입니다. 급속충전만 쓴 차와 완속으로 아껴 쓴 차는 종이 위에선
+            같은 차인데 배터리는 다릅니다. 그 차이는 어떤 모델로도 좁힐 수 없습니다 — 입력에 없으니까요.
+            남는 산포의 폭이 곧 "기록만으로는 여기까지"라는 한계선입니다.
+          </p>
+          <div class="box obs">
+            <p class="box-label">관측</p>
+            <p>
+              모델을 고칠수록 줄어드는 오차가 있고, 무엇을 해도 줄지 않는 오차가 있습니다. 후자를
+              발견하면 모델을 더 만지는 대신 <em>출력의 형태</em>를 바꿔야 할 때입니다 — 점을 버리고
+              범위로.
+            </p>
+          </div>
+
+          <h2>그래서 범위로만 말하기로 했다</h2>
+          <p>
+            결론은 화면 설계로 이어집니다. 추정 SOH를 "87%"라고 쓰는 대신 잔차 폭을 얹어
+            <strong>"대략 83~91% 사이"</strong>처럼 씁니다. 그리고 세 가지 규칙을 붙였습니다.
+          </p>
+          <ul>
+            <li>
+              <strong>하한을 보수적으로.</strong> 마지막 기록 이후에도 차는 계속 달렸을 수 있으니,
+              확인된 사용 페이스만큼 하한을 더 내립니다. 대여·영업처럼 험하게 쓰였을 신호가 있으면
+              하한만 추가로 낮춥니다 — 상한은 올릴 근거가 없습니다.
+            </li>
+            <li>
+              <strong>추정에는 좋은 소식 색을 쓰지 않습니다.</strong> 추정치가 좋게 나와도 초록불을
+              켜지 않고, 나쁠 때만 경고합니다. 측정과 추정이 같은 색이면 사용자는 구분하지 못합니다.
+            </li>
+            <li>
+              <strong>배터리를 교체한 차는 아예 계산하지 않습니다.</strong> 곡선의 시계가 리셋된
+              차에 원래 곡선을 들이대면 확실하게 틀립니다. "모른다"가 정답인 경우입니다.
+            </li>
+          </ul>
+
+          <h2>보증이라는 안전망을 함께 읽기</h2>
+          <p>
+            범위 추정과 짝을 이루는 게 제조사 보증입니다. 국내 제조사들의 고전압 배터리 기본 보증은
+            대체로 <strong>10년 또는 16만 km(먼저 도래하는 쪽)</strong>이고, 중고로 넘어가도
+            승계됩니다. 그래서 실질적인 질문은 "SOH가 정확히 몇 %냐"가 아니라 <strong>"추정 범위의
+            하한이 보증 기준(70%) 근처까지 내려가느냐, 그리고 보증이 얼마나 남았느냐"</strong>입니다.
+            범위의 하한이 넉넉히 높고 보증도 몇 년 남았다면, 점 추정의 정밀도는 사실 중요하지
+            않습니다.
+          </p>
+          <p>
+            한 가지 함정도 있습니다. 최초 구매자에게만 적용되는 확대 보증(주행거리 상향 등)은
+            소유권이 바뀌면 사라지는 경우가 있습니다. 중고 거래에서는 <strong>승계되는 기본 보증
+            기준으로만</strong> 계산해야 안전합니다.
+          </p>
+
+          <div class="box kept">
+            <p class="box-label">남긴 규칙</p>
+            <p>
+              줄일 수 없는 산포를 만나면 출력을 점에서 범위로 바꾼다. 추정의 하한은 보수적으로,
+              좋은 쪽 단정은 하지 않는다.
+            </p>
+          </div>
+
+          <h2>다음에 파 볼 것</h2>
+          <p>
+            실험실에서 셀을 직접 돌려 보면(충방전 사이클러에 물려 몇 주씩) 기록 데이터에서는 절대 안
+            보이는 것들이 보입니다 — 같은 조건에서도 셀마다 다른 개성, 온도 몇 도 차이가 만드는 격차
+            같은 것들. 실험실 쪽 이야기는 이 카테고리에서 따로 이어가 보려 합니다.
+          </p>
+
+          <nav class="post-nav">
+            <a href="../?cat=battery">← 연구 · 배터리 목록</a>
+            <a href="graph-first.html"><span>다른 카테고리</span>데이터가 얕아도 그래프는 그린다</a>
+          </nav>
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하듯 사업합니다. 서비스를 만들며 부딪힌 문제를 실험과 데이터로 파고들고,
+                결정의 이유를 여기 남깁니다. → <a href="../">전체 글 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하듯 사업합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="../">전체보기 <span class="n">7</span></a></li>
+              <li><a href="../?cat=evalue">사업 · EValue <span class="n">6</span></a></li>
+              <li><a class="on" href="../?cat=battery">연구 · 배터리 <span class="n">1</span></a></li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 사업합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>
