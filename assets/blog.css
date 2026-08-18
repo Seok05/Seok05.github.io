@@ -342,13 +342,21 @@ figure {
   margin: 2.25rem 0;
 }
 
+/* 좁은 화면에서 640 뷰박스를 통째로 줄이면 라벨이 6px가 되어 못 읽는다.
+   최소 폭을 주고 도해만 가로로 밀어 보게 한다(본문은 절대 가로 스크롤되지 않는다). */
+.fig-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--card);
+  -webkit-overflow-scrolling: touch;
+}
+
 figure svg {
   display: block;
   width: 100%;
+  min-width: 560px;
   height: auto;
-  background: var(--card);
-  border: 1px solid var(--rule);
-  border-radius: 12px;
 }
 
 figcaption {
@@ -387,12 +395,12 @@ figcaption {
 }
 .svg-label {
   font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
-  font-size: 11px;
+  font-size: 12.5px;
   font-weight: 600;
 }
 .svg-label-sm {
   font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 500;
 }
 
