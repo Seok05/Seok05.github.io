@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>"적정가"라는 단어를 버렸다</title>
+    <meta
+      name="description"
+      content="단일 추정 숫자를 사분위 구간으로 바꾸고, 라벨을 데이터가 보증하는 범위까지만 줄인 기록. 신선도 강등과 라벨 정밀화."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 22h6v-6h6v-5h6V6h6' fill='none' stroke='%236b7280' stroke-width='3' stroke-linejoin='round'/%3E%3Ccircle cx='28' cy='6' r='3' fill='%234f46e5'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M4 22h6v-6h6v-5h6V6h6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+          </svg>
+          얕은 데이터 노트
+        </a>
+        <nav class="site-nav"><a href="../">목록</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <article>
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <span class="tag">데이터 정직성</span><span>2026.08.18</span>
+            </div>
+            <h1>"적정가"라는 단어를 버렸다</h1>
+            <p class="lede">
+              통계로 뽑은 기대 가격을 화면에 "예상 적정가 3,180만원"이라고 적었습니다. 계산은
+              맞았지만, 그 문장이 약속하는 것은 우리가 가진 것보다 컸습니다.
+            </p>
+          </div>
+
+          <h2>숫자 하나는 측정값처럼 읽힌다</h2>
+          <p>
+            사람은 소수점 없는 단일 숫자를 보면 그것을 <strong>측정된 사실</strong>로 받아들입니다.
+            "3,180만원"은 어딘가에 그런 값이 실제로 존재하는 것처럼 보입니다. 하지만 그 숫자의
+            정체는 같은 조건 매물들의 가격 분포에서 뽑아낸 <em>추정</em>이고, 그 분포는 대개
+            넓습니다. 같은 연식·트림·주행거리대에서도 실제 호가는 수백만원씩 벌어집니다.
+          </p>
+          <p>
+            게다가 "적정"이라는 단어는 감정평가의 언어입니다. 우리는 차를 보지 않았고, 사고 이력을
+            전부 아는 것도 아니며, 옵션도 모릅니다. 공개된 호가를 모아 분포를 계산했을 뿐입니다.
+            그 위치에서 "적정"을 말할 자격이 없었습니다.
+          </p>
+
+          <div class="box obs">
+            <p class="box-label">관측</p>
+            <p>
+              같은 조건 실매물 91건의 가격이 4,900만원부터 7,777만원까지 퍼져 있는데, 화면은 그
+              분포를 6,280만원 하나로 눌러 보여주고 있었습니다. 사용자가 잃은 정보는 "얼마나
+              제각각인가"였고, 그건 사실 <em>가장 중요한</em> 정보였습니다.
+            </p>
+          </div>
+
+          <h2>단일 값 대신 사분위 구간</h2>
+          <p>
+            바꾼 방식은 단순합니다. 중앙값 하나 대신, 가운데 절반이 어디에 있는지를 보여줍니다.
+          </p>
+          <ul>
+            <li>25번째 백분위수부터 75번째 백분위수까지를 <strong>구간</strong>으로 제시</li>
+            <li>그 구간을 만든 <strong>표본 수</strong>를 함께 표시</li>
+            <li>구간의 폭에 따라 <strong>산포 라벨</strong>(편차 작음 / 보통 / 큼 / 표본 적음)</li>
+          </ul>
+          <p>
+            문장도 바꿨습니다. "예상 적정가 3,180만원" → "같은 조건 실매물은 대개 2,950~3,400만원".
+            같은 데이터인데, 뒤쪽 문장은 우리가 아는 만큼만 말합니다. 사분위를 쓴 이유는 최솟값과
+            최댓값이 극단값 하나에 휘둘리기 때문입니다. 가운데 절반은 이상치 몇 건에 잘 흔들리지
+            않습니다.
+          </p>
+
+          <figure>
+            <svg viewBox="0 0 640 210" role="img" aria-label="단일 숫자와 사분위 구간 비교">
+              <text class="svg-label svg-muted" x="24" y="26">이전</text>
+              <text
+                class="svg-label svg-ink"
+                x="24"
+                y="60"
+                style="font-size: 21px; font-weight: 800"
+              >
+                예상 적정가 3,180만원
+              </text>
+              <text class="svg-label-sm svg-faint" x="24" y="80">
+                분포도, 표본 수도, 확신의 정도도 보이지 않음
+              </text>
+
+              <line x1="24" y1="102" x2="616" y2="102" class="svg-stroke-rule" stroke-width="1" />
+
+              <text class="svg-label svg-muted" x="24" y="128">이후</text>
+              <!-- 분포 축 -->
+              <line x1="34" y1="168" x2="606" y2="168" class="svg-stroke-rule" stroke-width="1.5" />
+              <!-- IQR 밴드 -->
+              <rect
+                x="200"
+                y="150"
+                width="230"
+                height="36"
+                rx="5"
+                class="svg-fill-accent"
+                opacity="0.14"
+              />
+              <line x1="200" y1="146" x2="200" y2="190" class="svg-stroke-accent" stroke-width="2" />
+              <line x1="430" y1="146" x2="430" y2="190" class="svg-stroke-accent" stroke-width="2" />
+              <!-- 중앙값 -->
+              <line
+                x1="308"
+                y1="142"
+                x2="308"
+                y2="194"
+                class="svg-stroke-graphite"
+                stroke-width="2"
+                stroke-dasharray="3 3"
+              />
+              <text class="svg-label-sm svg-muted" x="308" y="136" text-anchor="middle">중앙값</text>
+              <text class="svg-label-sm svg-muted" x="200" y="206" text-anchor="middle">2,950</text>
+              <text class="svg-label-sm svg-muted" x="430" y="206" text-anchor="middle">3,400</text>
+              <text class="svg-label-sm svg-faint" x="46" y="206">최저</text>
+              <text class="svg-label-sm svg-faint" x="576" y="206">최고</text>
+              <text class="svg-label svg-ink" x="470" y="132" style="font-weight: 700">
+                실매물 91건 · 편차 보통
+              </text>
+            </svg>
+            <figcaption>
+              같은 데이터를 두 방식으로 표현한 예시. 아래쪽은 "가운데 절반이 어디인가"와 "표본이
+              몇 건인가"를 함께 말하므로, 사용자가 이 숫자를 얼마나 믿을지 스스로 정할 수 있습니다.
+            </figcaption>
+          </figure>
+
+          <h2>라벨은 데이터가 보증하는 범위를 넘지 않는다</h2>
+          <p>
+            같은 문제를 다른 데서도 발견했습니다. 사고 이력이 없는 차에 <strong>"무사고 확인"</strong>
+            배지를 달고 있었는데, 우리가 조회한 건 보험 처리된 사고 기록입니다. 자비로 수리했거나
+            신고하지 않은 사고는 거기 잡히지 않습니다. 즉 우리가 아는 건 "보험 기록에 사고가 없다"
+            까지입니다.
+          </p>
+          <p>
+            그래서 배지 문구를 <strong>"보험사고 없음"</strong>으로 줄이고, 조회 범위를 함께
+            밝혔습니다. 글자 몇 개 차이지만 약속의 크기가 다릅니다. 앞쪽은 차의 상태를 보증하고,
+            뒤쪽은 우리가 본 기록을 보고합니다.
+          </p>
+
+          <h3>오래된 사실은 강등한다</h3>
+          <p>
+            여기서 한 걸음 더 갔습니다. 이력 조회일이 오래됐다면, 그 "사고 없음"은 조회 시점의
+            사실이지 지금의 사실이 아닙니다. 조회한 지 90일이 넘은 긍정 배지는 초록색을 떼고
+            중립색으로 내린 뒤 기준 시점을 병기했습니다.
+          </p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>상황</th>
+                  <th>표시</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>최근 조회 · 기록 없음</td>
+                  <td>보험사고 없음 (긍정색)</td>
+                </tr>
+                <tr>
+                  <td>90일 초과 · 기록 없음</td>
+                  <td>보험사고 없음 · 2026.05 기준 (중립색)</td>
+                </tr>
+                <tr>
+                  <td>조회 불가 / 미공개</td>
+                  <td>배지 없음 — "없다"고 말하지 않는다</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            마지막 줄이 핵심입니다. 정보가 없을 때 가장 흔한 실수는 <strong>모르는 것을 좋은
+            쪽으로 채우는 것</strong>입니다. 미공개를 "이상 없음"으로 처리하면 화면은 깔끔해지지만
+            거짓이 됩니다. 우리는 배지를 아예 달지 않기로 했습니다.
+          </p>
+
+          <h2>색까지 규칙에 넣었다</h2>
+          <p>
+            색도 같은 문제를 일으킵니다. 가격이 내린 걸 초록색으로 칠하면 "싸졌다 = 좋다"는 판단이
+            함께 전달됩니다. 하지만 비싼 차가 조금 내려도 여전히 비쌉니다. 값의 변화는
+            <em>관측</em>이고, 좋은 딜인지는 <em>판단</em>입니다.
+          </p>
+          <p>
+            그래서 축을 갈랐습니다. 관측 신호(값 변화, 지켜본 기간, 판매 종료가)는 전부 중립
+            회색과 형태만 씁니다. 판단(추천 등급, 링크, 강조)에만 브랜드 색을 씁니다. 지금 읽고
+            계신 이 블로그도 같은 규칙으로 칠했습니다 — 도해의 데이터 표시는 회색, 주장과 링크는
+            보라색입니다.
+          </p>
+
+          <div class="box kept">
+            <p class="box-label">남긴 규칙</p>
+            <p>
+              라벨은 데이터가 보증하는 범위를 넘지 않는다. 모르는 것은 좋은 쪽으로 채우지 않고,
+              오래된 긍정은 중립으로 내린다.
+            </p>
+          </div>
+
+          <h2>돌아보며</h2>
+          <p>
+            이 작업들의 공통점은 <strong>기능을 더한 게 아니라 주장을 줄인 것</strong>이라는
+            점입니다. 화면은 오히려 덜 단정적으로 변했고, 처음엔 "약해 보인다"는 느낌도 있었습니다.
+            그런데 사용자가 큰돈을 쓰는 결정을 앞둔 상황에서, 과장된 확신은 신뢰를 벌지 못합니다.
+            한 번 틀리면 그 뒤의 모든 숫자를 의심받습니다.
+          </p>
+          <p>
+            아직 못 지킨 것도 있습니다. 여러 출처에서 모은 트림 표기가 제각각이라, 어떤 비교는
+            실제보다 넓은 범위를 "같은 조건"이라 부르고 있습니다. 지금은 그 사실을 라벨에 적어
+            두는 것으로 버티는 중입니다.
+          </p>
+
+          <nav class="post-nav">
+            <a href="theil-sen.html"><span>이전</span>하루가 튀어도 흔들리지 않는 추세선</a>
+            <a href="cohort-fallback.html"><span>다음</span>표본이 부족할 때 무엇을 먼저 포기할까</a>
+          </nav>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>얕은 데이터 노트 · 2026</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다.</p>
+      </div>
+    </footer>
+  </body>
+</html>

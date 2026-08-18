@@ -1,0 +1,521 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+/* ───────────────────────────────────────────────────────────
+   색의 규칙은 이 블로그가 다루는 프로젝트의 규칙을 그대로 따른다.
+   관측(데이터·측정·그림)은 중립 그래파이트, 판단(링크·강조·주장)은 인디고.
+   값이 내렸다는 사실에 초록을 쓰지 않는 것과 같은 이유다.
+   ─────────────────────────────────────────────────────────── */
+
+:root {
+  --paper: #f7f8fa;
+  --card: #ffffff;
+  --ink: #14181f;
+  --ink-soft: #3d4450;
+  --muted: #6b7280;
+  --faint: #9aa2ae;
+  --rule: #e3e6ea;
+  --accent: #4f46e5;
+  --accent-soft: #eef0fe;
+  --graphite: #6b7280;
+  --code-bg: #f1f3f6;
+  --measure: 43rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0d1014;
+    --card: #14181e;
+    --ink: #e7eaee;
+    --ink-soft: #c3c9d2;
+    --muted: #98a2b3;
+    --faint: #6b7684;
+    --rule: #222831;
+    --accent: #9b95ff;
+    --accent-soft: #1b1d3a;
+    --graphite: #98a2b3;
+    --code-bg: #171c23;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+  letter-spacing: -0.011em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* ── 골격 ────────────────────────────────────────────────── */
+
+.wrap {
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.site-header {
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.35rem;
+  padding-bottom: 1.35rem;
+}
+
+.site-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.site-name svg {
+  display: block;
+  color: var(--graphite);
+}
+
+.site-nav {
+  display: flex;
+  gap: 1.1rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.site-nav a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  color: var(--ink);
+}
+
+main {
+  padding: 3rem 0 4rem;
+}
+
+/* ── 홈 ──────────────────────────────────────────────────── */
+
+.intro {
+  padding-bottom: 2.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.intro h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.7rem, 5.2vw, 2.3rem);
+  line-height: 1.32;
+  letter-spacing: -0.032em;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+.intro p {
+  margin: 0 0 0.9rem;
+  color: var(--ink-soft);
+}
+
+.intro p:last-child {
+  margin-bottom: 0;
+}
+
+.eyebrow {
+  margin: 0 0 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.post-list {
+  list-style: none;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.post-list a {
+  display: block;
+  padding: 1.35rem 1.4rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.post-list a:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.post-list h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.09rem;
+  line-height: 1.45;
+  letter-spacing: -0.024em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.post-list p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+  font-size: 0.74rem;
+  color: var(--faint);
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.16rem 0.5rem;
+  border-radius: 999px;
+  background: var(--code-bg);
+  color: var(--graphite);
+  font-size: 0.71rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ── 본문 ────────────────────────────────────────────────── */
+
+.post-head {
+  padding-bottom: 2rem;
+  margin-bottom: 2.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.post-head h1 {
+  margin: 0.5rem 0 0.9rem;
+  font-size: clamp(1.55rem, 4.8vw, 2.1rem);
+  line-height: 1.34;
+  letter-spacing: -0.032em;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+.post-head .lede {
+  margin: 0;
+  font-size: 1.03rem;
+  color: var(--ink-soft);
+  line-height: 1.72;
+}
+
+article h2 {
+  margin: 3rem 0 0.9rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  letter-spacing: -0.026em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+article h3 {
+  margin: 2.1rem 0 0.7rem;
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+article p {
+  margin: 0 0 1.15rem;
+}
+
+article ul,
+article ol {
+  margin: 0 0 1.3rem;
+  padding-left: 1.3rem;
+}
+
+article li {
+  margin-bottom: 0.5rem;
+}
+
+article li::marker {
+  color: var(--faint);
+}
+
+article strong {
+  font-weight: 700;
+}
+
+article a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+hr {
+  height: 1px;
+  border: 0;
+  background: var(--rule);
+  margin: 2.75rem 0;
+}
+
+/* ── 관측 / 남긴 규칙 — 프로젝트의 두 축을 글의 구조로 ──── */
+
+.box {
+  margin: 1.9rem 0;
+  padding: 1.1rem 1.3rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-left-width: 3px;
+  border-radius: 4px 10px 10px 4px;
+}
+
+.box .box-label {
+  margin: 0 0 0.45rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.box p:last-child {
+  margin-bottom: 0;
+}
+
+.box.obs {
+  border-left-color: var(--graphite);
+}
+
+.box.obs .box-label {
+  color: var(--graphite);
+}
+
+.box.kept {
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.box.kept .box-label {
+  color: var(--accent);
+}
+
+.box.kept p {
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.018em;
+}
+
+/* ── 도해 ────────────────────────────────────────────────── */
+
+figure {
+  margin: 2.25rem 0;
+}
+
+figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+}
+
+figcaption {
+  margin-top: 0.7rem;
+  font-size: 0.83rem;
+  line-height: 1.62;
+  color: var(--muted);
+}
+
+.svg-ink {
+  fill: var(--ink);
+}
+.svg-muted {
+  fill: var(--muted);
+}
+.svg-faint {
+  fill: var(--faint);
+}
+.svg-stroke-rule {
+  stroke: var(--rule);
+}
+.svg-stroke-graphite {
+  stroke: var(--graphite);
+}
+.svg-stroke-accent {
+  stroke: var(--accent);
+}
+.svg-fill-graphite {
+  fill: var(--graphite);
+}
+.svg-fill-accent {
+  fill: var(--accent);
+}
+.svg-fill-card {
+  fill: var(--card);
+}
+.svg-label {
+  font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+}
+.svg-label-sm {
+  font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+  font-size: 9.5px;
+  font-weight: 500;
+}
+
+/* ── 코드 ────────────────────────────────────────────────── */
+
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 0.14em 0.38em;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+pre {
+  margin: 1.7rem 0;
+  padding: 1.1rem 1.2rem;
+  background: var(--code-bg);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow-x: auto;
+  line-height: 1.65;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.845rem;
+  word-break: normal;
+}
+
+/* ── 표 ──────────────────────────────────────────────────── */
+
+.table-scroll {
+  overflow-x: auto;
+  margin: 1.8rem 0;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  padding: 0.7rem 0.95rem;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+th {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--graphite);
+  white-space: nowrap;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── 글 사이 이동 ────────────────────────────────────────── */
+
+.post-nav {
+  margin-top: 3.5rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  font-size: 0.88rem;
+}
+
+.post-nav a {
+  color: var(--accent);
+  text-decoration: none;
+  max-width: 20rem;
+}
+
+.post-nav a:hover {
+  text-decoration: underline;
+}
+
+.post-nav span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--faint);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.15rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--rule);
+  padding: 2rem 0 3rem;
+  font-size: 0.82rem;
+  color: var(--faint);
+}
+
+.site-footer p {
+  margin: 0 0 0.35rem;
+}
+
+.site-footer a {
+  color: var(--muted);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>수집이 하루 빠지면 통계가 거짓말을 한다</title>
+    <meta
+      name="description"
+      content="관측 공백 뒤 사라진 항목의 소진일을 어디로 귀속하느냐가 체류일 통계를 한쪽으로 계속 밀어내는 문제와 중앙 귀속 해법."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 22h6v-6h6v-5h6V6h6' fill='none' stroke='%236b7280' stroke-width='3' stroke-linejoin='round'/%3E%3Ccircle cx='28' cy='6' r='3' fill='%234f46e5'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M4 22h6v-6h6v-5h6V6h6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+          </svg>
+          얕은 데이터 노트
+        </a>
+        <nav class="site-nav"><a href="../">목록</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <article>
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <span class="tag">편향</span><span>2026.08.18</span>
+            </div>
+            <h1>수집이 하루 빠지면 통계가 거짓말을 한다 — 소진일 귀속</h1>
+            <p class="lede">
+              "이 조건은 보통 며칠 만에 나갑니다"라는 문장을 만들려면 사라진 날을 알아야 합니다.
+              그런데 우리가 아는 건 <em>사라진 걸 발견한 날</em>뿐이었습니다.
+            </p>
+          </div>
+
+          <h2>발견한 날은 일어난 날이 아니다</h2>
+          <p>
+            매일 목록을 받아 저장하고, 어제 있던 항목이 오늘 없으면 "소진"으로 기록합니다. 여기까지는
+            간단합니다. 문제는 수집이 매일 되지 않는다는 것이었습니다. 장비가 쉬거나 작업이 끊기면
+            며칠이 비고, 그 공백 뒤에 사라진 항목들이 한꺼번에 발견됩니다.
+          </p>
+          <p>
+            8월 14일에 마지막으로 보였고 다음 수집이 8월 18일이었다면, 이 항목은 14일과 18일
+            사이 어딘가에서 사라진 것입니다. 정확한 날은 원리적으로 알 수 없습니다.
+          </p>
+
+          <div class="box obs">
+            <p class="box-label">관측</p>
+            <p>
+              19일치 관측 중 공백이 여러 번 있었습니다. 소진을 "마지막으로 본 날"로 기록하면
+              공백 뒤에 사라진 항목은 전부 실제보다 <strong>짧게</strong> 산 것으로 기록됩니다.
+              이 오차는 무작위가 아니라 <em>항상 같은 방향</em>이라는 게 문제였습니다.
+            </p>
+          </div>
+
+          <h2>한쪽으로만 틀리는 오차는 편향이다</h2>
+          <p>
+            무작위 오차라면 표본이 늘수록 상쇄됩니다. 그런데 이 오차는 언제나 체류일을 줄이는
+            쪽으로만 작동합니다. 아무리 데이터를 모아도 통계는 계속 "빨리 팔린다"고 말합니다.
+            그리고 그 문장은 사용자를 재촉하는 데 쓰입니다. 틀린 방향으로 사람을 미는 셈입니다.
+          </p>
+          <p>
+            선택지는 셋이었습니다.
+          </p>
+
+          <figure>
+            <svg viewBox="0 0 640 250" role="img" aria-label="관측 공백과 세 가지 소진일 귀속 후보">
+              <!-- 타임라인 -->
+              <line x1="60" y1="90" x2="600" y2="90" class="svg-stroke-rule" stroke-width="2" />
+
+              <!-- 관측일 눈금 -->
+              <g class="svg-stroke-graphite" stroke-width="2">
+                <line x1="100" y1="82" x2="100" y2="98" />
+                <line x1="160" y1="82" x2="160" y2="98" />
+                <line x1="220" y1="82" x2="220" y2="98" />
+                <line x1="500" y1="82" x2="500" y2="98" />
+                <line x1="560" y1="82" x2="560" y2="98" />
+              </g>
+              <text class="svg-label-sm svg-muted" x="220" y="72" text-anchor="middle">
+                마지막 관측
+              </text>
+              <text class="svg-label-sm svg-muted" x="500" y="72" text-anchor="middle">
+                다음 수집
+              </text>
+
+              <!-- 공백 구간 -->
+              <rect x="220" y="80" width="280" height="20" class="svg-fill-graphite" opacity="0.09" />
+              <text class="svg-label svg-muted" x="360" y="126" text-anchor="middle">
+                수집 공백 — 이 안에서 사라졌다
+              </text>
+
+              <!-- 후보들 -->
+              <circle cx="220" cy="168" r="5" class="svg-fill-graphite" />
+              <text class="svg-label-sm svg-muted" x="220" y="190" text-anchor="middle">① 마지막 관측일</text>
+              <text class="svg-label-sm svg-faint" x="220" y="206" text-anchor="middle">항상 짧게</text>
+
+              <circle cx="360" cy="168" r="6.5" class="svg-fill-accent" />
+              <text class="svg-label-sm" x="360" y="190" text-anchor="middle" style="fill: var(--accent); font-weight: 700">
+                ② 공백의 중앙
+              </text>
+              <text class="svg-label-sm svg-faint" x="360" y="206" text-anchor="middle">양쪽으로 흩어짐</text>
+
+              <circle cx="500" cy="168" r="5" class="svg-fill-graphite" />
+              <text class="svg-label-sm svg-muted" x="500" y="190" text-anchor="middle">③ 다음 수집일</text>
+              <text class="svg-label-sm svg-faint" x="500" y="206" text-anchor="middle">항상 길게</text>
+
+              <line x1="220" y1="100" x2="220" y2="158" class="svg-stroke-rule" stroke-width="1" stroke-dasharray="3 3" />
+              <line x1="360" y1="100" x2="360" y2="156" class="svg-stroke-accent" stroke-width="1.5" stroke-dasharray="3 3" />
+              <line x1="500" y1="100" x2="500" y2="158" class="svg-stroke-rule" stroke-width="1" stroke-dasharray="3 3" />
+
+              <text class="svg-label-sm svg-faint" x="60" y="234">시간 →</text>
+            </svg>
+            <figcaption>
+              ①과 ③은 오차가 한 방향으로만 쌓입니다. ②는 개별 항목에서는 여전히 틀리지만, 틀리는
+              방향이 양쪽으로 갈려 평균에서 상쇄됩니다.
+            </figcaption>
+          </figure>
+
+          <p>
+            ②를 골랐습니다. 코드로는 한 줄입니다.
+          </p>
+          <pre><code>const soldAt = nextCollection
+  ? (lastSeen + nextCollection) / 2   // 공백의 중앙으로 귀속
+  : lastSeen;                          // 다음 수집이 없으면(가장 최근) 그대로</code></pre>
+          <p>
+            수집이 매일 됐다면 공백은 하루뿐이고, 중앙 귀속은 0.5일 차이밖에 안 냅니다. 즉
+            <strong>정상일 때는 거의 아무 일도 하지 않다가, 공백이 길어질수록 보정이 커지는</strong>
+            방식입니다. 이런 성질이 마음에 들었습니다. 평소엔 조용하고 필요할 때만 개입합니다.
+          </p>
+
+          <h2>남은 문제 두 가지</h2>
+          <h3>사라진 게 팔린 것이 아닐 수 있다</h3>
+          <p>
+            목록에서 사라지는 이유는 판매만이 아닙니다. 판매자가 내렸을 수도, 잠시 숨겨졌을 수도
+            있습니다. 우리는 그걸 구분할 방법이 없습니다. 그래서 화면에서 이 값을 "판매"라고
+            부르지 않고 <strong>"소진"</strong>이라고 씁니다. 관측된 사실은 "목록에서 사라졌다"까지
+            입니다.
+          </p>
+          <p>
+            같은 이유로, 소진 직전 가격도 "실거래가"가 아니라 "판매 종료 전 마지막으로 걸려 있던
+            값"이라고 표기합니다. 이 두 단어의 차이가 사용자의 기대를 완전히 바꿉니다.
+          </p>
+
+          <h3>같은 차가 다시 올라온다</h3>
+          <p>
+            데이터를 훑다가 같은 차량이 네 번에 걸쳐 새 항목으로 등록된 걸 발견했습니다. 우리
+            기준으로는 "네 번 등장하고 세 번 소진된" 것으로 집계됩니다. 실제로는 한 대가 오래
+            안 팔린 것인데, 통계는 정반대로 "자주 소진된다"고 말합니다.
+          </p>
+          <p>
+            이건 아직 못 고쳤습니다. 항목 단위가 아니라 실물 단위로 체류일을 세려면 동일 차량을
+            묶는 작업이 먼저 안정돼야 합니다. 지금은 문제를 아는 상태로 두고, 이 수치를 재촉하는
+            문구에 쓰지 않는 것으로 대응하고 있습니다.
+          </p>
+
+          <div class="box kept">
+            <p class="box-label">남긴 규칙</p>
+            <p>
+              모르는 구간은 중앙으로 귀속한다. 한쪽으로만 틀리는 오차는 데이터를 아무리 모아도
+              사라지지 않는다.
+            </p>
+          </div>
+
+          <h2>돌아보며</h2>
+          <p>
+            이 문제의 교훈은 통계 기법이 아니라 <strong>기본값의 무게</strong>였습니다. "사라진 날 =
+            마지막으로 본 날"은 아무도 결정하지 않은 기본값이었습니다. 그냥 가장 쓰기 쉬운 값이었고,
+            그래서 코드에 그렇게 들어갔습니다. 편향은 대개 이런 식으로, 누군가의 나쁜 의도가 아니라
+            <em>가장 편한 선택</em>을 통해 들어옵니다.
+          </p>
+
+          <nav class="post-nav">
+            <a href="cohort-fallback.html"><span>이전</span>표본이 부족할 때 무엇을 먼저 포기할까</a>
+            <a href="laptop-to-server.html"><span>다음</span>노트북을 24시간 서버로 만들어 본 기록</a>
+          </nav>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>얕은 데이터 노트 · 2026</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다.</p>
+      </div>
+    </footer>
+  </body>
+</html>

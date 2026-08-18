@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>하루가 튀어도 흔들리지 않는 추세선</title>
+    <meta
+      name="description"
+      content="최소제곱법이 하루의 이상치에 기울기를 내주는 문제를 Theil–Sen 회귀로 해결한 기록. 점쌍 기울기의 중앙값, breakdown point, 주간 % 정규화."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 22h6v-6h6v-5h6V6h6' fill='none' stroke='%236b7280' stroke-width='3' stroke-linejoin='round'/%3E%3Ccircle cx='28' cy='6' r='3' fill='%234f46e5'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M4 22h6v-6h6v-5h6V6h6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+          </svg>
+          얕은 데이터 노트
+        </a>
+        <nav class="site-nav"><a href="../">목록</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <article>
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <span class="tag">통계</span><span>2026.08.18</span>
+            </div>
+            <h1>하루가 튀어도 흔들리지 않는 추세선 — Theil–Sen 회귀</h1>
+            <p class="lede">
+              "이번 주 시세가 내려가고 있다"고 말하려면 기울기가 필요합니다. 그런데 우리 데이터에는
+              하루씩 크게 튀는 날이 있고, 최소제곱법은 그 하루에 기울기를 내줍니다.
+            </p>
+          </div>
+
+          <h2>이상치는 오류가 아니라 현실이었다</h2>
+          <p>
+            일별 시세 중앙값을 모아 보니 특정 날짜만 뾰족하게 솟거나 꺼졌습니다. 원인은 데이터
+            오류가 아니었습니다.
+          </p>
+          <ul>
+            <li>
+              한 판매자가 비슷한 매물 수십 대를 하루에 몰아 등록하면, 그날 중앙값이 그 무리 쪽으로
+              끌려갑니다.
+            </li>
+            <li>
+              수집 시점에 특정 가격대가 우연히 몰려 빠지거나 들어오면 하루짜리 계단이 생깁니다.
+            </li>
+          </ul>
+          <p>
+            즉 <strong>지울 수 없는 이상치</strong>입니다. 실제로 그날 시장에 그런 값들이 걸려
+            있었으니까요. 데이터를 손대는 대신, 이상치에 둔감한 추정량을 찾아야 했습니다.
+          </p>
+
+          <div class="box obs">
+            <p class="box-label">관측</p>
+            <p>
+              평평한 20일 사이에 하루만 크게 솟은 데이터에 최소제곱을 돌리면, 그 하루가 전체 기울기를
+              한쪽으로 기울여 버립니다. 사용자에게는 "시세가 오르는 중"이라는 문장으로 도착합니다.
+              하루 때문에 없는 추세를 만들어 내는 것입니다.
+            </p>
+          </div>
+
+          <h2>Theil–Sen: 모든 점쌍의 기울기, 그중 중앙값</h2>
+          <p>
+            방법은 이름만큼 복잡하지 않습니다. 점이 n개 있으면 두 점을 고르는 모든 조합에 대해
+            기울기를 구하고, 그 기울기들의 <strong>중앙값</strong>을 취합니다.
+          </p>
+          <pre><code>slopes = []
+for i in points:
+  for j in points where j is after i:
+    slopes.push( (value[j] - value[i]) / (day[j] - day[i]) )
+
+slope = median(slopes)</code></pre>
+          <p>
+            왜 강건한지가 바로 보입니다. 이상치 한 점이 만드는 기울기는 n−1개뿐이고, 나머지 정상
+            점들끼리 만드는 기울기가 압도적으로 많습니다. 중앙값은 그 다수 쪽에 있습니다. 평균이라면
+            이상치가 낀 기울기들이 값을 끌고 갔을 겁니다.
+          </p>
+          <p>
+            찾아보니 이 성질에는 이름이 있었습니다. <strong>breakdown point</strong> — 추정량이
+            무너지기 전까지 견딜 수 있는 오염 데이터의 비율입니다. 최소제곱법은 사실상 0%(한 점이
+            무한히 멀어지면 기울기도 따라갑니다). Theil–Sen은 약 29.3%까지 견딥니다. 데이터의 4분의
+            1이 오염돼도 기울기가 살아 있다는 뜻입니다.
+          </p>
+
+          <figure>
+            <svg viewBox="0 0 640 260" role="img" aria-label="최소제곱과 Theil-Sen 기울기 비교">
+              <!-- 축 -->
+              <line x1="56" y1="200" x2="600" y2="200" class="svg-stroke-rule" stroke-width="1" />
+              <line x1="56" y1="40" x2="56" y2="200" class="svg-stroke-rule" stroke-width="1" />
+
+              <!-- 정상 점들 (평평) -->
+              <g class="svg-fill-graphite">
+                <circle cx="90" cy="150" r="3.4" />
+                <circle cx="140" cy="152" r="3.4" />
+                <circle cx="190" cy="149" r="3.4" />
+                <circle cx="240" cy="151" r="3.4" />
+                <circle cx="340" cy="150" r="3.4" />
+                <circle cx="390" cy="152" r="3.4" />
+                <circle cx="440" cy="149" r="3.4" />
+                <circle cx="490" cy="151" r="3.4" />
+                <circle cx="540" cy="150" r="3.4" />
+              </g>
+              <!-- 이상치 하루 -->
+              <circle cx="290" cy="66" r="4.6" fill="none" class="svg-stroke-graphite" stroke-width="2" />
+              <text class="svg-label-sm svg-muted" x="290" y="56" text-anchor="middle">
+                일괄 등록된 하루
+              </text>
+
+              <!-- 최소제곱 (이상치에 끌려 기울어짐) -->
+              <line
+                x1="80"
+                y1="158"
+                x2="556"
+                y2="126"
+                class="svg-stroke-graphite"
+                stroke-width="2"
+                stroke-dasharray="6 4"
+              />
+              <text class="svg-label svg-muted" x="566" y="122">최소제곱</text>
+
+              <!-- Theil-Sen (평평 유지) -->
+              <line x1="80" y1="150.5" x2="556" y2="150.5" class="svg-stroke-accent" stroke-width="2.5" />
+              <text class="svg-label svg-fill-accent" x="566" y="154" style="fill: var(--accent)">
+                Theil–Sen
+              </text>
+
+              <text class="svg-label-sm svg-faint" x="56" y="222">관측일 →</text>
+              <text class="svg-label-sm svg-muted" x="328" y="244" text-anchor="middle">
+                같은 데이터, 다른 결론 — 한쪽은 "오르는 중", 한쪽은 "거의 그대로"
+              </text>
+            </svg>
+            <figcaption>
+              평평한 관측 사이에 하루가 솟은 상황(설명을 위한 예시). 점선은 최소제곱, 실선은
+              Theil–Sen입니다. 사용자에게 도착하는 문장이 갈립니다.
+            </figcaption>
+          </figure>
+
+          <h2>기울기를 그대로 쓰지 않고 주간 %로 바꿨다</h2>
+          <p>
+            기울기의 단위는 "하루당 만원"입니다. 그런데 이 값을 그대로 화면에 쓸 수는 없었습니다.
+            6천만원대 차와 2천만원대 차에서 "하루 3만원 하락"은 전혀 다른 의미입니다. 그래서
+            중앙값으로 나눠 비율로 만들고, 사람이 체감하는 단위인 주로 환산했습니다.
+          </p>
+          <pre><code>weeklyPct = (slopePerDay * 7) / median(values) * 100</code></pre>
+          <p>
+            이렇게 해야 차종을 가로질러 비교할 수 있습니다. "A는 주 −2.5%, B는 주 −0.4%"는 값의
+            크기와 무관하게 읽히는 문장입니다.
+          </p>
+
+          <h3>보합을 만들어 준 것</h3>
+          <p>
+            처음엔 부호만 보고 "오르는 중 / 내리는 중"을 갈랐습니다. 그러니 주 +0.03% 같은 값에도
+            "오르고 있어요"가 붙었습니다. 사실상 변화가 없는데 방향을 단언하는 셈입니다. 절댓값이
+            0.15% 미만이면 "거의 그대로"라고 말하도록 중립 구간을 뒀습니다. 통계적으로 엄격한
+            기준은 아니지만, 없는 방향을 주장하지 않는다는 목적에는 충분했습니다.
+          </p>
+
+          <h2>테스트로 성질을 못 박아 두기</h2>
+          <p>
+            이 함수는 "이상치에 강건하다"는 성질 자체가 존재 이유입니다. 그래서 그 성질을 테스트로
+            직접 검증했습니다. 나중에 누가 최소제곱으로 갈아 끼우면 테스트가 깨지도록.
+          </p>
+          <pre><code>it("하루 이상치에 끌려가지 않는다 (Theil-Sen 채택 이유)", () =&gt; {
+  const pts = 열흘간_같은_값(3000);
+  pts[4] = { ...pts[4], value: 4000 }; // 스파이크 하루
+  const pct = weeklyTrendPct(pts);
+  expect(Math.abs(pct)).toBeLessThan(0.5); // 사실상 무추세로 읽어야 한다
+});</code></pre>
+          <p>
+            테스트 이름에 "채택 이유"를 적어 뒀습니다. 이 테스트가 왜 존재하는지 6개월 뒤의 제가
+            모를 테니까요.
+          </p>
+
+          <h2>대가</h2>
+          <p>
+            공짜는 아닙니다. 모든 점쌍을 보므로 계산량이 점 개수의 제곱으로 늘어납니다. 관측이
+            수십 일 규모라 문제가 없지만, 몇 년치가 쌓이면 그때는 다른 구현(중앙값의 중앙값 같은
+            근사)이 필요합니다. 지금 규모에서 굳이 최적화하지 않기로 하고, 대신 그 사실을 주석에
+            남겼습니다.
+          </p>
+          <p>
+            또 하나. Theil–Sen은 직선을 가정합니다. 시세가 완만하게 꺾이는 곡선이라면 이 방법은
+            "평균적인 방향" 하나만 알려줍니다. 지금은 몇 주 구간이라 직선 가정이 무리가 아니지만,
+            기간이 길어지면 구간을 나눠 봐야 합니다.
+          </p>
+
+          <div class="box kept">
+            <p class="box-label">남긴 규칙</p>
+            <p>
+              이상치를 지우지 말고, 이상치에 둔감한 추정량을 쓴다. 그리고 그 추정량을 고른 이유를
+              테스트 이름에 남긴다.
+            </p>
+          </div>
+
+          <nav class="post-nav">
+            <a href="graph-first.html"><span>이전</span>데이터가 얕아도 그래프는 그린다</a>
+            <a href="price-band.html"><span>다음</span>"적정가"라는 단어를 버렸다</a>
+          </nav>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>얕은 데이터 노트 · 2026</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다.</p>
+      </div>
+    </footer>
+  </body>
+</html>

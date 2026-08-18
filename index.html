@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>얕은 데이터 노트</title>
+    <meta
+      name="description"
+      content="관측이 며칠치뿐일 때 무엇을 말할 수 있고 무엇을 말하면 안 되는가 — 중고 전기차 시세 데이터를 다루며 배운 것들을 정리한 학습 노트."
+    />
+    <meta property="og:title" content="얕은 데이터 노트" />
+    <meta
+      property="og:description"
+      content="관측이 며칠치뿐일 때 무엇을 말할 수 있고 무엇을 말하면 안 되는가."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="assets/blog.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 22h6v-6h6v-5h6V6h6' fill='none' stroke='%236b7280' stroke-width='3' stroke-linejoin='round'/%3E%3Ccircle cx='28' cy='6' r='3' fill='%234f46e5'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="./">
+          <svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M4 22h6v-6h6v-5h6V6h6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+          </svg>
+          얕은 데이터 노트
+        </a>
+        <nav class="site-nav">
+          <a href="#글">글</a>
+          <a href="#소개">소개</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <section class="intro">
+          <p class="eyebrow">학습 노트</p>
+          <h1>관측이 18일치뿐일 때, 그래프를 그려도 되는가</h1>
+          <p>
+            중고 전기차 시세 데이터를 매일 모아 가치를 견주는 서비스를 만들고 있습니다. 매물
+            수천 건, 관측은 겨우 몇 주치. 이 조합이 계속 같은 질문을 던졌습니다 —
+            <strong>지금 가진 데이터로 어디까지 말해도 되는가.</strong>
+          </p>
+          <p>
+            숨기면 정직하지만 아무것도 전하지 못합니다. 다 보여주면 없는 확신을 팔게 됩니다. 그
+            사이에서 내린 결정들과, 그때 새로 배운 통계·설계·배포를 기록해 둡니다. 잘 되지 않은
+            것도 함께 적었습니다.
+          </p>
+        </section>
+
+        <section id="글">
+          <ul class="post-list">
+            <li>
+              <a href="posts/graph-first.html">
+                <h2>데이터가 얕아도 그래프는 그린다 — 표현과 해석을 갈랐다</h2>
+                <p>
+                  "데이터를 모으는 중입니다"라는 문장은 사용자에게 빈 화면과 같습니다. 그림은 하루치여도
+                  그리고, 추세를 말하는 문장만 표본이 감당할 때 붙이기로 했습니다.
+                </p>
+                <div class="meta-row">
+                  <span class="tag">설계 원칙</span><span>2026.08.18</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="posts/theil-sen.html">
+                <h2>하루가 튀어도 흔들리지 않는 추세선 — Theil–Sen 회귀</h2>
+                <p>
+                  최소제곱법은 단 하루의 이상치에 기울기를 내줍니다. 모든 점쌍의 기울기 중앙값을
+                  쓰는 방법을 배우고, 왜 이게 우리 데이터에 맞는지 테스트로 확인했습니다.
+                </p>
+                <div class="meta-row">
+                  <span class="tag">통계</span><span>2026.08.18</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="posts/price-band.html">
+                <h2>"적정가"라는 단어를 버렸다</h2>
+                <p>
+                  숫자 하나를 내놓으면 사용자는 그것을 측정값으로 읽습니다. 우리는 감정평가사가
+                  아니어서, 단일 값을 사분위 구간으로 바꾸고 라벨을 데이터가 보증하는 범위까지만
+                  줄였습니다.
+                </p>
+                <div class="meta-row">
+                  <span class="tag">데이터 정직성</span><span>2026.08.18</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="posts/cohort-fallback.html">
+                <h2>표본이 부족할 때 무엇을 먼저 포기할까 — 폴백 사다리</h2>
+                <p>
+                  같은 조건 매물이 3대뿐인 코호트에서 회귀는 의미가 없습니다. 정밀도를 단계적으로
+                  포기하면서 그 사실을 화면에 드러내는 5단 구조를 만들었습니다.
+                </p>
+                <div class="meta-row">
+                  <span class="tag">모델 설계</span><span>2026.08.18</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="posts/sold-day-attribution.html">
+                <h2>수집이 하루 빠지면 통계가 거짓말을 한다 — 소진일 귀속</h2>
+                <p>
+                  매물이 사라진 걸 발견한 날은 팔린 날이 아닙니다. 관측 공백을 어느 날로 귀속하느냐가
+                  "평균 며칠 만에 팔리는가"를 한쪽으로 계속 밀어냅니다.
+                </p>
+                <div class="meta-row">
+                  <span class="tag">편향</span><span>2026.08.18</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="posts/laptop-to-server.html">
+                <h2>노트북을 24시간 서버로 만들어 본 기록</h2>
+                <p>
+                  임시 터널의 주소는 매번 바뀌고, 회사 계정은 관리자 정책에 막히고, 홈 디렉터리는
+                  root 소유였습니다. 고정 주소 하나를 얻기까지의 삽질과, 결국 배운 한 가지.
+                </p>
+                <div class="meta-row">
+                  <span class="tag">배포</span><span>2026.08.18</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section id="소개" style="margin-top: 3.5rem">
+          <h2 style="font-size: 1.1rem; margin-bottom: 0.8rem">이 노트에 대해</h2>
+          <p style="color: var(--ink-soft); margin-bottom: 1.1rem">
+            데이터를 모아 판단을 만드는 일을 합니다. 이 노트의 글은 특정 제품 이야기가 아니라,
+            그 과정에서 마주친 문제와 해법을 일반화해 정리한 것입니다. 수집 대상이나 실제 매물
+            데이터는 다루지 않습니다.
+          </p>
+          <p style="color: var(--ink-soft)">
+            도해는 전부 직접 그렸고, 예시로 든 숫자는 설명을 위한 것입니다.
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>얕은 데이터 노트 · 2026</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다.</p>
+      </div>
+    </footer>
+  </body>
+</html>

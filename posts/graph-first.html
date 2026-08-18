@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>데이터가 얕아도 그래프는 그린다</title>
+    <meta
+      name="description"
+      content="관측이 며칠치뿐일 때 차트를 숨기는 대신, 표현과 해석을 분리했습니다. 그림은 하루치여도 그리고 추세 문장만 표본 임계로 막습니다."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M4 22h6v-6h6v-5h6V6h6' fill='none' stroke='%236b7280' stroke-width='3' stroke-linejoin='round'/%3E%3Ccircle cx='28' cy='6' r='3' fill='%234f46e5'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M4 22h6v-6h6v-5h6V6h6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linejoin="round"
+            />
+          </svg>
+          얕은 데이터 노트
+        </a>
+        <nav class="site-nav"><a href="../">목록</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <article>
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <span class="tag">설계 원칙</span><span>2026.08.18</span>
+            </div>
+            <h1>데이터가 얕아도 그래프는 그린다 — 표현과 해석을 갈랐다</h1>
+            <p class="lede">
+              시세 추이 화면을 만들 차례가 왔는데, 관측이 18일치였습니다. 추세를 그리기엔 짧고,
+              아무것도 안 그리기엔 사용자가 기대하는 게 명확했습니다.
+            </p>
+          </div>
+
+          <h2>"데이터를 모으는 중입니다"는 빈 화면과 같다</h2>
+          <p>
+            처음 만든 화면은 정직했습니다. 관측이 30일을 넘기 전에는 차트를 그리지 않고 "값 흐름 —
+            데이터 쌓는 중이에요"라는 안내만 띄웠습니다. 데이터가 없는데 선을 그으면 없는 추세를
+            보여주는 셈이니, 안 그리는 게 맞다고 생각했습니다.
+          </p>
+          <p>
+            그런데 이 화면을 본 사람의 반응은 예상과 달랐습니다. 시세 추이를 확인하러 들어온
+            사람에게 그 문구는 "여기엔 아무것도 없다"로 읽혔습니다. 정직함은 지켰지만
+            <strong>전달은 0</strong>이었습니다. 게다가 사용자들은 이미 다른 서비스에서 가격
+            그래프를 봐 왔습니다. 기준선이 이미 존재하는 상태에서 빈 상자를 내놓으면, 정직한
+            서비스가 아니라 미완성 서비스로 보입니다.
+          </p>
+
+          <div class="box obs">
+            <p class="box-label">관측</p>
+            <p>
+              같은 데이터, 같은 정직함. 그런데 "안 그림"과 "그림"의 차이는 신뢰가 아니라
+              전달력에서 갈렸습니다. 문제는 데이터의 양이 아니라 <em>무엇을 데이터의 양에
+              묶어야 하는가</em>였습니다.
+            </p>
+          </div>
+
+          <h2>그림은 사실이고, 문장은 주장이다</h2>
+          <p>
+            여기서 생각을 뒤집었습니다. 차트에는 성격이 다른 두 가지가 섞여 있습니다.
+          </p>
+          <ul>
+            <li>
+              <strong>표현</strong> — 점, 선, 띠, 마커. "이 날 이 값을 봤다"는 관측 사실의 배치입니다.
+              하루치 점 하나도 거짓이 아닙니다. 그건 실제로 본 값입니다.
+            </li>
+            <li>
+              <strong>해석</strong> — "요즘 시세가 일주일에 1.1% 내려오고 있어요" 같은 문장.
+              이건 표본이 뒷받침해야 하는 주장입니다. 3일치로 이런 말을 하면 거짓입니다.
+            </li>
+          </ul>
+          <p>
+            30일 임계를 차트 전체에 걸었던 건, 이 둘을 하나로 묶어 뒀기 때문이었습니다. 갈라
+            놓으면 규칙은 단순해집니다. <strong>표현은 관대하게, 주장은 인색하게.</strong>
+          </p>
+
+          <figure>
+            <svg viewBox="0 0 640 250" role="img" aria-label="숨기는 화면과 그리는 화면 비교">
+              <!-- 왼쪽: 숨김 -->
+              <text class="svg-label svg-muted" x="24" y="28">이전 — 임계 미달이면 숨김</text>
+              <rect
+                x="24"
+                y="42"
+                width="264"
+                height="150"
+                rx="10"
+                fill="none"
+                class="svg-stroke-rule"
+                stroke-width="1.5"
+                stroke-dasharray="5 4"
+              />
+              <text class="svg-label svg-faint" x="156" y="112" text-anchor="middle">
+                데이터 쌓는 중이에요
+              </text>
+              <text class="svg-label-sm svg-faint" x="156" y="132" text-anchor="middle">
+                더 모이면 보여드릴게요
+              </text>
+              <text class="svg-label-sm svg-muted" x="156" y="216" text-anchor="middle">
+                정직하지만 전달 0
+              </text>
+
+              <!-- 오른쪽: 그림 -->
+              <text class="svg-label svg-muted" x="352" y="28">이후 — 그리고, 문장만 막음</text>
+              <rect
+                x="352"
+                y="42"
+                width="264"
+                height="150"
+                rx="10"
+                fill="none"
+                class="svg-stroke-rule"
+                stroke-width="1.5"
+              />
+              <!-- 밴드 -->
+              <path
+                d="M372 96 L412 88 L452 102 L492 92 L532 108 L572 100 L596 106 L596 148 L572 142 L532 152 L492 134 L452 146 L412 130 L372 138 Z"
+                class="svg-fill-accent"
+                opacity="0.1"
+              />
+              <!-- 중앙값 선 -->
+              <polyline
+                points="372,118 412,110 452,124 492,112 532,130 572,120 596,126"
+                fill="none"
+                class="svg-stroke-accent"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+              <g class="svg-fill-accent">
+                <circle cx="372" cy="118" r="2.6" />
+                <circle cx="412" cy="110" r="2.6" />
+                <circle cx="452" cy="124" r="2.6" />
+                <circle cx="492" cy="112" r="2.6" />
+                <circle cx="532" cy="130" r="2.6" />
+                <circle cx="572" cy="120" r="2.6" />
+              </g>
+              <circle cx="596" cy="126" r="4.5" class="svg-fill-card" />
+              <circle
+                cx="596"
+                cy="126"
+                r="4.5"
+                fill="none"
+                class="svg-stroke-graphite"
+                stroke-width="2"
+              />
+              <text class="svg-label-sm svg-muted" x="484" y="176" text-anchor="middle">
+                추세 문장 대신 · 쌓는 중 6일째
+              </text>
+              <text class="svg-label-sm svg-muted" x="484" y="216" text-anchor="middle">
+                같은 정직함 + 전달됨
+              </text>
+            </svg>
+            <figcaption>
+              같은 관측량으로 만든 두 화면. 오른쪽은 그림을 그리지만, 방향을 말하는 문장 자리에는
+              여전히 "쌓는 중"만 놓습니다. 정직함을 포기한 게 아니라 정직함의 위치를 옮긴 것입니다.
+            </figcaption>
+          </figure>
+
+          <h2>임계는 어디에 걸었나</h2>
+          <p>
+            추세 문장을 붙이려면 두 조건을 함께 넘겨야 하게 했습니다.
+          </p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>조건</th>
+                  <th>값</th>
+                  <th>왜</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>유효 관측일</td>
+                  <td>6일 이상</td>
+                  <td>
+                    방향을 말하려면 최소한 한 주가 필요합니다. 3~4일은 주중 리듬(월요일 등록 몰림)에
+                    쉽게 휘둘립니다.
+                  </td>
+                </tr>
+                <tr>
+                  <td>하루 표본</td>
+                  <td>5건 이상</td>
+                  <td>
+                    그날 매물이 2대뿐이면 그 중앙값은 시세가 아니라 우연입니다. 미달한 날은 추세
+                    계산에서 아예 뺍니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            중요한 건 두 번째입니다. 관측일이 10일이어도 그중 표본이 얇은 날을 걸러내면 유효
+            관측일이 4일로 줄 수 있습니다. 그러면 문장은 붙지 않습니다. 날짜 개수만 세면
+            <strong>얇은 날들이 두꺼운 날처럼 한 표씩 행사</strong>하게 됩니다.
+          </p>
+
+          <h3>구현은 null 하나로</h3>
+          <p>
+            임계 판정을 화면 컴포넌트에 넣지 않고, 추세를 계산하는 순수 함수가
+            <code>number | null</code>을 돌려주게 했습니다. 임계 미달이면 계산을 시도하지 않고
+            <code>null</code>입니다.
+          </p>
+          <pre><code>export function weeklyTrendPct(points, gate = TREND_GATE) {
+  // 표본이 얇은 날은 입력에서 제외 — 날짜 수만 세면 얇은 날이 한 표를 행사한다
+  const usable = points.filter((p) => p.n &gt;= gate.minDailyN);
+  if (usable.length &lt; gate.minDays) return null; // 방향을 말하지 않는다
+  // ... 기울기 추정
+}</code></pre>
+          <p>
+            이렇게 하면 "문장을 붙일지" 판단이 한 곳에만 존재합니다. 화면은 값이 오면 문장을
+            쓰고, <code>null</code>이면 "쌓는 중 · N일째"를 씁니다. 나중에 화면이 늘어나도 각
+            화면이 제 나름의 임계를 만들 여지가 없습니다.
+          </p>
+
+          <h2>빈 자리를 지우지 않고 남겨두기</h2>
+          <p>
+            기간 탭(2주 / 1개월 / 3개월)에서 한 가지를 더 배웠습니다. 처음엔 데이터가 부족한 탭을
+            아예 숨겼습니다. 깔끔했지만, 사용자는 그 서비스가 원래 2주만 보여주는 서비스라고
+            생각하게 됩니다.
+          </p>
+          <p>
+            그래서 지우지 않고 <strong>비활성 상태로 남겨</strong> "쌓는 중 · 27일째"를 달았습니다.
+            지금 못 보는 이유와 언제 열리는지가 한 번에 보입니다. 없는 기능처럼 숨기는 것보다,
+            채워지는 중인 약속으로 보이는 편이 낫습니다.
+          </p>
+
+          <div class="box kept">
+            <p class="box-label">남긴 규칙</p>
+            <p>
+              표현은 관대하게, 주장은 인색하게. 그리고 아직 못 하는 것은 숨기지 말고 비활성으로
+              남긴다.
+            </p>
+          </div>
+
+          <h2>돌아보며</h2>
+          <p>
+            처음의 30일 임계는 게으른 정직함이었습니다. "확신이 없으면 안 보여준다"는 규칙 하나로
+            판단을 끝냈고, 그 대가로 사용자가 볼 수 있었던 사실까지 함께 지웠습니다. 정직함은
+            침묵이 아니라 <strong>말할 수 있는 것과 없는 것을 구분하는 일</strong>이라는 걸 이
+            화면에서 배웠습니다.
+          </p>
+          <p>
+            부작용도 하나 있었습니다. 하루치 관측으로 그린 그래프는 점 하나뿐이라, 차트 라이브러리가
+            선을 그리지 못해 아무것도 안 보였습니다. 결국 점 하나짜리 경우를 따로 그려 줘야 했습니다.
+            "하루치여도 그린다"는 원칙을 지키려면 코드도 그 하루를 특별히 대접해야 했습니다.
+          </p>
+
+          <nav class="post-nav">
+            <a href="../">← 목록</a>
+            <a href="theil-sen.html">
+              <span>다음</span>하루가 튀어도 흔들리지 않는 추세선
+            </a>
+          </nav>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>얕은 데이터 노트 · 2026</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다.</p>
+      </div>
+    </footer>
+  </body>
+</html>
