@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>슈뢰딩거 방정식을 "못 풀어서" 만들어진 도구 — DFT 완전 입문 · Seok Lab</title>
+    <meta
+      name="description"
+      content="원자 배치를 넣으면 에너지가 나오는 계산기, DFT. 왜 정면돌파가 불가능한 문제인지, 밀도 하나로 어떻게 우회했는지, 그리고 VASP의 입력 파일들이 이 이론의 어느 부품인지까지 — 사전 지식 없이 읽을 수 있게 정리했습니다."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 사업합니다</span>
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">이론</span><span>2026.08.23</span>
+            </div>
+            <h1>슈뢰딩거 방정식을 "못 풀어서" 만들어진 도구 — DFT 완전 입문</h1>
+            <p class="lede">
+              배터리 재료 연구를 시작하면서 DFT를 처음부터 공부하고 있습니다. 논문 공저자로 이름을
+              올려 본 적은 있어도, 이 계산이 <em>왜</em> 되는지는 설명하지 못했습니다. 이 글은 그
+              구멍을 메우면서 정리한 노트입니다 — 사전 지식 없이 읽을 수 있게 썼고, 미래의 제가
+              언제든 다시 꺼내 볼 수 있게 만들었습니다.
+            </p>
+          </div>
+
+          <h2>DFT는 무엇을 하는 도구인가</h2>
+          <p>
+            한 문장으로 줄이면 이렇습니다. <strong>DFT(밀도범함수이론)는 원자들의 종류와 위치를
+            입력하면, 그 배치가 갖는 총 에너지와 전자 상태를 양자역학 원리로부터 계산해 주는 가상
+            실험 장치</strong>입니다.
+          </p>
+
+          <figure>
+            <div class="fig-scroll"><svg viewBox="0 0 640 150" role="img" aria-label="DFT의 입력과 출력 흐름도">
+              <rect x="20" y="35" width="160" height="80" rx="10" class="svg-fill-card svg-stroke-rule" stroke-width="1.2" />
+              <text class="svg-label-sm svg-ink" x="100" y="65" text-anchor="middle" style="font-weight:700">입력</text>
+              <text class="svg-label-sm svg-muted" x="100" y="85" text-anchor="middle">원자의 종류와 위치</text>
+              <text class="svg-label-sm svg-faint" x="100" y="102" text-anchor="middle">(결정 구조)</text>
+
+              <rect x="240" y="25" width="160" height="100" rx="10" class="svg-fill-accent" opacity="0.12" />
+              <rect x="240" y="25" width="160" height="100" rx="10" fill="none" class="svg-stroke-accent" stroke-width="1.6" />
+              <text class="svg-label-sm" x="320" y="60" text-anchor="middle" style="fill: var(--accent); font-weight: 700">DFT 엔진</text>
+              <text class="svg-label-sm svg-muted" x="320" y="80" text-anchor="middle">슈뢰딩거 방정식을</text>
+              <text class="svg-label-sm svg-muted" x="320" y="97" text-anchor="middle">전자밀도로 근사해 풂</text>
+
+              <rect x="460" y="35" width="160" height="80" rx="10" class="svg-fill-card svg-stroke-rule" stroke-width="1.2" />
+              <text class="svg-label-sm svg-ink" x="540" y="65" text-anchor="middle" style="font-weight:700">출력</text>
+              <text class="svg-label-sm svg-muted" x="540" y="85" text-anchor="middle">총 에너지 · 힘</text>
+              <text class="svg-label-sm svg-muted" x="540" y="102" text-anchor="middle">전자 상태 · 자기모멘트</text>
+
+              <line x1="184" y1="75" x2="234" y2="75" class="svg-stroke-graphite" stroke-width="1.6" />
+              <path d="M234 75 l-8 -4 v8 z" class="svg-fill-graphite" />
+              <line x1="404" y1="75" x2="454" y2="75" class="svg-stroke-graphite" stroke-width="1.6" />
+              <path d="M454 75 l-8 -4 v8 z" class="svg-fill-graphite" />
+            </svg></div>
+            <figcaption>
+              "이 배치는 에너지가 얼마인가?"에 답하는 기계. 이 단순한 능력이 재료과학의 거의 모든
+              질문에 닿습니다.
+            </figcaption>
+          </figure>
+
+          <p>
+            에너지 하나로 뭘 할 수 있냐고요? 재료과학의 질문 대부분이 결국
+            <strong>에너지 비교</strong>로 환원되기 때문에, 거의 전부입니다. 어느 상(phase)이
+            안정한가 — 에너지가 낮은 쪽. 배터리 전압은 얼마인가 — 이온을 넣고 뺄 때의 에너지 차이.
+            이온이 어느 길로 움직이는가 — 경로 중간의 에너지 언덕이 낮은 쪽. 논문에 실리는 화려한
+            그림들은 전부 이 계산기 출력을 가공한 것입니다.
+          </p>
+          <p>
+            그리고 "제1원리(first-principles)"라는 수식어의 뜻: 실험값을 피팅한 파라미터 없이
+            전자의 질량·전하·플랑크 상수 같은 <strong>물리 상수만으로</strong> 계산한다는
+            의미입니다. 그래서 아직 세상에 합성된 적 없는 물질도 계산할 수 있습니다 — 신물질
+            스크리닝이 가능한 근본 이유입니다.
+          </p>
+
+          <h2>왜 정면돌파는 불가능한가</h2>
+          <p>
+            원리적으로는 DFT가 필요 없습니다. 전자들의 상태는 파동함수 Ψ로 기술되고, 슈뢰딩거
+            방정식 ĤΨ = EΨ를 풀면 에너지가 나옵니다. 1929년에 디랙이 이미 말했습니다 — 화학
+            전체의 기초 법칙은 완성됐고, 문제는 그 방정식이 <em>너무 어려워서 못 푼다</em>는 것뿐이라고.
+          </p>
+          <p>
+            얼마나 어려운가. 전자 N개의 파동함수 Ψ(r₁, r₂, …, r_N)는 <strong>변수 3N개짜리
+            함수</strong>입니다. 망간 원자 하나의 전자 25개만 해도 75차원 함수이고, 계산에 쓰는
+            셀 하나(전자 수백 개)면 수천 차원입니다. 이 함수를 격자점에 저장하려는 시도만 해도
+            필요한 메모리가 우주의 원자 수를 넘어갑니다. 이걸 <strong>차원의 저주</strong>라고
+            부릅니다. 컴퓨터가 느려서가 아니라, 원리적으로 불가능합니다.
+          </p>
+          <p>
+            한 전자씩 따로 풀 수도 없습니다. 전자들은 서로 밀어내며 <strong>상관</strong>되어
+            움직이기 때문에 — 한 전자의 위치가 다른 모든 전자의 움직임에 얽혀 있기 때문에 — 문제가
+            분리되지 않습니다. 이 얽힘이 어려움의 본질입니다.
+          </p>
+          <p>
+            참고로 여기서 조용히 쓰이는 가정이 하나 있습니다.
+            <strong>보른-오펜하이머 근사</strong> — 원자핵은 전자보다 수천 배 무거워서 거의 정지한
+            배경으로 취급한다는 것. 덕분에 "원자 위치를 입력으로 고정하고 전자 문제만 푼다"는
+            구도가 성립하고, DFT의 입력이 원자 좌표인 이유가 바로 이것입니다.
+          </p>
+
+          <h2>1964년의 우회로 — 밀도만 있으면 된다</h2>
+          <p>
+            DFT의 출발점은 Hohenberg와 Kohn이 증명한, 처음 들으면 믿기 힘든 정리입니다.
+            <strong>바닥상태의 모든 정보는 3N차원 파동함수가 아니라, 3차원 함수인 전자밀도
+            n(r)에 이미 전부 담겨 있다.</strong> 공간의 각 지점에 전자가 얼마나 있는지만 알면,
+            원리적으로 에너지를 포함한 모든 것이 결정된다는 뜻입니다. 에너지는 밀도의
+            "범함수"(함수를 넣으면 숫자가 나오는 함수) E[n]이고, 올바른 바닥상태 밀도에서 최소가
+            됩니다. Density Functional Theory라는 이름이 여기서 나왔습니다.
+          </p>
+          <p>
+            비유하면 이렇습니다. 도시 시민 개개인의 동선(파동함수)을 전부 추적하지 않아도,
+            시간대별 인구밀도 지도(전자밀도)만으로 그 도시의 상태를 완전히 결정할 수 있다는 것.
+            수천 차원 문제가 3차원 문제로 압축됩니다.
+          </p>
+          <p>
+            다만 함정이 하나 있습니다. 이 정리는 "그런 범함수가 <em>존재한다</em>"까지만
+            보장합니다. 정확한 형태는 아무도 모릅니다. 정확한 E[n]을 아는 순간 화학이라는 학문이
+            끝나는 셈인데, 현실에서는 근사해야 합니다. 이 근사가 어디까지 왔는지가 뒤에 나올
+            "사다리" 이야기입니다.
+          </p>
+
+          <h2>1965년의 실용화 — 가짜 전자로 바꿔치기</h2>
+          <p>
+            존재 증명만으로는 계산을 못 합니다. 이듬해 Kohn과 Sham이 내놓은 트릭이 오늘날 모든
+            DFT 코드의 뼈대입니다. <strong>서로 밀어내며 얽혀 있는 진짜 전자들 대신, 동일한
+            전자밀도를 만들어내는 "서로 상호작용하지 않는 가상의 전자들"을 도입한다.</strong>
+            가상 전자 각각은 유효 퍼텐셜 속에서 1전자 방정식만 풀면 되고, 이건 3차원 방정식
+            N개라서 컴퓨터로 풀 수 있습니다.
+          </p>
+
+          <figure>
+            <div class="fig-scroll"><svg viewBox="0 0 640 185" role="img" aria-label="다전자 문제가 HK 정리와 KS 방법으로 풀 수 있는 문제로 압축되는 과정">
+              <rect x="16" y="30" width="185" height="95" rx="10" class="svg-fill-card svg-stroke-rule" stroke-width="1.2" />
+              <text class="svg-label-sm svg-ink" x="108" y="58" text-anchor="middle" style="font-weight:700">다전자 파동함수</text>
+              <text class="svg-label-sm svg-muted" x="108" y="78" text-anchor="middle">Ψ(r₁,…,r_N)</text>
+              <text class="svg-label-sm svg-muted" x="108" y="96" text-anchor="middle">= 3N차원 함수</text>
+              <text class="svg-label-sm" x="108" y="148" text-anchor="middle" style="fill: var(--warm); font-weight: 700">✕ 직접 풀기 불가능</text>
+
+              <rect x="228" y="30" width="185" height="95" rx="10" class="svg-fill-card svg-stroke-rule" stroke-width="1.2" />
+              <text class="svg-label-sm svg-ink" x="320" y="58" text-anchor="middle" style="font-weight:700">Hohenberg–Kohn</text>
+              <text class="svg-label-sm svg-muted" x="320" y="78" text-anchor="middle">밀도 n(r)만으로 충분</text>
+              <text class="svg-label-sm svg-muted" x="320" y="96" text-anchor="middle">= 3차원 함수</text>
+              <text class="svg-label-sm svg-faint" x="320" y="148" text-anchor="middle">존재 증명 (형태는 모름)</text>
+
+              <rect x="440" y="30" width="185" height="95" rx="10" class="svg-fill-accent" opacity="0.12" />
+              <rect x="440" y="30" width="185" height="95" rx="10" fill="none" class="svg-stroke-accent" stroke-width="1.6" />
+              <text class="svg-label-sm" x="532" y="58" text-anchor="middle" style="fill: var(--accent); font-weight:700">Kohn–Sham</text>
+              <text class="svg-label-sm svg-muted" x="532" y="78" text-anchor="middle">독립 전자 방정식 N개</text>
+              <text class="svg-label-sm svg-muted" x="532" y="96" text-anchor="middle">(각각 3차원)</text>
+              <text class="svg-label-sm" x="532" y="148" text-anchor="middle" style="fill: var(--accent); font-weight: 700">✓ 컴퓨터로 풀 수 있음</text>
+
+              <line x1="205" y1="77" x2="222" y2="77" class="svg-stroke-graphite" stroke-width="1.6" />
+              <path d="M224 77 l-7 -4 v8 z" class="svg-fill-graphite" />
+              <line x1="417" y1="77" x2="434" y2="77" class="svg-stroke-graphite" stroke-width="1.6" />
+              <path d="M436 77 l-7 -4 v8 z" class="svg-fill-graphite" />
+            </svg></div>
+            <figcaption>
+              "못 푸는 문제"를 "풀 수 있는 문제"로 바꾸는 두 번의 압축. DFT의 역사는 이 두 논문
+              (1964, 1965)으로 시작합니다. Kohn은 이 공로로 1998년 노벨 화학상을 받았습니다.
+            </figcaption>
+          </figure>
+
+          <p>
+            물론 공짜는 아닙니다. 진짜 시스템과 가짜 시스템의 차이 — 전자끼리의
+            교환(exchange)과 상관(correlation) 효과 — 는 전부 <strong>교환-상관 에너지
+            E<sub>xc</sub>[n]</strong>라는 한 항에 몰아넣습니다. "모르는 것을 전부 한 바구니에
+            담아 격리"하는 전략입니다. 그리고 이 바구니를 얼마나 잘 근사하느냐가 DFT의 정확도
+            등급을 결정합니다.
+          </p>
+          <p>
+            덧붙여 알아두면 좋은 것: 계산 결과에서 보는 "밴드"나 "오비탈"은 전부 이 Kohn–Sham
+            가상 전자의 상태입니다. 물리적 실체라기보다 계산 장치지만, 실제 전자구조를 놀랄 만큼
+            잘 근사하기 때문에 해석 도구로 널리 씁니다. "도구로서 신뢰, 존재로서 회의"가 올바른
+            태도라고 배웠습니다.
+          </p>
+
+          <h2>근사의 사다리 — PBE, SCAN이 여기서 등장한다</h2>
+          <p>
+            E<sub>xc</sub>를 근사하는 수준을 Perdew는 "야곱의 사다리"에 비유했습니다. 위 칸으로
+            갈수록 더 많은 정보를 사용해 정확해지고, 그만큼 비싸집니다. 논문에서 마주치는 PBE니
+            r2SCAN이니 하는 이름들은 전부 "사다리의 몇 번째 칸을 썼는가"라는 이야기입니다.
+          </p>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>사다리 칸</th><th>사용하는 정보</th><th>대표 범함수</th><th>특징</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1단 LDA</td><td>그 지점의 밀도 값만</td><td>LDA</td><td>균일 전자기체 가정. 고체에서 과결합 경향</td></tr>
+                <tr><td>2단 GGA</td><td>+ 밀도의 기울기</td><td><strong>PBE</strong></td><td>고체 계산의 30년 표준. 싸고 무난하나 전이금속 d 전자에 약함</td></tr>
+                <tr><td>3단 meta-GGA</td><td>+ 운동에너지 밀도</td><td>SCAN, <strong>r2SCAN</strong></td><td>정확도 크게 개선. r2SCAN은 수치 안정성까지 확보해 대량 계산의 새 표준</td></tr>
+                <tr><td>4단 하이브리드</td><td>+ 정확한 교환 일부 혼합</td><td>HSE06</td><td>가장 정확하지만 수십 배 비쌈 — 검증용으로만</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            대량 스크리닝 연구에서 2~3단이 선택되는 이유가 바로 이 정확도-비용 트레이드오프입니다.
+            그리고 배터리 양극재처럼 전이금속이 들어간 산화물에서는 2단(PBE)의 알려진 결함 —
+            전자가 자기 자신과 상호작용하는 오차 때문에 d 전자가 과도하게 퍼지는 문제 — 을
+            보정하려고 <strong>Hubbard U</strong>라는 페널티 항을 얹은 GGA+U를 쓰거나, 아예
+            3단(r2SCAN)으로 올라갑니다. 이 보정 없이는 배터리 전압이 실험보다 0.5~1V씩 낮게
+            나옵니다. 처음엔 "DFT가 틀렸다"고 생각하기 쉬운데, 정확한 표현은 "E<sub>xc</sub>
+            근사가 불완전하다"입니다.
+          </p>
+
+          <h2>계산기의 부품들 — 입력 파일과 이론의 대응</h2>
+          <p>
+            여기까지가 이론이라면, 실제 계산 코드(저는 VASP를 씁니다)의 입력 파일들은 이 이론의
+            실무적 구현입니다. 이 대응만 잡히면 입력 파일이 외계어에서 설정 메뉴로 바뀝니다.
+          </p>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>개념</th><th>VASP에서</th><th>직관적 의미</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>주기 경계조건·슈퍼셀</td><td>POSCAR</td><td>결정은 무한하므로 작은 상자를 무한 반복해 표현. 어떤 원소를 어디에 둘지가 이 파일</td></tr>
+                <tr><td>평면파 기저</td><td>ENCUT</td><td>파동함수를 사인파들의 합으로 전개할 때 몇 개까지 쓸지 = <strong>이미지의 해상도</strong>. 높일수록 정확하고 비쌈</td></tr>
+                <tr><td>브릴루앙 존 샘플링</td><td>KPOINTS</td><td>무한 결정의 전자 상태 적분을 유한 개 격자점으로 근사. 실공간 축이 길수록 그 방향 k점은 적게 필요(반비례)</td></tr>
+                <tr><td>유사퍼텐셜(PAW)</td><td>POTCAR</td><td>화학에 관여하지 않는 심층 전자는 얼려 두고 원자가 전자만 계산 — 계산량 대폭 절감</td></tr>
+                <tr><td>스핀 분극</td><td>ISPIN, MAGMOM</td><td>스핀 업/다운 밀도를 따로 취급. 자성 있는 전이금속 산화물에서는 필수이며, 초기 추측이 결과를 좌우</td></tr>
+                <tr><td>교환-상관 선택</td><td>GGA / METAGGA / LDAU 태그</td><td>위 사다리에서 어느 칸을 쓸지 + U 보정 여부</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>계산이 실제로 도는 방식 — 닭과 달걀의 반복</h2>
+          <p>
+            Kohn–Sham 방정식에는 구조적인 문제가 하나 있습니다. 전자가 느끼는 퍼텐셜은
+            전자밀도에 의존하는데, 전자밀도는 그 퍼텐셜을 풀어야 나옵니다. 닭과 달걀입니다.
+            해법은 반복입니다 — <strong>밀도를 추측하고 → 방정식을 풀고 → 새 밀도를 얻고 →
+            다시 풀기를, 답이 더 이상 변하지 않을 때까지</strong>(자기일관될 때까지) 돌립니다.
+            이것이 SCF(self-consistent field) 루프이고, 로그 파일에서 한 줄씩 올라가는 반복
+            기록이 바로 이것입니다.
+          </p>
+
+          <figure>
+            <div class="fig-scroll"><svg viewBox="0 0 640 300" role="img" aria-label="SCF 루프와 이온 이완 루프의 이중 구조">
+              <rect x="230" y="14" width="180" height="38" rx="8" class="svg-fill-card svg-stroke-rule" stroke-width="1.2" />
+              <text class="svg-label-sm svg-ink" x="320" y="38" text-anchor="middle">초기 구조 + 밀도 추측</text>
+
+              <rect x="230" y="72" width="180" height="38" rx="8" class="svg-fill-accent" opacity="0.12" />
+              <rect x="230" y="72" width="180" height="38" rx="8" fill="none" class="svg-stroke-accent" stroke-width="1.4" />
+              <text class="svg-label-sm" x="320" y="96" text-anchor="middle" style="fill: var(--accent); font-weight:700">KS 방정식 풀기 → 새 밀도</text>
+
+              <rect x="230" y="130" width="180" height="38" rx="8" class="svg-fill-card svg-stroke-rule" stroke-width="1.2" />
+              <text class="svg-label-sm svg-ink" x="320" y="149" text-anchor="middle">밀도 수렴? (EDIFF)</text>
+              <text class="svg-label-sm svg-faint" x="320" y="162" text-anchor="middle">아니오 → 다시 풀기</text>
+
+              <rect x="230" y="188" width="180" height="38" rx="8" class="svg-fill-card svg-stroke-rule" stroke-width="1.2" />
+              <text class="svg-label-sm svg-ink" x="320" y="207" text-anchor="middle">힘 계산 → 힘 ≈ 0? (EDIFFG)</text>
+              <text class="svg-label-sm svg-faint" x="320" y="220" text-anchor="middle">아니오 → 원자 이동 후 SCF 재시작</text>
+
+              <rect x="230" y="246" width="180" height="38" rx="8" fill="none" class="svg-stroke-accent" stroke-width="1.6" />
+              <text class="svg-label-sm" x="320" y="270" text-anchor="middle" style="fill: var(--accent); font-weight:700">완료: 최종 구조·에너지</text>
+
+              <line x1="320" y1="52" x2="320" y2="68" class="svg-stroke-graphite" stroke-width="1.4" /><path d="M320 71 l-4 -7 h8 z" class="svg-fill-graphite" />
+              <line x1="320" y1="110" x2="320" y2="126" class="svg-stroke-graphite" stroke-width="1.4" /><path d="M320 129 l-4 -7 h8 z" class="svg-fill-graphite" />
+              <line x1="320" y1="168" x2="320" y2="184" class="svg-stroke-graphite" stroke-width="1.4" /><path d="M320 187 l-4 -7 h8 z" class="svg-fill-graphite" />
+              <line x1="320" y1="226" x2="320" y2="242" class="svg-stroke-graphite" stroke-width="1.4" /><path d="M320 245 l-4 -7 h8 z" class="svg-fill-graphite" />
+
+              <path d="M414 149 H 470 V 91 H 414" fill="none" class="svg-stroke-rule" stroke-width="1.4" />
+              <path d="M416 91 l7 -4 v8 z" class="svg-fill-graphite" />
+              <text class="svg-label-sm svg-muted" x="480" y="124">안쪽: SCF 루프</text>
+
+              <path d="M226 207 H 160 V 91 H 226" fill="none" class="svg-stroke-rule" stroke-width="1.4" />
+              <path d="M224 91 l-7 -4 v8 z" class="svg-fill-graphite" />
+              <text class="svg-label-sm svg-muted" x="24" y="120">바깥: 이온 이완</text>
+              <text class="svg-label-sm svg-faint" x="24" y="136">(원자 옮기고 반복)</text>
+            </svg></div>
+            <figcaption>
+              계산 1건 = 안쪽 SCF 루프(전자) + 바깥 이완 루프(원자). 실무에서 만나는 에러의
+              대부분 — 수렴 실패, 자성 붕괴, 구조 폭주 — 는 이 두 루프 어딘가의 고장입니다.
+            </figcaption>
+          </figure>
+
+          <p>
+            SCF가 수렴하면 각 원자에 걸리는 힘이 나옵니다. 힘의 방향으로 원자를 조금 옮기고 다시
+            SCF — 힘이 거의 0이 될 때까지 반복하면 그 배치의 "가장 편안한 구조"와 최종 에너지를
+            얻습니다. 여기서 중요한 교훈 하나: <strong>수렴이 안 된 계산도 숫자는 뱉습니다.</strong>
+            "숫자가 나왔다"와 "믿을 수 있다"는 완전히 별개이고, 그래서 모든 결과에는 수렴 확인이
+            따라붙어야 합니다.
+          </p>
+
+          <h2>출력을 배터리의 언어로 번역하기</h2>
+          <p>
+            마지막 퍼즐입니다. 계산기가 뱉는 숫자들이 어떻게 배터리 논문의 그림이 되는가.
+          </p>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>DFT 출력</th><th>번역되는 배터리 물성</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>총 에너지 E</td><td>상안정성(어느 구조가 이기는가), 전압(이온을 넣고 뺄 때의 에너지 차 ÷ 전하 — 사실상 뺄셈)</td></tr>
+                <tr><td>원자별 자기모멘트</td><td><strong>산화수 판정.</strong> DFT에는 "산화수"라는 출력이 없어서, Mn³⁺≈4μB, Mn⁴⁺≈3μB 같은 스핀 크기로 읽습니다</td></tr>
+                <tr><td>상태밀도(DOS)</td><td>페르미 준위 근처에 어떤 오비탈이 있는가 = 충방전 때 어떤 전자가 먼저 반응하는가</td></tr>
+                <tr><td>힘·격자상수</td><td>충방전 중 부피·격자 변화 (재료가 부풀고 뒤틀리는 정도)</td></tr>
+                <tr><td>경로 에너지 곡선(NEB)</td><td>이온 이동 장벽 = 얼마나 빨리 충전되는가</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>DFT가 못 하는 것</h2>
+          <p>
+            정리하면서 한계도 같이 적어 둡니다. 셋 다 "그래서 어떻게 우회하는가"가 각각 하나의
+            연구 분야가 된 항목들입니다.
+          </p>
+          <ul>
+            <li>
+              <strong>근사 범함수의 오차</strong> — 특히 전이금속 d 전자의 자기상호작용 오차.
+              +U와 meta-GGA가 그 땜질입니다.
+            </li>
+            <li>
+              <strong>0 K 계산</strong> — DFT에는 온도가 없습니다. 유한온도 효과(배열 엔트로피
+              등)는 DFT 바깥에서 통계역학으로 따로 처리합니다. "전자는 DFT가, 통계는 몬테카를로가"
+              — 이 역할 분담이 제 연구 주제의 뼈대이기도 합니다.
+            </li>
+            <li>
+              <strong>크기 한계</strong> — 현실적으로 수백 원자가 상한입니다. 계산 비용이 대략
+              원자 수의 세제곱으로 늘기 때문인데, 이 벽을 넘으려는 것이 요즘의 기계학습
+              퍼텐셜(MLIP) 붐입니다.
+            </li>
+          </ul>
+
+          <div class="box">
+            <p style="margin: 0">
+              <strong>전체 요약.</strong> 슈뢰딩거 방정식은 원리적으로 옳지만 3N차원이라 못
+              푼다(차원의 저주). Hohenberg–Kohn이 "3차원 밀도만으로 충분하다"는 존재를 증명했고,
+              Kohn–Sham이 "가짜 독립 전자"로 바꿔치기해 풀 수 있게 만들었다. 모르는 것은 전부
+              E<sub>xc</sub> 한 바구니에 담았고, 그 바구니의 근사 수준(사다리)이 정확도를
+              결정한다. 계산은 SCF 루프(전자)와 이완 루프(원자)의 이중 반복으로 돌고, 출력된
+              에너지·모멘트·DOS를 전압·산화수·반응성으로 번역하는 것이 배터리 계산과학이다.
+            </p>
+          </div>
+
+          <p>
+            여기까지가 이론입니다. 이 글의 개념들이 실제 계산에서 어떻게 등장하는지 — ENCUT과
+            MAGMOM을 직접 정하고, SCF 루프가 로그에 찍히는 걸 지켜보고, 자기모멘트로 산화수를
+            읽어낸 기록 — 은 실습편에 이어집니다.
+          </p>
+
+          <nav class="post-nav">
+            <a href="first-dft-run.html"><span>다음</span>맥북에서 인생 첫 DFT 계산까지 — 89.5초의 기록</a>
+          </nav>
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하듯 사업합니다. 배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는
+                중입니다. → <a href="../?cat=dft">연구 · DFT 글 더 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하듯 사업합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="../">전체보기 <span class="n">9</span></a></li>
+              <li><a href="../?cat=evalue">사업 · EValue <span class="n">6</span></a></li>
+              <li><a href="../?cat=battery">연구 · 배터리 <span class="n">1</span></a></li>
+              <li><a class="on" href="../?cat=dft">연구 · DFT <span class="n">2</span></a></li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 사업합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

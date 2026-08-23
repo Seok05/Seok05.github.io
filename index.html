@@ -42,6 +42,32 @@
           <p class="list-desc" id="list-desc" hidden></p>
 
           <ul class="post-list" id="posts">
+            <li data-cat="dft">
+              <a href="posts/first-dft-run.html">
+                <h2>맥북에서 인생 첫 DFT 계산까지 — 89.5초의 기록</h2>
+                <p>
+                  SSH 접속, 스케줄러 파악, POTCAR 라이브러리 정리, 입력 파일 4종, 그리고 로그
+                  읽는 법까지. 계산재료과학의 '헬로 월드'를 처음부터 끝까지 직접 해 본 하루.
+                  마지막 줄의 mag=12.0이 이 글의 하이라이트입니다.
+                </p>
+                <div class="meta-row">
+                  <span class="tag">연구 · DFT</span><span>2026.08.23</span>
+                </div>
+              </a>
+            </li>
+            <li data-cat="dft">
+              <a href="posts/dft-explained.html">
+                <h2>슈뢰딩거 방정식을 "못 풀어서" 만들어진 도구 — DFT 완전 입문</h2>
+                <p>
+                  원자 배치를 넣으면 에너지가 나오는 계산기. 왜 정면돌파가 불가능한 문제였는지,
+                  밀도 하나로 어떻게 우회했는지, 입력 파일들이 이론의 어느 부품인지까지 — 사전
+                  지식 없이 읽히게 정리한 노트.
+                </p>
+                <div class="meta-row">
+                  <span class="tag">연구 · DFT</span><span>2026.08.23</span>
+                </div>
+              </a>
+            </li>
             <li data-cat="battery">
               <a href="posts/battery-soh-range.html">
                 <h2>배터리 건강, 왜 숫자 하나로 말하면 안 될까</h2>
@@ -147,9 +173,10 @@
           <nav class="cat-box" aria-label="카테고리">
             <p class="cat-title">카테고리</p>
             <ul>
-              <li><a href="./" data-cat="all">전체보기 <span class="n">7</span></a></li>
+              <li><a href="./" data-cat="all">전체보기 <span class="n">9</span></a></li>
               <li><a href="./?cat=evalue" data-cat="evalue">사업 · EValue <span class="n">6</span></a></li>
               <li><a href="./?cat=battery" data-cat="battery">연구 · 배터리 <span class="n">1</span></a></li>
+              <li><a href="./?cat=dft" data-cat="dft">연구 · DFT <span class="n">2</span></a></li>
             </ul>
           </nav>
         </aside>
@@ -176,6 +203,11 @@
           battery: {
             name: "연구 · 배터리",
             desc: "전기차의 심장인 배터리를 실험실과 데이터 양쪽에서 들여다본 기록.",
+          },
+          dft: {
+            name: "연구 · DFT",
+            desc:
+              "배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는 기록 — 이론과 실습을 나란히.",
           },
         };
         var cat = new URLSearchParams(location.search).get("cat") || "all";
