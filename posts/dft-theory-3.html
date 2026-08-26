@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DFT 이론 [3] — GGA는 왜 전압을 1 V씩 틀리는가: +U 보정의 논리 · Seok Lab</title>
+    <meta
+      name="description"
+      content="표준 DFT(GGA)로 배터리 양극재를 계산하면 전압이 실험보다 0.5~1 V 낮게 나옵니다. 왜 하필 그 방향으로, 왜 하필 전이금속 산화물에서 틀리는지, 그리고 U라는 페널티 하나로 어떻게 고치는지. Wang–Maxisch–Ceder (PRB 2006)를 공부하며 정리한 이론 노트."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 사업합니다</span>
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">이론</span><span>2026.08.25</span>
+            </div>
+            <h1>DFT 이론 [3] — GGA는 왜 전압을 1 V씩 틀리는가: +U 보정의 논리</h1>
+            <p class="lede">
+              표준 DFT(GGA)로 배터리 양극재의 전압을 계산하면 실험보다 0.5~1 V씩 낮게
+              나옵니다. 무작위 오차가 아니라 항상 <em>같은 방향</em>으로요. 이 글은 그 오차의
+              정체와 처방을 다룬 고전 논문을 공부하며 정리한 이론 노트입니다. 다음 실습에서 제
+              INCAR에 들어갈 숫자 하나(U = 3.9 eV)의 출처이기도 합니다.
+            </p>
+          </div>
+
+          <div class="box">
+            <p style="margin: 0">
+              <strong>공부한 논문.</strong> L. Wang, T. Maxisch &amp; G. Ceder, "Oxidation
+              energies of transition metal oxides within the GGA+U framework", <em>Phys. Rev.
+              B</em> <strong>73</strong>, 195107 (2006).
+              <a href="https://doi.org/10.1103/PhysRevB.73.195107">doi:10.1103/PhysRevB.73.195107</a>.
+              배터리 계산에서 쓰는 U 값의 표준 출처이며, Materials Project의 U 세팅도 이
+              계보를 따릅니다. 논문 자체의 리뷰는 별도 글로 다루고, 여기서는 이론의 뼈대만
+              정리합니다.
+            </p>
+          </div>
+
+          <h2>문제 설정, 산화 반응은 DFT에게 왜 가혹한 시험인가</h2>
+          <p>
+            배터리의 충방전은 화학적으로 산화·환원 반응입니다. 예컨대 망간 산화물이 산소를
+            얻어 더 높은 산화 상태로 가는 반응(MnO → Mn₂O₃ → MnO₂ 계열)의 에너지를 정확히
+            계산할 수 있어야, Na나 Li을 넣고 뺄 때의 전압도 정확히 나옵니다. 그런데 이런
+            반응에는 DFT가 가장 힘들어하는 사건이 들어 있습니다:
+            <strong>전자가 성격이 전혀 다른 두 오비탈 사이를 이동한다</strong>는 것.
+            금속의 좁고 국재화된 d 오비탈과, 산소의 상대적으로 퍼진 2p 오비탈 사이를요.
+          </p>
+
+          <h2>범인 1 · 자기상호작용 오차(SIE)는 국재화를 차별한다</h2>
+          <p>
+            <a href="dft-explained.html">이론 [1]</a>에서 다뤘듯, DFT의 근사 범함수에는
+            전자가 자기 자신과 상호작용하는 가짜 반발(self-interaction error)이 남아
+            있습니다. 핵심은 이 오차가 <em>공평하지 않다</em>는 겁니다. 퍼져 있는 전자에게는
+            작고, <strong>좁은 방에 갇힌 전자(전이금속 d)에게는 큽니다.</strong> 결과적으로
+            GGA는 전자가 국재화된 상태에 부당한 벌점을 매기고, 전자를 실제보다 퍼뜨리는
+            쪽으로 세상을 왜곡합니다.
+          </p>
+          <p>
+            산화 반응에 대입하면 오차의 <em>방향</em>이 설명됩니다. 산화가 진행될수록 금속의
+            d 전자 수가 줄고 남은 전자들은 더 국재화되는데, GGA는 이 상태를 실제보다
+            불리하게 평가합니다. 즉 산화로 얻는 에너지 이득(산화 엔탈피의 크기)이
+            <strong>계통적으로 과소평가</strong>되고, 전압은 에너지 차이 그 자체이므로 항상
+            낮은 쪽으로 틀립니다. 무작위가 아니라 한 방향인 이유가 이것입니다.
+          </p>
+
+          <h2>범인 2 · O₂ 분자라는 별개의 오차</h2>
+          <p>
+            이 논문의 중요한 정리 하나는 <strong>오차가 사실 두 종류이고, 서로 분리해서
+            고쳐야 한다</strong>는 것입니다. 산화 반응식의 반대편에는 기체 O₂가 있는데, GGA는
+            O₂ 분자의 결합 에너지 자체를 상당히 틀리게(과결합) 계산합니다. 이건 d 전자와는
+            무관한, 분자 쪽의 별도 오차입니다. 저자들은 이를 O₂ 에너지에 일정한 보정값(O₂당
+            약 1.36 eV)을 더하는 것으로 분리 처리했습니다. 이 분리가 왜 중요하냐면, 만약 두
+            오차를 뭉뚱그려 U 하나로 때우면, U가 "d 전자 보정"이라는 물리적 의미를 잃고
+            그냥 만능 피팅 손잡이가 되어버리기 때문입니다. 오차마다 제 이름의 처방을 주는
+            것, 이게 이 논문의 방법론적 품격입니다.
+          </p>
+
+          <h2>처방, U라는 페널티의 작동 원리</h2>
+          <p>
+            DFT+U는 d 오비탈에만 추가 규칙을 하나 얹습니다. 직관적으로 말하면:
+            <strong>"d 오비탈은 어중간하게 차 있지 마라. 확실히 차 있거나(1) 확실히
+            비어 있어라(0)."</strong> 수식으로는 점유수가 0이나 1에서 벗어난 정도에 비례해
+            에너지 벌점을 주는 항을 추가하는 것이고, 그 벌점의 세기가 U(정확히는 U_eff =
+            U − J, VASP의 Dudarev 방식)입니다. 이 벌점이 SIE가 만든 "부당한 비편재화
+            선호"를 상쇄해, 전자를 제자리(국재화된 정수 점유)로 돌려놓습니다. Mn³⁺과
+            Mn⁴⁺의 구분이 선명해지고, <a href="dft-theory-2.html">이론 [2]</a>에서 쓴
+            "자기모멘트 = 산화수" 판독도 더 깨끗해집니다.
+          </p>
+
+          <h2>그러면 U는 어떻게 정하나, 제1원리의 우아한 타협</h2>
+          <p>
+            여기가 제일 궁금했던 부분입니다. U는 물리 상수가 아니어서 이론만으로 정해지지
+            않습니다. 이 논문의 선택: <strong>실험적으로 잘 측정된 이원계 산화물들의 산화
+            엔탈피(예: MnO가 MnO₂ 계열로 산화될 때의 반응열)를 재현하도록 금속별로 U를
+            피팅한다.</strong> 순서가 중요합니다. 먼저 O₂ 보정으로 분자 쪽 오차를 제거한
+            뒤, 남은 오차를 U가 흡수하게 합니다. 이렇게 얻어진 값이 망간의 경우
+            <strong>U ≈ 3.9 eV</strong>이고, 이 숫자가 곧 제 다음 실습의 INCAR(LDAUU
+            태그)에 들어갑니다. "남들이 쓰길래 3.9"가 아니라, 이 피팅 절차가 출처입니다.
+          </p>
+          <p>
+            "실험값에 피팅하면 제1원리가 아니지 않나?"라는 반문이 당연히 듭니다. 저자들의
+            입장은 실용적 타협입니다. 이원계 산화물 몇 개의 반응열이라는 <em>최소한의</em>
+            실험 정보로 U를 고정하고, 그 U로 아직 측정된 적 없는 수많은 화합물(삼원계
+            양극재, 새 조성)을 예측한다. 넣는 정보는 적고 나오는 예측은 많으니 남는
+            장사라는 거죠. 고엔트로피 조성처럼 실험 데이터가 없는 물질을 스크리닝하려는 제
+            연구에서, 이 타협의 구조는 그대로 전제 조건이 됩니다.
+          </p>
+
+          <h2>U가 고치는 것, 고치지 못하는 것</h2>
+          <ul>
+            <li>
+              <strong>좋아지는 것:</strong> 산화 에너지가 실험과 정량적으로 맞기 시작하고,
+              따라서 전압 예측이 살아납니다. 잘못된 금속성 바닥상태(실제로는 절연체인데
+              GGA가 금속으로 예측하는 병)도 상당 부분 교정됩니다.
+            </li>
+            <li>
+              <strong>남는 문제 1 · U는 하나인데 상태는 여럿:</strong> 최적 U는 원소만이
+              아니라 산화 상태·배위 환경에 따라 달라지는데, 계산 하나에는 U를 하나만 걸 수
+              있습니다. Mn³⁺와 Mn⁴⁺를 오가는 충방전 계산에는 계통 오차가 남습니다.
+            </li>
+            <li>
+              <strong>남는 문제 2 · 에너지끼리 호환이 안 됨:</strong> GGA로 계산한 에너지와
+              GGA+U로 계산한 에너지는 기준이 달라 직접 비교할 수 없습니다. 서로 다른 수준의
+              계산을 섞어 상평형(convex hull)을 그리려면 별도의 호환 보정 스킴이
+              필요합니다. Materials Project가 하는 일이 그것입니다.
+            </li>
+            <li>
+              <strong>남는 문제 3 · 금속에는 걸면 안 됨:</strong> U는 국재화 전자를 위한
+              약입니다. 전자가 원래 퍼져 있는 금속상(예: 금속 Na)에 걸면 오히려 물리를
+              망칩니다. 그래서 전압 계산에서 산화물 쪽만 +U, 금속 전극 쪽은 GGA라는
+              비대칭이 생기고, 이것이 문제 2와 얽힙니다.
+            </li>
+          </ul>
+
+          <div class="box">
+            <p style="margin: 0">
+              <strong>요약.</strong> GGA의 전압 오차는 무작위 잡음이 아니라, 국재화된 d
+              전자를 차별하는 자기상호작용 오차(+O₂ 분자의 별도 오차)가 만드는 계통
+              편향이다. 처방은 두 갈래다. O₂에는 상수 보정, d 전자에는 "정수 점유를
+              선호하라"는 벌점 U. U는 이원계 산화물의 실험 산화 엔탈피에 피팅되며 Mn은 약
+              3.9 eV. 이로써 전압 예측이 살아나지만, U의 비전이성·에너지 호환성·금속
+              부적용이라는 세 가지 청구서가 남는다. 이 청구서들을 피해 가는 설계가 곧 계산
+              연구의 방법론이다.
+            </p>
+          </div>
+
+          <p>
+            다음 실습은 이 이론의 검증이 됩니다. 같은 NaMnO₂에 U=3.9를 걸었을 때와 안
+            걸었을 때, 그리고 사다리 3단(r2SCAN)으로 올라갔을 때 전압·자기모멘트가 어떻게
+            달라지는지 직접 비교하는 것. 이 글이 그 실험의 가설 노트인 셈입니다.
+          </p>
+
+          <nav class="post-nav">
+            <a href="dft-practice-2.html"><span>이전</span>DFT 실습 [2] — 폴더 여덟 개로 그린 인생 첫 수렴 곡선</a>
+            <a href="dft-practice-3.html"><span>다음</span>DFT 실습 [3] — k점 네 개가 물리를 부순 날</a>
+          </nav>
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하듯 사업합니다. 배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는
+                중입니다. → <a href="../?cat=dft">연구 · DFT 글 더 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하듯 사업합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="../">전체보기 <span class="n">14</span></a></li>
+              <li><a href="../?cat=evalue">사업 · EValue <span class="n">6</span></a></li>
+              <li><a href="../?cat=battery">연구 · 배터리 <span class="n">1</span></a></li>
+              <li><a class="on" href="../?cat=dft">연구 · DFT <span class="n">6</span></a></li>
+              <li><a href="../?cat=paper">연구 · Paper <span class="n">1</span></a></li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 사업합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+    <script src="../assets/posts.js"></script>
+    <script src="../assets/site.js"></script>
+  </body>
+</html>

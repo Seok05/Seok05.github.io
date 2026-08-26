@@ -1,0 +1,94 @@
+<!doctype html>
+<!-- ─────────────────────────────────────────────────────────────
+     새 글 템플릿. 사용법:
+       1. 이 파일을 posts/<slug>.html 로 복사
+       2. 아래 ((...)) 자리를 채운다
+       3. assets/posts.js 맨 위에 항목 하나 추가 (그게 끝)
+     사이드바 카테고리와 하단 이전/다음 내비게이션은 posts.js
+     데이터로 site.js가 자동으로 채우니 여기서 신경 쓸 것 없다.
+     글 본문 스타일 규칙:
+       - 도해는 인라인 SVG, 색은 CSS 변수만 (--accent 판단 / --graphite 관측 / --warm 경고)
+       - 서버 주소·계정·포트는 <서버주소> 식으로 마스킹
+       - 본문에서 줄표(—) 부연설명 패턴은 쓰지 않는다 (제목은 예외)
+     ───────────────────────────────────────────────────────────── -->
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>((글 제목)) · Seok Lab</title>
+    <meta name="description" content="((한두 문장 요약))" />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 사업합니다</span>
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <a class="chip-cat" href="../?cat=((카테고리 key))">((카테고리 이름))</a><span class="tag">((태그))</span><span>((YYYY.MM.DD))</span>
+            </div>
+            <h1>((글 제목))</h1>
+            <p class="lede">((리드 문단))</p>
+          </div>
+
+          ((본문))
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하듯 사업합니다. 배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는
+                중입니다. → <a href="../?cat=((카테고리 key))">글 더 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하듯 사업합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="../">전체보기</a></li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 사업합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+
+    <script src="../assets/posts.js"></script>
+    <script src="../assets/site.js"></script>
+  </body>
+</html>
