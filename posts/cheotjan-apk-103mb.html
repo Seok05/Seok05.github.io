@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>첫잔 [4] — APK가 103MB였다 · Seok Lab</title>
+    <meta
+      name="description"
+      content="갤럭시에 보낼 APK가 103MB였습니다. 첫 조치는 헛발질이었고, 진짜 원인은 아키텍처 네 개였습니다. 52MB를 해부한 뒤 병 그림을 줄이고 R8을 켰습니다."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row">
+              <a class="chip-cat" href="../?cat=cheotjan">바이브코딩 · 첫잔</a><span class="tag">빌드</span><span>2026.09.02</span>
+            </div>
+            <h1>첫잔 [4] — APK가 103MB였다</h1>
+            <p class="lede">
+              갤럭시에 보낼 첫 APK를 뽑았더니 103MB였습니다. 위스키 기록 앱이 게임만 한 크기라는 건
+              말이 안 됩니다. 오후 내내 이걸 줄였고, 첫 조치는 헛발질이었습니다.
+            </p>
+          </div>
+
+          <h2>131MB짜리 헛발질</h2>
+          <p>
+            프로젝트 폴더를 뒤지니 병 그림 원본 PNG가 97개, 131MB나 들어 있었습니다. 코드는 WebP 76개만
+            참조하는데 PNG 원본이 옆에 그대로 있었던 겁니다. 지웠습니다. assets 폴더는 146MB에서 14MB가
+            됐고, WebP 없이 PNG만 있는 파일은 0개라 잃은 것도 없었습니다.
+          </p>
+          <p>
+            그리고 다시 빌드해 보니 105MB. 거의 그대로였습니다. 번들러는 코드가 참조하는 파일만 앱에
+            넣습니다. 폴더에 굴러다니던 PNG는 애초에 APK 안에 없었던 겁니다. 폴더가 가벼워진 건
+            좋았지만, 문제를 푼 건 아니었습니다.
+          </p>
+
+          <h2>진짜 원인은 네 개의 CPU</h2>
+          <p>
+            APK를 열어 보고 알았습니다. universal APK라 네 가지 아키텍처의 네이티브 라이브러리가 전부
+            들어 있었습니다. arm64가 18.7MB, armeabi-v7a가 12.9MB, x86이 19.8MB, x86_64가 20.1MB.
+            x86 계열은 에뮬레이터용이고 armeabi-v7a는 2017년 이전 32비트 폰용입니다. 지금 갤럭시에
+            보낼 파일에 셋은 필요가 없습니다.
+          </p>
+          <p>arm64 하나로만 빌드하자 52MB가 됐습니다. 반으로 줄이는 데 코드는 한 줄도 안 고쳤습니다.</p>
+
+          <h2>52MB의 해부</h2>
+          <figure>
+            <div class="fig-scroll"><svg viewBox="0 0 640 150" role="img" aria-label="APK 52MB의 구성: dex 28.2, lib 18.7, res 18.2, JS 4.3MB">
+              <text class="svg-label-sm svg-faint" x="24" y="30">arm64 단일 APK 52MB (합계는 압축 전 크기)</text>
+              <!-- 총 69.4MB 기준 폭 582px: dex 236 / lib 157 / res 153 / js 36 -->
+              <rect x="24" y="44" width="236" height="34" rx="4" class="svg-fill-accent" opacity="0.55" />
+              <rect x="264" y="44" width="157" height="34" rx="4" class="svg-fill-graphite" opacity="0.30" />
+              <rect x="425" y="44" width="153" height="34" rx="4" class="svg-fill-graphite" opacity="0.18" />
+              <rect x="582" y="44" width="34" height="34" rx="4" class="svg-fill-graphite" opacity="0.10" />
+              <text class="svg-label svg-ink" x="36" y="66">dex 28.2</text>
+              <text class="svg-label svg-ink" x="274" y="66">lib 18.7</text>
+              <text class="svg-label svg-ink" x="435" y="66">res 18.2</text>
+              <text class="svg-label-sm svg-muted" x="586" y="66">JS</text>
+              <text class="svg-label-sm svg-muted" x="24" y="104">dex는 자바 코드, lib는 네이티브 라이브러리, res는 그림과 리소스, JS는 우리가 쓴 화면 코드 4.3MB</text>
+              <text class="svg-label-sm svg-faint" x="24" y="128">줄일 수 있는 건 res의 병 그림과 dex의 안 쓰는 코드</text>
+            </svg></div>
+            <figcaption>
+              우리가 쓴 코드는 4.3MB뿐입니다. 나머지는 프레임워크와 그림입니다. 그러니 줄일 곳도 둘로
+              좁혀집니다.
+            </figcaption>
+          </figure>
+          <p>
+            먼저 그림. 병 아트 WebP가 1024×1536이었는데, 앱에서 병이 가장 크게 그려지는 곳이 200px입니다.
+            3배 밀도 화면을 잡아도 600px이면 됩니다. 600×900으로 다시 저장하니 13.6MB가 4.4MB로
+            줄었습니다.
+          </p>
+          <p>
+            다음은 코드. R8 minify와 shrinkResources를 켰습니다. dex에서 안 쓰는 클래스를 걷어내는
+            건데, React Native는 리플렉션으로 클래스를 찾는 데가 있어서 잘못 걷어내면 앱이 실행 중에
+            죽습니다. 빌드가 되는 것과 폰에서 도는 것은 다른 문제라, 이건 실기기에서 켜 봐야 압니다.
+          </p>
+
+          <h2>밤에 하나 더</h2>
+          <p>
+            JS 번들도 들여다봤습니다. 8.04MB 중 큰 덩어리가 산지 지도의 해안선 데이터였습니다.
+            world-atlas 패키지를 통째로 앱에 싣고 실행 때 해안선을 계산하고 있었는데, 그건 빌드할 때
+            한 번만 하면 되는 일입니다. 미리 계산한 결과만 넣고 패키지는 개발 의존성으로 내렸습니다.
+            안 쓰는 expo-device와 expo-web-browser도 지웠습니다. 번들은 4.45MB.
+          </p>
+
+          <div class="box obs">
+            <p class="box-label">관측</p>
+            <p>
+              103MB에서 52MB로 간 건 설정 한 줄이었고, 오후 내내 한 나머지 일이 다 합쳐도 그보다
+              작습니다. 큰 숫자 앞에서는 먼저 열어 보고 무엇이 큰지 재야 합니다. 저는 폴더 크기부터
+              봤고, 그건 APK 크기와 상관이 없었습니다.
+            </p>
+          </div>
+
+          <div class="box kept">
+            <p class="box-label">남긴 규칙</p>
+            <p>줄이기 전에 잰다. 실기기 배포용 APK는 arm64 하나만. 그림은 화면에서 쓰이는 최대 크기의 3배까지만.</p>
+          </div>
+
+          <h2>아직 모르는 것</h2>
+          <p>
+            R8을 켠 빌드는 지금 올라가는 중이라, 내일 폰에서 첫 화면이 뜰지 안 뜰지 모릅니다. 안 뜨면
+            어떤 클래스를 살려 둬야 하는지 하나씩 찾아야 합니다. 그리고 병 그림 4.4MB는 여전히 앱
+            안에 있습니다. 병이 늘어날수록 같이 커질 텐데, 그걸 어떻게 할지는 아직 생각이 없습니다.
+          </p>
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하듯 사업합니다. 배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는
+                중입니다. → <a href="../?cat=cheotjan">글 더 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul><li><a href="../">전체보기</a></li></ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 사업합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+
+    <script src="../assets/posts.js"></script>
+    <script src="../assets/site.js"></script>
+  </body>
+</html>

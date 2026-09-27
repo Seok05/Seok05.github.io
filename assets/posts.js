@@ -71,6 +71,100 @@ window.SEOK = {
 
   posts: [
     {
+      slug: "dft-practice-6",
+      cat: "dft",
+      date: "2026.09.27",
+      series: "dft",
+      order: 9,
+      related: ["dft-theory-3"],
+      title: "DFT 실습 [6] — Na 하나를 빼서 첫 전압을 얻었다: 2.40 V",
+      blurb:
+        "α-NaMnO₂에서 Na를 하나 빼고 Na 금속을 기준 전극으로 계산해 첫 전압 2.40 V를 얻었습니다. 대칭을 깨서 Mn³⁺와 Mn⁴⁺를 갈라놓고, 자리별 결합 길이로 얀-텔러가 사라지는 것을 확인하고, Pulay 보정의 부호가 부피를 따라 바뀌는 것까지 본 연구 0호 데이터의 기록.",
+    },
+    {
+      slug: "dft-practice-5",
+      cat: "dft",
+      date: "2026.09.27",
+      series: "dft",
+      order: 8,
+      related: ["dft-theory-2"],
+      title: "DFT 실습 [5] — 장난감을 졸업했더니 팔면체가 늘어나 있었다",
+      blurb:
+        "이상화 구조를 버리고 Materials Project에서 진짜 NaMnO₂를 꺼내 왔습니다. 파이썬 버전 충돌을 넘어 다형체 11개를 조회하고, 처음으로 이완 계산을 두 번 돌렸고, Mn–O 결합 여섯 개에서 얀-텔러의 지문(4개 짧고 2개 긴)을 직접 확인했습니다.",
+    },
+    {
+      slug: "dft-practice-4",
+      cat: "dft",
+      date: "2026.09.27",
+      series: "dft",
+      order: 7,
+      related: ["paper-1-wang2006"],
+      title: "DFT 실습 [4] — U를 걸었더니 전자가 제자리로 돌아왔다",
+      blurb:
+        "한 달을 미루고 복귀한 날, 이론 [3]에 걸어둔 가설을 실측으로 회수했습니다. INCAR 여섯 줄(U=3.9 eV)에 Mn d 모멘트가 3.85에서 4.35로. 그리고 GGA와 GGA+U의 에너지를 직접 비교하면 안 되는 이유를 4.5 eV짜리 실물로 확인했습니다.",
+    },
+    {
+      slug: "cheotjan-fingerprint",
+      cat: "cheotjan",
+      date: "2026.09.19",
+      series: "cheotjan",
+      order: 9,
+      title: "첫잔 [9] — .gitignore 한 줄이 업데이트를 막은 날, 그리고 세 번째",
+      blurb:
+        "Expo의 OTA는 네이티브 지문이 같은 빌드에만 갑니다. 그 지문에 .gitignore, package.json의 scripts, 앱 아이콘이 들어간다는 걸 세 번 당하고서야 규칙으로 적었습니다.",
+    },
+    {
+      slug: "cheotjan-no-numbers",
+      cat: "cheotjan",
+      date: "2026.09.18",
+      series: "cheotjan",
+      order: 8,
+      related: ["price-band"],
+      title: "첫잔 [8] — 앱에 숫자를 적지 않기로 했다",
+      blurb:
+        "\"전체 629병 훑어보기\"라고 적었더니 그 문장이 우리 데이터의 한계를 드러내고 있었습니다. 결과 개수, 시드 총수, 산지 지도의 병 수까지 전부 지웠습니다. 세는 건 정렬에만 씁니다.",
+    },
+    {
+      slug: "cheotjan-delete-account",
+      cat: "cheotjan",
+      date: "2026.09.06",
+      series: "cheotjan",
+      order: 7,
+      title: "첫잔 [7] — 로그인보다 어려운 회원 탈퇴",
+      blurb:
+        "카카오·Google·Apple 로그인은 반나절이면 붙습니다. 그 계정을 제대로 지우는 데는 하루가 걸렸습니다. 지우는 순서가 있고, 지우려면 로그인하는 순간에 미리 챙겨 둬야 하는 것이 있었습니다.",
+    },
+    {
+      slug: "cheotjan-things-removed",
+      cat: "cheotjan",
+      date: "2026.09.04",
+      series: "cheotjan",
+      order: 6,
+      title: "첫잔 [6] — 잔량, 개봉일, 위시, 연령 확인을 지웠다",
+      blurb:
+        "시장조사가 요구한 필드들을 다 만들고 다 지웠습니다. 전부 사용자에게 숙제를 내는 칸이었습니다. 저장 목록은 내 위스키 하나로, 앱 안의 연령 확인은 스토어 등급으로.",
+    },
+    {
+      slug: "cheotjan-ai-smell",
+      cat: "cheotjan",
+      date: "2026.09.03",
+      series: "cheotjan",
+      order: 5,
+      title: "첫잔 [5] — \"아직 AI스럽다\"는 말을 듣고",
+      blurb:
+        "AI와 만든 앱을 보여줬더니 AI스럽다는 말이 돌아왔습니다. 그 말이 정확히 어디를 가리키는지 찾아 표지·부팅·홈을 다시 짰습니다. 같은 모티프 두 번, 설명이 붙은 버튼, 세 번 반복되는 같은 행.",
+    },
+    {
+      slug: "cheotjan-apk-103mb",
+      cat: "cheotjan",
+      date: "2026.09.02",
+      series: "cheotjan",
+      order: 4,
+      title: "첫잔 [4] — APK가 103MB였다",
+      blurb:
+        "갤럭시에 보낼 첫 APK가 103MB였습니다. 첫 조치는 헛발질이었고, 진짜 원인은 아키텍처 네 개였습니다. 52MB를 해부한 뒤 병 그림을 줄이고 R8을 켰습니다.",
+    },
+    {
       slug: "cheotjan-mfds-504",
       cat: "cheotjan",
       date: "2026.08.29",
