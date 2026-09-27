@@ -10,7 +10,13 @@
    각 글 HTML 안의 사이드바·post-nav는 자바스크립트가 꺼져 있을
    때를 위한 예비일 뿐이므로 손대지 않아도 된다.
 
-   필드 설명:
+   필드 설명 (cats):
+     mark     : 표지(타이포 커버)에 크게 찍는 짧은 이름
+     hue      : 표지 색상(0~360). 카테고리마다 다른 색 한 톤
+     featured : 홈 맨 위 '지금 쓰는 시리즈' 자리에 올릴 카테고리 (하나만)
+     art      : 표지 그림. app(앱 아이콘 + 폰 프레임 속 화면 캡처) · image(파일 하나) ·
+                draw(site.js의 ART에 있는 그림 이름). 없으면 mark 글자로 대신한다
+   필드 설명 (posts):
      slug   : posts/<slug>.html 의 파일명
      cat    : cats 중 하나의 key
      series : 시리즈 묶음 (같은 series끼리 order 순으로 이전/다음 연결)
@@ -22,26 +28,42 @@ window.SEOK = {
   cats: [
     {
       key: "cheotjan",
+      art: { type: "app", icon: "assets/covers/cheotjan-icon.png", shot: "assets/covers/cheotjan-home.webp" },
+      mark: "첫잔",
+      hue: 16,
+      featured: true,
       name: "바이브코딩 · 첫잔",
       desc: "위스키 기록 앱 첫잔을 만드는 동안 쓴 일지. 그날 정한 것과 아직 모르는 것.",
     },
     {
       key: "evalue",
+      art: { type: "image", src: "assets/covers/evalue-symbol.svg" },
+      mark: "EValue",
+      hue: 165,
       name: "사업 · EValue",
       desc: "지금 만들고 있는 서비스 EValue(중고 전기차 매물을 매일 지켜보며 값을 견주는 도구)를 만들며 부딪힌 문제와 결정의 기록.",
     },
     {
       key: "battery",
+      art: { type: "draw", name: "battery" },
+      mark: "배터리",
+      hue: 350,
       name: "연구 · 배터리",
       desc: "전기차의 심장인 배터리를 실험실과 데이터 양쪽에서 들여다본 기록.",
     },
     {
       key: "dft",
+      art: { type: "image", src: "assets/covers/dft-namno2.webp", width: "82%" },
+      mark: "DFT",
+      hue: 30,
       name: "연구 · DFT",
       desc: "배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는 기록. 이론과 실습을 나란히.",
     },
     {
       key: "paper",
+      art: { type: "draw", name: "paper" },
+      mark: "Paper",
+      hue: 210,
       name: "연구 · Paper",
       desc: "읽은 논문을 소화해서 남기는 리뷰. 수치, 논증 구조, 저자들이 그은 한계까지.",
     },

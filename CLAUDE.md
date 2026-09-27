@@ -4,16 +4,25 @@
 
 ## 구조
 
-- `assets/posts.js` — **단일 데이터 원장.** 카테고리 정의 + 글 메타데이터(최신 글이 배열 맨 위).
-- `assets/site.js` — posts.js를 읽어 렌더링: 홈의 글 목록·필터·카운트, 모든 페이지의 사이드바
-  카테고리, 글 하단의 이전/다음/관련 내비게이션(`series`/`order`/`related` 필드).
-  그 밖에 헤더의 라이트/다크 토글(`localStorage.theme`), 글 페이지의 읽는 시간(분당 500자)과
-  사이드바 소제목 목차(`article h2`에서 자동 생성)도 여기서 만든다.
+- `assets/posts.js` — **단일 데이터 원장.** 카테고리 정의(`mark`·`hue`·`featured`·`art` 포함) +
+  글 메타데이터(최신 글이 배열 맨 위).
+- `assets/covers/` — 카테고리 표지 그림. 첫잔은 앱 아이콘(`cheotjan/assets/images/icon.png` 256px)
+  + 홈 화면 캡처(`docs/09-제품소개서/첫잔-제품소개서-v1.4.html`에 박힌 `shot:home`을 뽑아 720px webp).
+  화면이 크게 바뀌면 캡처를 다시 뽑는다. EValue는 `EValue/docs/brand/evalue-symbol.svg`.
+  DFT는 첫 계산 구조였던 O3형 NaMnO₂를 `scripts/render-namno2.py`(numpy+matplotlib, VESTA 기본색)로
+  그린 `dft-namno2.webp`. VESTA에서 직접 내보낸 PNG가 생기면 같은 이름으로 바꿔 끼우면 된다.
+  배터리·Paper는 site.js의 `ART`에 인라인 SVG로 그려 두었다(currentColor = 카테고리 색).
+- `assets/site.js` — posts.js를 읽어 페이지를 조립한다.
+  - 홈: 소개(정적) → 지금 쓰는 시리즈(`featured` 카테고리) → 시리즈 카드 → 최근 글 6편.
+    `?view=all`은 전체 글을 달별로, `?cat=<key>`는 카테고리 하나(시리즈면 읽는 순서로 번호).
+  - 글 페이지: 사이드바를 숨기고 한 단으로. 시리즈 띠(몇 편 중 몇 편), 읽는 시간(분당 500자),
+    1180px 이상에서 오른쪽 목차(`article h2`), 이전/다음/관련, 같은 시리즈 목록.
+  - 모든 페이지: 헤더 메뉴(글·시리즈·GitHub) 통일, 라이트/다크 토글(`localStorage.theme`).
 - 모든 페이지 `<head>`의 `<meta charset>` 바로 아래에 테마를 먼저 적용하는 한 줄 스크립트가 있다
   (첫 그림에서 색이 튀지 않게). 템플릿에 들어 있으니 새 글은 신경 쓸 것 없다.
-- `index.html` — 목록 컨테이너만 있는 껍데기. 글 목록은 JS가 채운다.
+- `index.html` — 소개 문구만 정적이고 나머지 구획은 빈 컨테이너. JS가 채운다.
 - `posts/*.html` — 글 본문. 안에 하드코딩된 사이드바·post-nav는 JS 꺼진 환경용 예비이며
-  site.js가 덮어쓴다(고치지 않아도 됨).
+  site.js가 숨기거나 덮어쓴다(고치지 않아도 됨).
 - `posts/_template.html` — 새 글 템플릿.
 - `assets/blog.css` — 스타일 전부. 색 규칙: 관측=그래파이트, 판단·강조=인디고(--accent),
   경고=--warm. 라이트/다크는 CSS 변수로 자동 전환.

@@ -19,72 +19,67 @@
     <link rel="stylesheet" href="assets/blog.css" />
     <link rel="icon" type="image/png" href="assets/favicon.png" />
   </head>
-  <body>
+  <body class="home">
     <header class="site-header">
       <div class="wrap">
         <a class="site-name" href="./">
           <img class="avatar-sm" src="assets/profile.png" alt="" width="30" height="30" />
           Seok Lab
-          <span class="tagline">연구하면서, 사업합니다</span>
         </a>
         <nav class="site-nav">
+          <a href="./?view=all" data-nav="all">글</a>
+          <a href="./#series" data-nav="series">시리즈</a>
           <a href="https://github.com/Seok05">GitHub</a>
         </nav>
       </div>
     </header>
 
     <main>
-      <div class="layout">
-        <section class="content">
-          <div class="list-head">
-            <h1 id="list-title">전체 글</h1>
-            <span class="n" id="list-count"></span>
+      <!-- 홈: 소개 → 지금 쓰는 시리즈 → 시리즈 전체 → 최근 글.
+           목록은 assets/posts.js 데이터로 site.js가 채운다. -->
+      <section class="hero wrap" id="hero">
+        <div class="hero-text">
+          <p class="eyebrow">Seok Lab</p>
+          <h1>연구하면서, <br />사업합니다.</h1>
+          <p class="hero-sub">
+            낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 것을 그날의
+            기록으로 남깁니다.
+          </p>
+          <div class="hero-actions" id="hero-actions">
+            <a class="btn" href="https://github.com/Seok05">GitHub</a>
           </div>
-          <p class="list-desc" id="list-desc" hidden></p>
+        </div>
+        <img class="hero-avatar" src="assets/profile.png" alt="Seok" width="160" height="160" />
+      </section>
 
-          <!-- 글 목록은 assets/posts.js 데이터로 site.js가 채운다.
-               새 글은 posts/에 HTML을 넣고 posts.js에 항목만 추가하면 된다. -->
-          <ul class="post-list" id="posts">
-            <noscript>
-              <li>
-                <p>
-                  이 목록은 자바스크립트로 그려집니다. 글은
-                  <a href="https://github.com/Seok05/Seok05.github.io/tree/main/posts">posts/ 폴더</a>에서
-                  직접 볼 수 있습니다.
-                </p>
-              </li>
-            </noscript>
-          </ul>
-        </section>
+      <section class="wrap sec" id="featured" aria-label="지금 쓰는 시리즈"></section>
+      <section class="wrap sec" id="series" aria-label="시리즈"></section>
+      <section class="wrap sec" id="recent" aria-label="최근 글"></section>
 
-        <aside class="sidebar">
-          <div class="profile-card">
-            <img src="assets/profile.png" alt="Seok 프로필" width="92" height="92" />
-            <div>
-              <p class="p-name">Seok</p>
-              <p class="p-bio">
-                연구하듯 사업합니다.<br />
-                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
-                적어요.
-              </p>
-              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
-            </div>
-          </div>
-
-          <nav class="cat-box" aria-label="카테고리">
-            <p class="cat-title">카테고리</p>
-            <ul>
-              <li><a href="./" data-cat="all">전체보기</a></li>
-            </ul>
-          </nav>
-        </aside>
-      </div>
+      <!-- ?view=all (전체 글, 월별) · ?cat=<key> (카테고리) 일 때만 보인다 -->
+      <section class="wrap sec listing" id="listing" hidden>
+        <noscript>
+          <p>
+            이 목록은 자바스크립트로 그려집니다. 글은
+            <a href="https://github.com/Seok05/Seok05.github.io/tree/main/posts">posts/ 폴더</a>에서
+            직접 볼 수 있습니다.
+          </p>
+        </noscript>
+      </section>
     </main>
 
     <footer class="site-footer">
       <div class="wrap">
-        <p>Seok Lab · 연구하면서, 사업합니다</p>
-        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+        <div class="foot-brand">
+          <p class="foot-name">Seok Lab</p>
+          <p>연구하면서, 사업합니다</p>
+        </div>
+        <nav class="foot-nav" aria-label="바닥 메뉴">
+          <a href="./?view=all">글</a>
+          <a href="./#series">시리즈</a>
+          <a href="https://github.com/Seok05">GitHub</a>
+        </nav>
+        <p class="foot-note">글의 예시 수치는 설명용이며 실제 시세가 아닙니다.</p>
       </div>
     </footer>
 
