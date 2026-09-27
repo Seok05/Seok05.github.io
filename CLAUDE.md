@@ -8,10 +8,13 @@
   글 메타데이터(최신 글이 배열 맨 위).
 - `assets/covers/` — 카테고리 표지 그림. 첫잔은 앱 아이콘(`cheotjan/assets/images/icon.png` 256px)
   + 홈 화면 캡처(`docs/09-제품소개서/첫잔-제품소개서-v1.4.html`에 박힌 `shot:home`을 뽑아 720px webp).
-  화면이 크게 바뀌면 캡처를 다시 뽑는다. EValue는 `EValue/docs/brand/evalue-symbol.svg`.
+  화면이 크게 바뀌면 캡처를 다시 뽑는다. EValue는 앱 아이콘(`EValue/docs/brand/evalue-appicon.svg`) +
+  랜딩 캡처(`npm --prefix ~/Desktop/EValue run dev -- --port 3011` 띄운 뒤 헤드리스 크롬으로
+  1440×900@2x 찍고 위 1560px만 잘라 1200px webp; 왼쪽 아래 Next 개발 표시가 안 들어가게 자른다).
+  배터리는 `scripts/render-battery.py`(원통 셀 셋), Paper는 `scripts/render-paper.py`(논문 두 장)로 그린 webp.
   DFT는 첫 계산 구조였던 O3형 NaMnO₂를 `scripts/render-namno2.py`(numpy+matplotlib, VESTA 기본색)로
   그린 `dft-namno2.webp`. VESTA에서 직접 내보낸 PNG가 생기면 같은 이름으로 바꿔 끼우면 된다.
-  배터리·Paper는 site.js의 `ART`에 인라인 SVG로 그려 두었다(currentColor = 카테고리 색).
+  site.js의 `ART`(인라인 SVG 배터리·격자·문서)는 그림 파일이 없을 때의 예비다.
 - `assets/site.js` — posts.js를 읽어 페이지를 조립한다.
   - 홈: 소개(정적) → 지금 쓰는 시리즈(`featured` 카테고리) → 시리즈 카드 → 최근 글 6편.
     `?view=all`은 전체 글을 달별로, `?cat=<key>`는 카테고리 하나(시리즈면 읽는 순서로 번호).

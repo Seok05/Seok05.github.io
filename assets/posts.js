@@ -14,7 +14,7 @@
      mark     : 표지(타이포 커버)에 크게 찍는 짧은 이름
      hue      : 표지 색상(0~360). 카테고리마다 다른 색 한 톤
      featured : 홈 맨 위 '지금 쓰는 시리즈' 자리에 올릴 카테고리 (하나만)
-     art      : 표지 그림. app(앱 아이콘 + 폰 프레임 속 화면 캡처) · image(파일 하나) ·
+     art      : 표지 그림. app(앱 아이콘 + 폰 프레임 속 화면) · web(아이콘 + 브라우저 창 속 화면) · image(파일 하나) ·
                 draw(site.js의 ART에 있는 그림 이름). 없으면 mark 글자로 대신한다
    필드 설명 (posts):
      slug   : posts/<slug>.html 의 파일명
@@ -37,7 +37,7 @@ window.SEOK = {
     },
     {
       key: "evalue",
-      art: { type: "image", src: "assets/covers/evalue-symbol.svg" },
+      art: { type: "web", icon: "assets/covers/evalue-appicon.svg", shot: "assets/covers/evalue-landing.webp" },
       mark: "EValue",
       hue: 165,
       name: "사업 · EValue",
@@ -45,7 +45,7 @@ window.SEOK = {
     },
     {
       key: "battery",
-      art: { type: "draw", name: "battery" },
+      art: { type: "image", src: "assets/covers/battery-cells.webp", width: "68%" },
       mark: "배터리",
       hue: 350,
       name: "연구 · 배터리",
@@ -53,7 +53,7 @@ window.SEOK = {
     },
     {
       key: "dft",
-      art: { type: "image", src: "assets/covers/dft-namno2.webp", width: "82%" },
+      art: { type: "image", src: "assets/covers/dft-namno2.webp", width: "64%" },
       mark: "DFT",
       hue: 30,
       name: "연구 · DFT",
@@ -61,7 +61,7 @@ window.SEOK = {
     },
     {
       key: "paper",
-      art: { type: "draw", name: "paper" },
+      art: { type: "image", src: "assets/covers/paper-sheets.webp", width: "62%" },
       mark: "Paper",
       hue: 210,
       name: "연구 · Paper",

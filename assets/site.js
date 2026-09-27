@@ -115,6 +115,14 @@
         (art.icon ? '<img class="app-icon" src="' + root + art.icon + '" alt="" loading="lazy" decoding="async">' : "") +
         '<div class="phone"><img src="' + root + art.shot + '" alt="" loading="lazy" decoding="async"></div>' +
         "</div>";
+    } else if (art.type === "web" && art.shot) {
+      // 아이콘(왼쪽 위) + 브라우저 창 속 랜딩 페이지(오른쪽 아래, 아래로 잘림)
+      inner =
+        '<div class="cover-web">' +
+        (art.icon ? '<img class="app-icon" src="' + root + art.icon + '" alt="" loading="lazy" decoding="async">' : "") +
+        '<div class="browser"><div class="browser-bar"><i></i><i></i><i></i></div>' +
+        '<img src="' + root + art.shot + '" alt="" loading="lazy" decoding="async"></div>' +
+        "</div>";
     } else if (art.type === "image" && art.src) {
       inner =
         '<div class="cover-img"><img src="' + root + art.src + '" alt="" loading="lazy" decoding="async"' +

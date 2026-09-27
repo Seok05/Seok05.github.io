@@ -532,6 +532,83 @@ main {
   bottom: -12%;
 }
 
+/* 웹 서비스 표지: 아이콘은 왼쪽 위, 브라우저 창은 오른쪽 아래에서 올라온다 */
+.cover-web {
+  position: absolute;
+  inset: 0;
+}
+
+.cover-web .app-icon {
+  position: absolute;
+  left: 9%;
+  top: 10%;
+  width: 22%;
+  height: auto;
+  border-radius: 22%;
+  box-shadow: 0 10px 22px -6px rgba(20, 22, 28, 0.32), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  z-index: 2;
+}
+
+.cover-web .browser {
+  position: absolute;
+  right: -7%;
+  bottom: -5%;
+  width: 80%;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 26px 44px -18px rgba(20, 22, 28, 0.45), 0 0 0 1px rgba(20, 22, 28, 0.08);
+  transform: rotate(-4deg);
+  transform-origin: 100% 100%;
+  overflow: hidden;
+  transition: transform 0.25s ease;
+}
+
+.cover-web .browser-bar {
+  height: 14px;
+  background: #ecedf0;
+  border-bottom: 1px solid #dfe1e5;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+}
+
+.cover-web .browser-bar i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c9ccd2;
+}
+
+.cover-web .browser img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cat-card:hover .cover-web .browser,
+.featured-cover:hover .cover-web .browser {
+  transform: rotate(-4deg) translateY(-3%);
+}
+
+.cover-lg .cover-web .app-icon {
+  width: 20%;
+}
+
+.cover-lg .cover-web .browser {
+  width: 86%;
+  bottom: -8%;
+}
+
+.cover-lg .cover-web .browser-bar {
+  height: 20px;
+}
+
+.cover-lg .cover-web .browser-bar i {
+  width: 7px;
+  height: 7px;
+}
+
 .cover-img,
 .cover-draw {
   position: absolute;
