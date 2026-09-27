@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DFT 실습 [4] — U를 걸었더니 전자가 제자리로 돌아왔다 · Seok Lab</title>
+    <meta
+      name="description"
+      content="한 달을 미루고 복귀한 날, 이론 [3]에 걸어둔 가설을 실측으로 회수했습니다. INCAR에 여섯 줄(U=3.9 eV)을 얹자 Mn의 d 모멘트가 3.85에서 4.35로 올라왔고, GGA와 GGA+U의 에너지를 직접 비교하면 안 되는 이유도 4.5 eV짜리 실물로 확인했습니다."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 사업합니다</span>
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">VASP 실습</span><span>2026.09.27</span>
+            </div>
+            <h1>DFT 실습 [4] — U를 걸었더니 전자가 제자리로 돌아왔다</h1>
+            <p class="lede">
+              고백부터 하겠습니다. 한 달을 미뤘습니다.
+              <a href="dft-practice-3.html">실습 [3]</a>이 8월 25일이었고 오늘이 9월
+              27일입니다. 그런데 복귀에 걸린 시간은 20분이었습니다. 랩노트와 이 블로그의 지난
+              글들이 복구 문서 역할을 해준 덕입니다. 복귀전의 내용도 좋았습니다.
+              <a href="dft-theory-3.html">이론 [3]</a>에 공개적으로 걸어둔 가설, "U는 SIE가
+              퍼뜨린 d 전자를 국재화로 되돌린다"를 제 계산으로 회수한 날입니다.
+            </p>
+          </div>
+
+          <h2>0. 복귀: 블로그는 미래의 나를 위한 백업이었다</h2>
+          <p>
+            한 달 공백 후에 제일 무서운 건 "어디까지 했더라"입니다. 이번에 확인한 것: 그
+            공포의 해독제는 기억력이 아니라 <strong>기록</strong>이었습니다. 랩노트의 마지막
+            줄(ENCUT=520 / 6×6×2 동결)과 실습 [2], 이론 [3]을 다시 읽는 것으로 상태가
+            복원됐습니다. 심지어 이론 [3]의 마지막 문단에는 다음 할 일까지 적혀 있었습니다.
+            "같은 NaMnO₂에 U=3.9를 걸었을 때와 안 걸었을 때의 비교." 과거의 내가 오늘의
+            나에게 남긴 작업 지시서인 셈입니다.
+          </p>
+
+          <h2>1. 실험 설계: 바꾸는 것은 범함수 하나</h2>
+          <p>
+            수렴 테스트 시리즈와 똑같은 변인 통제입니다. 구조, ENCUT, k-mesh를 전부 동결한 채
+            <strong>범함수 쪽만</strong> 움직입니다. GGA 기준값은 실습 [1]의 계산이 이미
+            있으니 재활용하고, 새로 돌릴 것은 +U 쪽 하나뿐입니다.
+          </p>
+          <pre><code>mkdir -p work/02_functional                # 새 실험 종류 = 새 번호 폴더
+cp -r work/01_NaMnO2_conv/test01 work/02_functional/u39
+cd work/02_functional/u39
+rm -f WAVECAR CHGCAR CHG OUTCAR OSZICAR vasp.log CONTCAR</code></pre>
+
+          <h2>2. INCAR에 여섯 줄: U가 입주하는 순간</h2>
+          <pre><code>LDAU     = .TRUE.
+LDAUTYPE = 2
+LDAUL    = -1  2 -1
+LDAUU    =  0 3.9  0
+LDAUJ    =  0  0  0
+LMAXMIX  = 4</code></pre>
+          <ul>
+            <li>
+              <strong>LDAUTYPE = 2.</strong> Dudarev 방식.
+              <a href="paper-1-wang2006.html">Paper [1]</a>에서 해부한 바로 그 식
+              (U_eff/2)·Σn(1−n)입니다. U와 J의 차이만 들어가는 형식이라 LDAUJ는 0으로 두고
+              LDAUU에 U_eff를 직접 씁니다.
+            </li>
+            <li>
+              <strong>LDAUL = -1 2 -1.</strong> 원소별로 어느 오비탈에 걸 것인가. 순서는
+              POSCAR의 원소 순서(Na, Mn, O) 그대로이고, Na와 O는 걸지 않고(−1) Mn의 d
+              오비탈(l=2)에만 겁니다. 리뷰에서 배운 원칙, <em>U는 국재화된 d 전자를 위한
+              약이고 퍼진 전자에 걸면 병을 만든다</em>는 것의 실물 구현입니다.
+            </li>
+            <li>
+              <strong>LDAUU = 0 3.9 0.</strong> 주인공. Wang, Maxisch, Ceder(2006)가 망간
+              산화물들의 실험 산화 엔탈피에 피팅해 얻은 값 3.9 eV입니다. 논문 리뷰까지
+              해놓고 그 숫자를 제 입력 파일에 직접 적는 기분이 묘하게 좋습니다. "남들이
+              쓰길래"가 아니라 출처를 아는 숫자.
+            </li>
+            <li>
+              <strong>LMAXMIX = 4.</strong> 실무 비법 한 줄. SCF의 밀도 혼합기는 기본
+              설정으로 d 성분을 충분히 섞지 않는데, +U는 d 점유 행렬이 주인공이라 이걸
+              올려줘야 수렴이 안정됩니다. 빼먹으면 +U 계산이 느리게 수렴하거나 진동하는 단골
+              원인이라고 합니다.
+            </li>
+          </ul>
+
+          <h2>3. 결과: 이온별 자기모멘트 대조</h2>
+          <p>
+            이번 비교의 관측량은 총 에너지가 아니라(이유는 §5)
+            <strong>이온별 국소 자기모멘트</strong>입니다. OUTCAR의 magnetization 표에서 Mn
+            세 개와 O 여섯 개를 읽으면:
+          </p>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th></th><th>Mn d 모멘트 (μB)</th><th>O p 분극 (μB)</th><th>셀 전체 (μB)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>GGA</td><td>3.85</td><td>−0.04</td><td>12.00</td></tr>
+                <tr><td><strong>GGA+U (3.9 eV)</strong></td><td><strong>4.35</strong></td><td><strong>−0.25</strong></td><td>12.00</td></tr>
+                <tr><td>변화</td><td>+0.49</td><td>−0.21</td><td>0</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <figure>
+            <div class="fig-scroll"><svg viewBox="0 0 640 240" role="img" aria-label="GGA와 GGA+U의 Mn d 모멘트, O p 분극 비교 막대그래프">
+              <text class="svg-label-sm svg-ink" x="170" y="26" text-anchor="middle" style="font-weight:700">Mn d 모멘트 (μB)</text>
+              <line x1="60" y1="200" x2="290" y2="200" class="svg-stroke-rule" stroke-width="1.2" />
+              <rect x="90" y="76" width="70" height="124" class="svg-fill-graphite" opacity="0.55" />
+              <rect x="190" y="60" width="70" height="140" class="svg-fill-accent" />
+              <text class="svg-label-sm svg-muted" x="125" y="66" text-anchor="middle">3.85</text>
+              <text class="svg-label-sm" x="225" y="50" text-anchor="middle" style="fill: var(--accent); font-weight:700">4.35</text>
+              <text class="svg-label-sm svg-muted" x="125" y="218" text-anchor="middle">GGA</text>
+              <text class="svg-label-sm svg-ink" x="225" y="218" text-anchor="middle">GGA+U</text>
+
+              <line x1="330" y1="200" x2="330" y2="40" class="svg-stroke-rule" stroke-width="1" />
+
+              <text class="svg-label-sm svg-ink" x="490" y="26" text-anchor="middle" style="font-weight:700">O p 분극 (μB, 반평행)</text>
+              <line x1="380" y1="80" x2="610" y2="80" class="svg-stroke-rule" stroke-width="1.2" />
+              <rect x="410" y="80" width="70" height="10" class="svg-fill-graphite" opacity="0.55" />
+              <rect x="510" y="80" width="70" height="62" class="svg-fill-accent" />
+              <text class="svg-label-sm svg-muted" x="445" y="108" text-anchor="middle">−0.04</text>
+              <text class="svg-label-sm" x="545" y="160" text-anchor="middle" style="fill: var(--accent); font-weight:700">−0.25</text>
+              <text class="svg-label-sm svg-muted" x="445" y="218" text-anchor="middle">GGA</text>
+              <text class="svg-label-sm svg-ink" x="545" y="218" text-anchor="middle">GGA+U</text>
+            </svg></div>
+            <figcaption>
+              U를 걸자 Mn의 스핀은 통통해지고(+0.49 μB), 산소는 반대 방향으로 더 강하게
+              분극됩니다(−0.21 μB). 셀 합계는 양쪽 다 정확히 12.00입니다. 총합은 같은데 그
+              12가 어디에 사는지가 달라졌습니다.
+            </figcaption>
+          </figure>
+
+          <h2>4. 판독: 가설 회수</h2>
+          <ul>
+            <li>
+              <strong>국재화 복원, 실증.</strong> SIE는 d 전자를 실제보다 퍼뜨리고, U는 그
+              벌점을 상쇄해 전자를 제자리에 앉힌다는 이론 [3]의 핵심 문장이 +0.49 μB라는
+              숫자로 돌아왔습니다. 이 패턴은 Paper [1]의 Table II가 17개 산화물로 보여준
+              것과 같은 방향, 같은 크기(+0.3~0.5 μB)입니다. 그 표의 18번째 행을 제 손으로
+              추가한 셈입니다.
+            </li>
+            <li>
+              <strong>산소의 −0.25는 덤으로 얻은 물리.</strong> O 여섯 개가 전부 Mn과 반대
+              방향으로 분극되어 있습니다. Mn의 d 스핀이 산소 2p와 혼성하며 유도한 반평행
+              분극, 즉 초교환(superexchange) 상호작용의 지문입니다.
+              <a href="dft-theory-2.html">이론 [2]</a>에서 "11.9991의 부스러기는 산소로 샌
+              것"이라 했던 그 누수가, +U 세계에서는 이온별 표에 선명하게 찍힙니다.
+            </li>
+            <li>
+              <strong>왜 4.0이 아니라 4.35인가.</strong> 형식 이온 그림(d⁴ = 4.0)은
+              이상화이고, 모멘트를 세는 투영 구 안에 O 2p와 혼성된 성분이 함께 잡히기
+              때문입니다. Paper [1] §8.1에서 "d 전자라는 것이 유일하게 정의되지 않는다"고
+              했던 투영 임의성의 실물입니다. 중요한 것은 절대값이 아니라 GGA 대비
+              <em>방향과 크기</em>이고, 그건 교과서와 일치합니다.
+            </li>
+          </ul>
+
+          <h2>5. 함정: 총 에너지 4.5 eV의 경고</h2>
+          <p>
+            +U 계산의 총 에너지는 −62.13 eV로, GGA의 −66.67 eV보다 <strong>4.5 eV나
+            높게</strong> 나왔습니다. "U를 걸었더니 물질이 불안정해졌다"고 읽으면 완전히
+            틀립니다. U 벌점 항은 에너지 장부의 기준 자체를 옮겨놓기 때문에,
+            <strong>GGA 에너지와 GGA+U 에너지는 애초에 같은 자로 잰 값이 아닙니다.</strong>
+            이론 [3]에서 "청구서 ②: 에너지끼리 호환이 안 됨"이라고 적어뒀던 항목의 실측
+            증거입니다. 실무 규칙으로 번역하면 이렇습니다. +U 세계에서 무언가를 비교하려면
+            <em>비교 대상 전부를 같은 U로</em> 계산해야 하고, 서로 다른 수준의 계산을 한
+            상평형도에 섞으려면 별도의 호환 보정(Materials Project가 하는 그 일)이
+            필요합니다.
+          </p>
+
+          <h2>이날 배운 것들</h2>
+          <ul>
+            <li><strong>기록이 관성을 이긴다.</strong> 한 달 공백의 복구 비용이 20분이었던 건 랩노트와 블로그 덕이다. 미래의 나는 남이다. 남에게 설명하듯 남겨야 한다.</li>
+            <li><strong>U의 효과는 에너지가 아니라 전자 구조에서 읽는다.</strong> 이온별 모멘트(국재화)와 산소 분극이 관측량이고, GGA vs GGA+U 총 에너지 비교는 무의미하다.</li>
+            <li><strong>출처 있는 숫자의 힘.</strong> LDAUU의 3.9는 논문 리뷰로 출처를 확인한 값이라, 결과가 나왔을 때 "왜 이 방향인가"까지 설명할 수 있었다.</li>
+            <li><strong>LMAXMIX = 4.</strong> +U 계산의 수렴 안정용 비법 한 줄. 이런 건 매뉴얼보다 먼저 몸에 새겨두는 게 낫다.</li>
+          </ul>
+
+          <div class="box">
+            <p style="margin: 0">
+              <strong>다음.</strong> 범함수 비교의 나머지 반쪽, 사다리 3단
+              <strong>r2SCAN</strong>입니다. U라는 경험적 손잡이 없이 더 좋은 범함수만으로
+              어디까지 오는지를 같은 구조에서 확인하고, GGA / GGA+U / r2SCAN 세 세계의 Mn
+              모멘트와 격자를 나란히 놓는 것. 본 연구(고엔트로피 Na 층상산화물)의 방법론
+              선택이 걸린 비교라, 이번 시리즈에서 처음으로 "답을 모르는 채" 결과를 기다리는
+              계산이 됩니다.
+            </p>
+          </div>
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하듯 사업합니다. 배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는
+                중입니다. → <a href="../?cat=dft">글 더 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하듯 사업합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="../">전체보기</a></li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 사업합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+
+    <script src="../assets/posts.js"></script>
+    <script src="../assets/site.js"></script>
+  </body>
+</html>
