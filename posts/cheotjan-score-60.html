@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>첫잔 [1] — 60점은 "무난"이 아니었다 · Seok Lab</title>
+    <meta
+      name="description"
+      content="위스키 기록 앱 첫잔의 첫날. 기획서에 적어 둔 점수 안내 한 줄을 지우고, 100점제의 숫자가 아니라 그 숫자가 쓰이는 방식을 빌려 왔습니다."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 사업합니다</span>
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <a class="chip-cat" href="../?cat=cheotjan">바이브코딩 · 첫잔</a><span class="tag">점수</span><span>2026.08.27</span>
+            </div>
+            <h1>첫잔 [1] — 60점은 "무난"이 아니었다</h1>
+            <p class="lede">
+              위스키 기록 앱을 만들기 시작했습니다. 이름은 첫잔입니다. 첫날 한 일은 코드가 아니라,
+              기획서에 적어 둔 점수 안내 한 줄을 지우는 것이었습니다.
+            </p>
+          </div>
+
+          <h2>별 다섯 개에서 100점으로</h2>
+          <p>
+            처음 명세에는 별점을 넣었습니다. 별 다섯 개는 앱 평점의 기본형이라 따로 고민하지
+            않았습니다. 시장조사를 하면서 그 생각이 흔들렸습니다. 국내에서 위스키 이야기가 가장
+            활발한 곳(위스키 갤러리, 아래부터 위갤)과 세계에서 가장 큰 위스키 데이터베이스인
+            Whiskybase가 모두 100점제를 씁니다. 기록 앱의 점수가 그 바깥에서 통하지 않으면 사람들은
+            두 번 채점하거나, 앱을 안 씁니다.
+          </p>
+          <p>
+            그래서 명세 v1.1에서 100점제로 바꾸고, 입문자를 위해 안내를 한 줄 달았습니다.
+          </p>
+          <blockquote><p>60 무난 · 80 훌륭 · 90 인생 보틀</p></blockquote>
+          <p>
+            지금 보면 별 세 개를 100으로 환산한 숫자입니다. 별 셋이 60%니까 60은 무난, 별 넷이
+            80%니까 80은 훌륭. 100점제의 숫자만 가져오고 문화는 가져오지 않은 셈입니다.
+          </p>
+
+          <h2>60은 무난이 아니었다</h2>
+          <p>
+            <a href="https://support.whiskybase.com/support/solutions/articles/33000296438-how-does-the-100-point-rating-scale-work-">Whiskybase의 점수 가이드</a>를 읽고 알았습니다. 그쪽 기준으로 50~69점은 하위, 피해야 할
+            병입니다. 70~82가 평균 근처이고 그중에서도 76~82가 보통 나오는 점수입니다. 83~89는
+            남에게 권할 만한 좋은 위스키, 90 이상은 아주 드문 경험에만 씁니다.
+          </p>
+          <p>
+            즉 100칸 중 실제로 쓰이는 칸은 70에서 90 사이 스무 칸 정도입니다. 60점은 그 아래입니다.
+            "무난"이 아니라, 남은 술은 하이볼로 타 먹자는 쪽에 가깝습니다.
+          </p>
+
+          <figure>
+            <div class="fig-scroll"><svg viewBox="0 0 640 206" role="img" aria-label="Whiskybase 점수 구간과 처음 안내의 위치 비교">
+              <!-- 축 -->
+              <line x1="34" y1="96" x2="606" y2="96" class="svg-stroke-rule" stroke-width="1.5" />
+              <text class="svg-label-sm svg-faint" x="34" y="120" text-anchor="middle">0</text>
+              <text class="svg-label-sm svg-faint" x="320" y="120" text-anchor="middle">50</text>
+              <text class="svg-label-sm svg-faint" x="606" y="120" text-anchor="middle">100</text>
+
+              <!-- Whiskybase 구간 (관측: 그래파이트) -->
+              <rect x="320" y="78" width="114" height="36" rx="4" class="svg-fill-graphite" opacity="0.10" />
+              <rect x="434" y="78" width="69" height="36" rx="4" class="svg-fill-graphite" opacity="0.22" />
+              <rect x="503" y="78" width="40" height="36" rx="4" class="svg-fill-accent" opacity="0.18" />
+              <rect x="549" y="78" width="57" height="36" rx="4" class="svg-fill-accent" opacity="0.40" />
+
+              <text class="svg-label-sm svg-muted" x="377" y="66" text-anchor="middle">50~69 하위</text>
+              <text class="svg-label-sm svg-ink" x="468" y="66" text-anchor="middle">70~82 평균</text>
+              <text class="svg-label-sm svg-ink" x="523" y="46" text-anchor="middle">83~89 좋음</text>
+              <text class="svg-label-sm svg-ink" x="577" y="66" text-anchor="middle">90+ 드묾</text>
+              <text class="svg-label-sm svg-faint" x="140" y="66" text-anchor="middle">Whiskybase 가이드</text>
+
+              <!-- 처음 안내 (판단: 인디고 눈금) -->
+              <line x1="377" y1="120" x2="377" y2="146" class="svg-stroke-accent" stroke-width="2" />
+              <line x1="491" y1="120" x2="491" y2="146" class="svg-stroke-accent" stroke-width="2" />
+              <line x1="549" y1="120" x2="549" y2="172" class="svg-stroke-accent" stroke-width="2" />
+              <text class="svg-label svg-ink" x="377" y="166" text-anchor="middle">60 "무난"</text>
+              <text class="svg-label svg-ink" x="491" y="166" text-anchor="middle">80 "훌륭"</text>
+              <text class="svg-label svg-ink" x="549" y="192" text-anchor="middle">90 "인생 보틀"</text>
+              <text class="svg-label-sm svg-faint" x="140" y="166" text-anchor="middle">처음 안내</text>
+            </svg></div>
+            <figcaption>
+              위쪽 띠는 Whiskybase가 안내하는 구간, 아래 눈금은 명세 v1.1에 적었던 안내. 60은
+              "평균" 띠에 들어가지도 못하고, 실제로 쓰이는 칸은 오른쪽 스무 칸에 몰려 있습니다.
+            </figcaption>
+          </figure>
+
+          <div class="box obs">
+            <p class="box-label">관측</p>
+            <p>
+              처음 안내대로라면 입문자는 괜찮게 마신 술에 60을 찍습니다. 그 사람이 나중에 위갤에서
+              같은 병의 리뷰를 보면 자기 점수만 20점이 낮습니다. 앱이 처음부터 다른 언어를 가르친
+              것입니다.
+            </p>
+          </div>
+
+          <h2>형용사 대신 행동</h2>
+          <p>
+            라벨을 여섯 구간으로 다시 짰습니다. 구간은 Whiskybase를 따르고, 말은 위갤에서 사람들이
+            실제로 쓰는 행동 언어에서 가져왔습니다.
+          </p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>구간</th>
+                  <th>라벨</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>~69</td><td>아쉬움, 다시 안 찾을 듯</td></tr>
+                <tr><td>70~75</td><td>그럭저럭</td></tr>
+                <tr><td>76~82</td><td>무난한 데일리</td></tr>
+                <tr><td>83~86</td><td>좋음, 남에게 추천</td></tr>
+                <tr><td>87~89</td><td>훌륭, 바틀 재구매 각</td></tr>
+                <tr><td>90+</td><td>인생 보틀급 (아껴 쓰기)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            "훌륭"은 사람마다 기준이 다르지만 "한 병 더 살 것 같다"는 판단은 그 자리에서 답할 수
+            있습니다. 점수를 매기다 막힐 때 질문이 "이 술이 몇 점짜리인가"에서 "이걸 또 사겠는가"로
+            바뀌면 손이 움직입니다. 슬라이더를 움직이면 이 라벨이 따라오게 하고, 시작 위치도 80에서
+            82로 옮길 생각입니다. 실제 분포의 한가운데에 손가락을 놓아 주는 것입니다.
+          </p>
+
+          <h2>점수 하나로 안 되는 것</h2>
+          <p>
+            위갤 리뷰를 읽다 보니 점수를 두 번 매기는 사람이 많았습니다. 술 자체의 점수 하나, 가격까지
+            넣은 점수 하나. 맛은 88인데 이 값이면 80, 같은 식입니다. 위스키는 값이 맛과 따로 움직이는
+            물건이라 그럴 만합니다.
+          </p>
+          <p>
+            그걸 그대로 두 개의 점수로 만들면 기록이 무거워집니다. 그래서 두 번째 점수 대신 "다시 살
+            것인가" 칸 하나를 두기로 했습니다. 점수와 별개로 켜거나 끄는 한 칸입니다. 87점 이상 라벨에
+            이미 "재구매 각"이 들어가 있으니 겹치는 것 아닌가 싶기도 한데, 90점을 주고도 값 때문에
+            다시는 안 살 병이 있고, 78점인데 가성비로 늘 사 두는 병이 있습니다. 그 어긋남을 담을
+            자리가 이 칸입니다.
+          </p>
+          <p>사람들이 이 칸을 누를지는 모르겠습니다. 안 누르면 빼면 됩니다.</p>
+
+          <div class="box kept">
+            <p class="box-label">남긴 규칙</p>
+            <p>점수의 숫자만 빌리지 않고, 그 숫자가 쓰이는 방식까지 빌린다. 라벨은 형용사가 아니라 행동으로 쓴다.</p>
+          </div>
+
+          <h2>첫날의 정리</h2>
+          <p>
+            오늘 저장소에는 첫 커밋 하나뿐이고 화면은 아직 한 장도 없습니다. 고친 건 기획서의 표
+            하나입니다. 그런데 이 표가 이 앱이 어떤 사람들과 같은 말을 쓸지를 정합니다. 60에 무난이라
+            적어 둔 채 화면을 먼저 만들었다면, 기록 수백 개가 쌓인 뒤에 고쳐야 했을 겁니다.
+          </p>
+          <p>
+            82라는 시작점이 맞는지, 입문자가 이 라벨을 보고 편해질지는 써 보는 사람이 나와야 알 수
+            있습니다.
+          </p>
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하듯 사업합니다. 배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는
+                중입니다. → <a href="../?cat=cheotjan">글 더 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하듯 사업합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="../">전체보기</a></li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 사업합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+
+    <script src="../assets/posts.js"></script>
+    <script src="../assets/site.js"></script>
+  </body>
+</html>

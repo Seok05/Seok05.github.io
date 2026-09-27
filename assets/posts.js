@@ -21,6 +21,11 @@
 window.SEOK = {
   cats: [
     {
+      key: "cheotjan",
+      name: "바이브코딩 · 첫잔",
+      desc: "위스키 기록 앱 첫잔을 만드는 동안 쓴 일지. 그날 정한 것과 아직 모르는 것.",
+    },
+    {
       key: "evalue",
       name: "사업 · EValue",
       desc: "지금 만들고 있는 서비스 EValue(중고 전기차 매물을 매일 지켜보며 값을 견주는 도구)를 만들며 부딪힌 문제와 결정의 기록.",
@@ -43,6 +48,38 @@ window.SEOK = {
   ],
 
   posts: [
+    {
+      slug: "cheotjan-mfds-504",
+      cat: "cheotjan",
+      date: "2026.08.29",
+      series: "cheotjan",
+      order: 3,
+      title: "첫잔 [3] — 크롤링 대신 식약처: 수입신고 15만 건에서 위스키 504건",
+      blurb:
+        "명세에는 2,500종이라 적었는데 손으로 모은 건 464종이었습니다. 식약처 수입신고 15만 건에서 위스키 504건을 골라 시드와 맞춰 보니, 공식 데이터라도 붙이는 건 확률이라 자동으로 고치지 않기로 했습니다.",
+    },
+    {
+      slug: "cheotjan-robots-gsshop",
+      cat: "cheotjan",
+      date: "2026.08.28",
+      series: "cheotjan",
+      order: 2,
+      related: ["price-band"],
+      title: "첫잔 [2] — robots.txt를 안 보고 GS샵을 주력으로 썼다",
+      blurb:
+        "브랜드별 국내 위스키 소매가를 주는 무료·합법 피드는 없습니다. 단일 가격을 포기하고 밴드로 바꾸자 수확률이 세 배가 됐고, 그 과정에서 넘지 말아야 할 선을 두 번 밟을 뻔했습니다.",
+    },
+    {
+      slug: "cheotjan-score-60",
+      cat: "cheotjan",
+      date: "2026.08.27",
+      series: "cheotjan",
+      order: 1,
+      related: ["price-band"],
+      title: "첫잔 [1] — 60점은 \"무난\"이 아니었다",
+      blurb:
+        "위스키 기록 앱 첫잔의 첫날. 기획서에 적어 둔 \"60 무난 · 80 훌륭\"은 별 세 개를 100으로 환산한 숫자였습니다. Whiskybase의 실제 구간을 읽고 라벨을 형용사에서 행동으로 바꿨습니다.",
+    },
     {
       slug: "paper-1-wang2006",
       cat: "paper",
