@@ -5,6 +5,7 @@
      - 기본: 소개(정적) → 지금 쓰는 시리즈 → 시리즈 카드 → 최근 글
      - ?view=all : 전체 글을 달별로
      - ?cat=<key>: 카테고리 하나. 시리즈면 읽는 순서대로 번호를 붙인다
+       제목에 갈래가 있으면(DFT 이론·실습) 표시를 달고 탭으로 나눠 본다(&track=이론)
    글 페이지(posts/*.html)
      - 시리즈 띠(몇 편 중 몇 편), 읽는 시간, 오른쪽 목차, 이전/다음/관련,
        같은 시리즈 목록
@@ -65,6 +66,28 @@
   // "첫잔 [1] — 제목" → "제목" (번호를 따로 보여줄 때만 쓴다)
   function bareTitle(t) {
     return t.replace(/^.+?\s\[\d+\]\s—\s/, "");
+  }
+  // 시리즈 안의 갈래. "DFT 이론 [2] — …"는 표지 이름(mark) "DFT" 뒤의 "이론"이 갈래이고,
+  // "첫잔 [2] — …"처럼 mark만 있으면 갈래가 없다(null)
+  function trackOf(p) {
+    var m = /^(.+?)\s\[(\d+)\]\s—\s/.exec(p.title);
+    var c = catOf(p.cat);
+    if (!m || !c || !c.mark || m[1].indexOf(c.mark + " ") !== 0) return null;
+    return { label: m[1].slice(c.mark.length + 1), n: parseInt(m[2], 10) };
+  }
+  // 목록에 나오는 갈래 이름(처음 나오는 순서). 둘 이상일 때만 표시한다
+  function tracksIn(list) {
+    var out = [];
+    list.forEach(function (p) {
+      var t = trackOf(p);
+      if (t && out.indexOf(t.label) < 0) out.push(t.label);
+    });
+    return out;
+  }
+  function trackChip(p, labels) {
+    var t = trackOf(p);
+    if (!t || labels.length < 2) return "";
+    return '<span class="track tr' + labels.indexOf(t.label) + '">' + esc(t.label) + " " + t.n + "</span>";
   }
   function pad2(n) {
     return n < 10 ? "0" + n : String(n);
@@ -378,14 +401,39 @@
           '<p class="list-desc">' + esc(c.desc || "") + "</p>" +
           '<p class="meta">' + cp.length + "편" + (cp[0] ? " · 최근 " + cp[0].date : "") + "</p></div></div>" +
           filter;
+        var labels = tracksIn(series);
+        var wantTrack = labels.indexOf(params.get("track")) >= 0 ? params.get("track") : "";
         if (series.length) {
           html +=
-            '<h2 class="sub">읽는 순서</h2><ol class="series-list">' +
+            '<div class="sub-row"><h2 class="sub">읽는 순서</h2>' +
+            (labels.length > 1
+              ? '<div class="track-tabs" role="group" aria-label="갈래별로 보기">' +
+                [""].concat(labels)
+                  .map(function (l, k) {
+                    var key = k ? l : "";
+                    var n = k
+                      ? series.filter(function (p) {
+                          var t = trackOf(p);
+                          return t && t.label === l;
+                        }).length
+                      : series.length;
+                    return (
+                      '<button type="button" data-track="' + esc(key) + '" aria-pressed="' + (key === wantTrack) + '">' +
+                      (k ? esc(l) : "전체") + ' <span class="n">' + n + "</span></button>"
+                    );
+                  })
+                  .join("") +
+                "</div>"
+              : "") +
+            '</div><ol class="series-list">' +
             series
               .map(function (p) {
+                var t = trackOf(p);
+                var off = wantTrack && (!t || t.label !== wantTrack);
                 return (
-                  '<li><a href="' + href(p) + '"><span class="num">' + pad2(p.order || 0) + "</span>" + thumb(p) +
-                  '<span class="body"><span class="t">' + esc(bareTitle(p.title)) + "</span>" +
+                  "<li" + (t ? ' data-track="' + esc(t.label) + '"' : "") + (off ? " hidden" : "") + ">" +
+                  '<a href="' + href(p) + '"><span class="num">' + pad2(p.order || 0) + "</span>" + thumb(p) +
+                  '<span class="body">' + trackChip(p, labels) + '<span class="t">' + esc(bareTitle(p.title)) + "</span>" +
                   '<span class="b">' + esc(p.blurb) + "</span></span>" +
                   '<time datetime="' + isoDate(p.date) + '">' + p.date + "</time></a></li>"
                 );
@@ -412,6 +460,23 @@
       if (listingEl) {
         listingEl.innerHTML = html;
         listingEl.hidden = false;
+        // 갈래 탭: 읽는 순서에서 한 갈래(이론·실습)만 남긴다. 주소에 적어 두어 뒤로 오면 그대로다
+        var tabs = listingEl.querySelectorAll(".track-tabs button");
+        Array.prototype.forEach.call(tabs, function (b) {
+          b.addEventListener("click", function () {
+            var want = b.getAttribute("data-track");
+            Array.prototype.forEach.call(tabs, function (o) {
+              o.setAttribute("aria-pressed", String(o === b));
+            });
+            Array.prototype.forEach.call(listingEl.querySelectorAll(".series-list li"), function (li) {
+              li.hidden = !!want && li.getAttribute("data-track") !== want;
+            });
+            var q = new URLSearchParams(location.search);
+            if (want) q.set("track", want);
+            else q.delete("track");
+            history.replaceState(null, "", "?" + q.toString());
+          });
+        });
       }
     }
   }
@@ -527,6 +592,7 @@
       }
       if (chain.length > 1) {
         var cc = catOf(current.cat);
+        var chainTracks = tracksIn(chain);
         var box = document.createElement("section");
         box.className = "series-box";
         box.innerHTML =
@@ -536,7 +602,9 @@
               var on = p.slug === current.slug;
               return (
                 "<li" + (on ? ' class="on"' : "") + '><span class="num">' + pad2(p.order || 0) + "</span>" +
+                "<span>" + trackChip(p, chainTracks) +
                 (on ? '<span class="t">' + esc(bareTitle(p.title)) + " <em>지금 읽는 글</em></span>" : '<a href="' + p.slug + '.html">' + esc(bareTitle(p.title)) + "</a>") +
+                "</span>" +
                 "</li>"
               );
             })
