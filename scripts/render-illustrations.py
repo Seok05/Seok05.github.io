@@ -385,27 +385,46 @@ def dft_practice_8():
     save(fig, "dft-practice-8")
 
 
-# ── 실습 [9] 볼록 껍질이 세 번 뒤집히기까지: 가운데 점이 선 위·아래를 오간다 ──
+# ── 실습 [9] 총정리: 충전 중의 α-NaMnO₂를 원자 단위로. 왼쪽 x = 1, 오른쪽 x = 0.5, 사이는 두 상의 경계 ──
 def dft_practice_9():
     fig, ax = canvas(BG_DFT)
-    L, R = (230, 420), (1050, 420)   # 양 끝 조성(x=0.5, x=1). 캔버스는 y가 위로 커진다
-    mx = (L[0] + R[0]) / 2
-    ys = [600, 300, 520]  # 1차: 선 위(불안정) → 2차: 선 아래(안정) → 3차: 다시 위. 마지막이 결론
-    # 껍질: 두 끝을 잇는 선. 2차 판정 때는 껍질이 가운데로 꺾여 내려갔다(점선)
-    ax.plot([L[0], R[0]], [L[1], R[1]], color=mix(GRAPH, 0.2), lw=5, zorder=2, solid_capstyle="round")
-    ax.plot([L[0], mx, R[0]], [L[1], ys[1], R[1]], color=mix(INDIGO, 0.6), lw=3, ls=(0, (6, 6)), zorder=1)
-    for k, y in enumerate(ys[:2]):
-        col = WARM if y > L[1] else INDIGO
-        ax.add_patch(Circle((mx, y), 26, color=mix(col, 0.72), zorder=4, lw=0))
-        ax.add_patch(Circle((mx, y), 26, fill=False, ec=col, lw=2, ls=(0, (3, 4)), zorder=4.5, alpha=0.8))
-    # 판정이 옮겨간 순서: 굽은 화살표 둘
-    ax.add_patch(FancyArrowPatch((mx + 44, ys[0] - 20), (mx + 44, ys[1] + 20), arrowstyle="simple,head_length=16,head_width=18,tail_width=5", color=mix(GRAPH, 0.3), zorder=3, lw=0, connectionstyle="arc3,rad=-0.45"))
-    ax.add_patch(FancyArrowPatch((mx - 44, ys[1] + 20), (mx - 44, ys[2] - 20), arrowstyle="simple,head_length=16,head_width=18,tail_width=5", color=mix(GRAPH, 0.3), zorder=3, lw=0, connectionstyle="arc3,rad=-0.45"))
-    # 결론: 선 위에 남은 점과, 선까지의 높이
-    ax.plot([mx, mx], [L[1], ys[2] - 30], color=mix(WARM, 0.3), lw=2.5, ls=(0, (2, 4)), zorder=3)
-    sphere(ax, mx, ys[2], 30, WARM, z=6)
-    sphere(ax, *L, 30, "#8d939c", z=6)
-    sphere(ax, *R, 30, "#8d939c", z=6)
+    step, x_start, n = 150, 70, 7
+    def slab(y0):
+        for i in range(n):
+            x = x_start + i * step
+            tri_up = [(x, y0 + 55), (x - 75, y0 - 20), (x + 75, y0 - 20)]
+            tri_dn = [(x + 75, y0 - 20), (x + 150, y0 + 55), (x, y0 + 55)]
+            ax.add_patch(Polygon(tri_up, closed=True, color=mix(MN, 0.3), alpha=0.75, zorder=2, lw=0))
+            ax.add_patch(Polygon(tri_dn, closed=True, color=mix(MN, 0.5), alpha=0.75, zorder=2, lw=0))
+            ax.add_patch(Polygon(tri_up, closed=True, fill=False, ec=mix(MN, 0.15, INK), lw=1, zorder=2.5))
+            ax.add_patch(Polygon(tri_dn, closed=True, fill=False, ec=mix(MN, 0.15, INK), lw=1, zorder=2.5))
+        for i in range(n + 1):
+            sphere(ax, x_start + i * step - 75, y0 - 20, 13, O, z=4, shadow=False)
+            sphere(ax, x_start + i * step, y0 + 55, 13, O, z=4, shadow=False)
+    # 슬랩 셋, 사이에 Na 층 둘
+    for y0 in (105, 365, 625):
+        slab(y0)
+    # 두 상의 경계 (세로 점선)
+    bx = x_start + 2 * step + 150          # Na 열 2와 3 사이, 원자 위를 지나지 않게
+    ax.plot([bx, bx], [50, 720], color=mix(GRAPH, 0.35), lw=2.5, ls=(0, (7, 6)), zorder=1)
+    for gy in (235, 495):
+        for i in range(n):
+            x = x_start + i * step + 75
+            if x < bx:
+                sphere(ax, x, gy, 30, NA, z=5, shadow=False)                  # x = 1: 다 찬 Na
+            else:
+                if (i + (0 if gy == 235 else 1)) % 2 == 0:
+                    sphere(ax, x, gy, 30, NA, z=5, shadow=False)              # x = 0.5: 하나 걸러 남음
+                else:
+                    ax.add_patch(Circle((x, gy), 30, fill=False, ec=mix(GRAPH, 0.35), lw=2, ls=(0, (4, 5)), zorder=5))
+    # 빈자리와 맞닿은 Mn⁴⁺: 슬랩마다 오른쪽 Mn의 절반, 작고 진한 점 (위·가운데는 위 Na 층의 빈자리 열, 아래는 아래 Na 층의 빈자리 열)
+    for y0, cols in ((625, (4, 6)), (365, (4, 6)), (105, (3, 5))):
+        for i in cols:
+            ax.add_patch(Circle((x_start + i * step + 75, y0 + 17), 9, color=mix(MN, 0.0, INK), zorder=3.5, lw=0))
+    # 나가는 Na: 층 사이 통로를 따라 오른쪽 가장자리 밖으로 (충전)
+    for gy in (235, 495):
+        ax.add_patch(FancyArrowPatch((x_start + n * step - 40, gy), (x_start + n * step + 40, gy), arrowstyle="simple,head_length=20,head_width=26,tail_width=8", color=INDIGO, zorder=7, lw=0))
+        sphere(ax, x_start + n * step + 85, gy, 30, NA, z=6, shadow=False)
     save(fig, "dft-practice-9")
 
 if __name__ == "__main__":
