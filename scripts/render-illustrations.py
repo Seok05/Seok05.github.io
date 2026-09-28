@@ -385,6 +385,29 @@ def dft_practice_8():
     save(fig, "dft-practice-8")
 
 
+# ── 실습 [9] 볼록 껍질이 세 번 뒤집히기까지: 가운데 점이 선 위·아래를 오간다 ──
+def dft_practice_9():
+    fig, ax = canvas(BG_DFT)
+    L, R = (230, 420), (1050, 420)   # 양 끝 조성(x=0.5, x=1). 캔버스는 y가 위로 커진다
+    mx = (L[0] + R[0]) / 2
+    ys = [600, 300, 520]  # 1차: 선 위(불안정) → 2차: 선 아래(안정) → 3차: 다시 위. 마지막이 결론
+    # 껍질: 두 끝을 잇는 선. 2차 판정 때는 껍질이 가운데로 꺾여 내려갔다(점선)
+    ax.plot([L[0], R[0]], [L[1], R[1]], color=mix(GRAPH, 0.2), lw=5, zorder=2, solid_capstyle="round")
+    ax.plot([L[0], mx, R[0]], [L[1], ys[1], R[1]], color=mix(INDIGO, 0.6), lw=3, ls=(0, (6, 6)), zorder=1)
+    for k, y in enumerate(ys[:2]):
+        col = WARM if y > L[1] else INDIGO
+        ax.add_patch(Circle((mx, y), 26, color=mix(col, 0.72), zorder=4, lw=0))
+        ax.add_patch(Circle((mx, y), 26, fill=False, ec=col, lw=2, ls=(0, (3, 4)), zorder=4.5, alpha=0.8))
+    # 판정이 옮겨간 순서: 굽은 화살표 둘
+    ax.add_patch(FancyArrowPatch((mx + 44, ys[0] - 20), (mx + 44, ys[1] + 20), arrowstyle="simple,head_length=16,head_width=18,tail_width=5", color=mix(GRAPH, 0.3), zorder=3, lw=0, connectionstyle="arc3,rad=-0.45"))
+    ax.add_patch(FancyArrowPatch((mx - 44, ys[1] + 20), (mx - 44, ys[2] - 20), arrowstyle="simple,head_length=16,head_width=18,tail_width=5", color=mix(GRAPH, 0.3), zorder=3, lw=0, connectionstyle="arc3,rad=-0.45"))
+    # 결론: 선 위에 남은 점과, 선까지의 높이
+    ax.plot([mx, mx], [L[1], ys[2] - 30], color=mix(WARM, 0.3), lw=2.5, ls=(0, (2, 4)), zorder=3)
+    sphere(ax, mx, ys[2], 30, WARM, z=6)
+    sphere(ax, *L, 30, "#8d939c", z=6)
+    sphere(ax, *R, 30, "#8d939c", z=6)
+    save(fig, "dft-practice-9")
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     os.makedirs(FULL, exist_ok=True)
@@ -401,3 +424,4 @@ if __name__ == "__main__":
     laptop_to_server()
     dft_practice_7()
     dft_practice_8()
+    dft_practice_9()

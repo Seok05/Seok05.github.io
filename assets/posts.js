@@ -22,7 +22,8 @@
      series : 시리즈 묶음 (같은 series끼리 order 순으로 이전/다음 연결)
      order  : 시리즈 안에서의 순서 (읽는 순서)
      related: 시리즈 밖 관련 글의 slug 목록 ("관련"으로 연결)
-     thumb  : 카드 썸네일(4:3, assets/thumbs/<slug>.webp). 없으면 카테고리 표지 그림을 대신 쓴다
+     thumb  : 카드 썸네일(16:10, assets/thumbs/<slug>.webp). 없으면 카테고리 표지 그림을 대신 쓴다
+     tag    : 카드 메타 줄에 카테고리 옆에 붙는 짧은 표식(예: "복습"). 없으면 생략
    ───────────────────────────────────────────────────────────── */
 
 window.SEOK = {
@@ -71,6 +72,19 @@ window.SEOK = {
   ],
 
   posts: [
+    {
+      slug: "dft-practice-9",
+      cat: "dft",
+      tag: "복습",
+      thumb: "assets/thumbs/dft-practice-9.webp",
+      date: "2026.09.28",
+      series: "dft",
+      order: 12,
+      related: ["paper-1-wang2006"],
+      title: "DFT 실습 [9] — 볼록 껍질이 세 번 뒤집히기까지: α-NaMnO₂ 전압 계산 총정리",
+      blurb:
+        "Na를 절반 뺄 때의 전압을 27개의 계산으로 끝까지 따라간 복습용 총정리. 계산 프로토콜, 실험과의 비교, 얀-텔러 계단, 자기 배열의 에너지 지형, 세 번 뒤집힌 볼록 껍질 판정, 오차 예산과 운영 규칙까지 그림 6개와 표 9개로 모았습니다.",
+    },
     {
       slug: "dft-practice-8",
       cat: "dft",

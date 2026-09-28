@@ -172,6 +172,7 @@
     return (
       '<div class="meta-row">' +
       (withCat ? '<span class="tag">' + esc(c ? c.name : p.cat) + "</span>" : "") +
+      (p.tag ? '<span class="tag">' + esc(p.tag) + "</span>" : "") +
       '<span><time datetime="' + isoDate(p.date) + '">' + p.date + "</time></span></div>"
     );
   }
