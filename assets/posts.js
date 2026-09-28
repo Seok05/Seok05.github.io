@@ -72,6 +72,18 @@ window.SEOK = {
 
   posts: [
     {
+      slug: "dft-practice-7",
+      cat: "dft",
+      thumb: "assets/thumbs/dft-practice-7.webp",
+      date: "2026.09.27",
+      series: "dft",
+      order: 10,
+      related: ["dft-theory-2"],
+      title: "DFT 실습 [7] — 스핀을 뒤집자 두 구조가 정반대를 골랐다",
+      blurb:
+        "실습 [6]의 전압은 두 Mn의 스핀이 같은 방향이라는 가정 위에 서 있었습니다. 뒤집어 보니 원래 구조는 반강자성을, Na를 뺀 구조는 강자성을 골랐고, 바닥 상태끼리 비교한 전압은 2.42 V. 보류했던 Mn#1 판정의 결론과 첫 배열 열거까지.",
+    },
+    {
       slug: "dft-practice-6",
       thumb: "assets/thumbs/dft-practice-6.webp",
       cat: "dft",

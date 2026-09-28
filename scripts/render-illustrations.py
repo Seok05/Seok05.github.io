@@ -299,6 +299,64 @@ def dft_practice_6():
     save(fig, "dft-practice-6")
 
 
+# ── EValue: 노트북을 24시간 서버로 — 노트북, 터널, 고정 주소 ─────
+def laptop_to_server():
+    fig, ax = canvas("#e4f4ef")
+    # 노트북: 화면 + 받침
+    ax.add_patch(Polygon([(180, 300), (560, 300), (560, 560), (180, 560)], closed=True, color=mix(INK, 0.15), zorder=3))
+    ax.add_patch(Polygon([(196, 316), (544, 316), (544, 544), (196, 544)], closed=True, color="#0f1114", zorder=4))
+    for k in range(6):  # 화면 안 로그 줄
+        ax.plot([216, 216 + 200 - k * 22], [520 - k * 30, 520 - k * 30], color=mix("#7ee787", 0.1), lw=5, solid_capstyle="round", zorder=5, alpha=0.9 if k < 5 else 0.5)
+    ax.add_patch(Polygon([(120, 300), (620, 300), (600, 270), (140, 270)], closed=True, color=mix(INK, 0.3), zorder=3))
+    # 터널: 점선 곡선
+    t = np.linspace(0, 1, 60)
+    xs = 620 + t * 340
+    ys = 420 + 120 * np.sin(t * np.pi)
+    ax.plot(xs, ys, color="#149c8a", lw=6, ls=(0, (2, 3)), zorder=5, solid_capstyle="round")
+    ax.add_patch(FancyArrowPatch((940, 430), (985, 420), arrowstyle="simple,head_length=22,head_width=26,tail_width=8", color="#149c8a", zorder=6, lw=0))
+    # 구름 = 고정 주소
+    for (cx, cy, r) in ((1090, 420, 95), (1160, 470, 75), (1010, 470, 70), (1150, 380, 60)):
+        ax.add_patch(Circle((cx, cy), r, color="#ffffff", zorder=7, lw=0))
+        ax.add_patch(Circle((cx, cy), r, fill=False, ec=mix("#149c8a", 0.6), lw=2, zorder=7.5))
+    ax.add_patch(Polygon([(1010, 400), (1160, 400), (1160, 470), (1010, 470)], closed=True, color="#ffffff", zorder=7, lw=0))
+    # 구름 안 자물쇠(고정)
+    ax.add_patch(Polygon([(1060, 400), (1120, 400), (1120, 445), (1060, 445)], closed=True, color="#149c8a", zorder=8, lw=0))
+    ax.add_patch(Circle((1090, 452), 16, fill=False, ec="#149c8a", lw=6, zorder=8))
+    # 달 = 24시간
+    ax.add_patch(Circle((1150, 690), 46, color=mix(WARM, 0.35), zorder=3, lw=0))
+    ax.add_patch(Circle((1170, 705), 40, color="#e4f4ef", zorder=3.5, lw=0))
+    save(fig, "laptop-to-server")
+
+
+# ── 실습 [7] 스핀을 뒤집자: 원래 구조는 엇갈림(AFM), Na 뺀 구조는 나란히(FM) ──
+def dft_practice_7():
+    fig, ax = canvas(BG_DFT)
+    def arrow(x, y, up, color):
+        y0, y1 = (y - 95, y + 95) if up else (y + 95, y - 95)
+        ax.add_patch(FancyArrowPatch((x, y0), (x, y1), arrowstyle="simple,head_length=24,head_width=28,tail_width=10", color=color, zorder=8, lw=0))
+    # 왼쪽: Mn³⁺–Mn³⁺, 스핀 엇갈림. 위에 Na 둘
+    for x in (250, 430):
+        sphere(ax, x, 610, 34, NA, z=5, shadow=False)
+        cloud(ax, x, 380, 110, 110, MN, alpha=0.4)
+        sphere(ax, x, 380, 56, MN, z=6)
+    bond(ax, (306, 380), (374, 380), color=GRAPH, lw=7, z=4)
+    arrow(250, 380, True, INDIGO)
+    arrow(430, 380, False, INDIGO)
+    # 가운데 구분선
+    ax.plot([640, 640], [140, 700], color=mix(GRAPH, 0.55), lw=2, ls=(0, (6, 6)), zorder=1)
+    # 오른쪽: Mn³⁺–Mn⁴⁺, 스핀 나란히. Na 하나는 빈자리(점선)
+    sphere(ax, 850, 610, 34, NA, z=5, shadow=False)
+    ax.add_patch(Circle((1030, 610), 34, fill=False, ec=mix(GRAPH, 0.35), lw=2, ls=(0, (4, 5)), zorder=5))
+    cloud(ax, 850, 380, 110, 110, MN, alpha=0.4)
+    sphere(ax, 850, 380, 56, MN, z=6)
+    cloud(ax, 1030, 380, 80, 80, MN, alpha=0.4)
+    sphere(ax, 1030, 380, 42, MN, z=6)
+    bond(ax, (906, 380), (988, 380), color=GRAPH, lw=7, z=4)
+    arrow(850, 380, True, INDIGO)
+    arrow(1030, 380, True, INDIGO)
+    save(fig, "dft-practice-7")
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     os.makedirs(FULL, exist_ok=True)
@@ -312,3 +370,5 @@ if __name__ == "__main__":
     dft_practice_4()
     dft_practice_5()
     dft_practice_6()
+    laptop_to_server()
+    dft_practice_7()

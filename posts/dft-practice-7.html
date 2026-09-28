@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DFT 실습 [7] — 스핀을 뒤집자 두 구조가 정반대를 골랐다 · Seok Lab</title>
+    <meta
+      name="description"
+      content="실습 [6]의 전압 2.40 V는 두 Mn의 스핀이 같은 방향이라는 가정 위에 서 있었습니다. 스핀을 뒤집어 보니 원래 구조는 반강자성을, Na를 뺀 구조는 강자성을 골랐고, 바닥 상태끼리 비교한 전압은 2.42 V였습니다. 보류했던 Mn#1 판정의 결론, OUTCAR 부피의 함정, 그리고 첫 배열 열거까지."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 사업합니다</span>
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">VASP 실습</span><span>2026.09.27</span>
+            </div>
+            <h1>DFT 실습 [7] — 스핀을 뒤집자 두 구조가 정반대를 골랐다</h1>
+            <p class="lede">
+              <a href="dft-practice-6.html">실습 [6]</a>은 숙제 두 개를 남기고 끝났습니다. 하나는
+              판정을 보류한 Mn#1의 정체, 다른 하나는 전압 2.40 V가 기대고 있던 가정("두 Mn의
+              스핀은 같은 방향")이 얼마나 믿을 만한가. 오늘 둘 다 답이 나왔습니다. 첫 번째 답은
+              제 판단 실수를 바로잡았고, 두 번째 답은 예상하지 못한 방향으로 나왔습니다.
+            </p>
+          </div>
+
+          <figure class="shot wide illus">
+            <div class="shot-card"><img src="../assets/illus/dft-practice-7.webp" alt="원래 구조는 스핀이 엇갈리고, Na를 뺀 구조는 나란히 선다" width="1280" height="800" loading="lazy" decoding="async"></div>
+            <figcaption>Mn³⁺끼리인 원래 구조(왼쪽)는 스핀을 엇갈리게, Mn³⁺와 Mn⁴⁺가 이웃한 Na 뺀 구조(오른쪽)는 나란히 놓는 쪽을 골랐습니다.</figcaption>
+          </figure>
+
+          <h2>1. 숙제 하나: Mn#1은 온전한 Mn³⁺였다</h2>
+          <p>
+            실습 [6]에서 Na를 뺀 구조의 Mn#1은 d 모멘트가 3.86 μB였고, 저는 이걸 "기대보다
+            낮다"고 읽었습니다. 그 기대의 출처가 문제였습니다. 머릿속 기준이
+            <a href="dft-practice-4.html">실습 [4]</a>의 4.35였는데, 그건 R-3m 장난감 구조의
+            값이었거든요. 같은 C2/m 원래 구조의 이온별 모멘트를 기준값으로 뽑아 나란히
+            놓았습니다.
+          </p>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th></th><th>Mn d 모멘트 (μB)</th><th>O p 분극 (μB)</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Mn³⁺, R-3m 장난감 구조 (실습 [4])</td><td>4.35</td><td>−0.25</td></tr>
+                <tr><td><strong>Mn³⁺, C2/m 원래 구조 (기준값)</strong></td><td><strong>3.82</strong></td><td>−0.006</td></tr>
+                <tr><td>Na 뺀 구조의 Mn#1</td><td>3.86</td><td>·</td></tr>
+                <tr><td>Na 뺀 구조의 Mn#2</td><td>3.17</td><td>·</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Mn#1의 3.86은 같은 계열의 Mn³⁺(3.82)와 사실상 같습니다. <strong>Mn#1은 온전한
+            Mn³⁺였고, 전하는 3+와 4+로 깔끔하게 나뉘어 있었습니다.</strong> 같은 Mn³⁺인데도
+            구조가 R-3m이냐 C2/m이냐에 따라 모멘트가 4.35와 3.82로, 산소 분극은 −0.25와
+            −0.006으로 크게 다르게 나옵니다. 투영으로 잰 모멘트의 절대값은 구조에 이만큼
+            민감합니다. 그러니 <strong>모멘트는 같은 구조 계열끼리만 비교한다.</strong> 머리로는
+            알고 있던 규칙인데, 판단할 때 다른 구조의 숫자를 끌어왔던 겁니다.
+          </p>
+          <p>
+            그러면 수수께끼는 하나로 좁혀집니다. 온전한 Mn³⁺인데 왜 얀-텔러 왜곡은 절반으로
+            줄었나(긴/짧은 결합 비 1.24 → 1.13). 실습 [6]의 두 가설 중 "부분적 전하 분리"는
+            방금 배제됐으니, 남은 쪽인 <strong>셀의 기계적 제약</strong>이 유력합니다. Mn이 두
+            개뿐인 셀에서 Mn³⁺ 팔면체는 쪼그라든 Mn⁴⁺ 팔면체와 모서리를 맞대고 있어, 늘어나고
+            싶어도 마음껏 늘어나지 못한다는 해석입니다.
+          </p>
+
+          <div class="box obs">
+            <p class="box-label">연구와의 연결</p>
+            <p>
+              이 해석이 맞다면 왜곡 지수는 자기 자리의 산화 상태만이 아니라 <strong>이웃이 누구인가</strong>에도
+              반응한다는 뜻입니다. 고엔트로피 조성은 "Mn 옆에 무엇이 있느냐"가 자리마다 제각각인
+              물질이라, 해석 가능한 특징을 설계할 때 자리 자신의 상태와 이웃 환경을 따로 봐야
+              한다는 힌트가 여기서 처음 나왔습니다. §5에서 이 가설을 직접 시험하는 계산을
+              설계했습니다.
+            </p>
+          </div>
+
+          <h2>2. 숙제 둘: 원래 구조의 스핀을 뒤집다</h2>
+          <p>
+            실습 [6]의 모든 계산은 두 Mn의 스핀을 같은 방향으로 놓았습니다(강자성, FM). 그런데
+            실제 α-NaMnO₂는 반강자성(AFM)으로 알려져 있습니다. INCAR의 한 줄만 바꿔 같은 이완을
+            반복했습니다.
+          </p>
+          <pre><code>MAGMOM = 2*0.0 4.0 -4.0 4*0.0   ! 두 Mn의 스핀을 반대로</code></pre>
+          <p>
+            3스텝 만에 수렴했고 셀 합계 자기모멘트는 0, 두 Mn은 +3.809와 −3.809로 크기는 같고
+            부호만 반대였습니다. 크기는 FM의 3.822와 사실상 같으니, 스핀 방향을 뒤집어도 각
+            Mn의 국소 상태(Mn³⁺ 고스핀)는 그대로입니다. 에너지는 FM보다 셀당 27 meV(화학식당
+            13.5 meV) 낮았습니다. <strong>이 셀에서는 AFM이 더 안정</strong>하고, 실험과 방향이
+            맞습니다. 다만 이건 8원자 셀에서 만들 수 있는 가장 단순한 AFM이라, 실험에서 측정된
+            자기 구조와 같다고까지는 말할 수 없습니다.
+          </p>
+
+          <div class="box obs">
+            <p class="box-label">함정 하나</p>
+            <p>
+              부피를 확인하려고 <code>grep "volume of cell" OUTCAR</code>의 첫 줄과 끝 줄을 봤더니
+              45.47 → 90.81 Å³. 두 배로 커진 줄 알고 놀랐습니다. 알고 보니 OUTCAR는 대칭 분석
+              단계에서 <strong>원시 셀</strong>(C 중심 격자의 절반 크기 셀)의 부피를 먼저 찍고,
+              그 줄이 첫 번째로 잡힌 거였습니다. 실제 변화는 90.94 → 90.81, −0.14%. Na를 뺀
+              구조에서 이 현상이 없었던 건, Na 하나가 빠지며 C 중심 대칭이 이미 깨져 더 작은
+              원시 셀이 없었기 때문입니다. 부피 변화는 첫 줄이 아니라 두 번째 줄부터 봅니다.
+            </p>
+          </div>
+
+          <h2>3. Na를 뺀 구조는 반대를 골랐다</h2>
+          <p>
+            전압까지 비교하려면 Na를 뺀 구조도 스핀을 뒤집어야 합니다. 여기서는 Mn³⁺(스핀 4)와
+            Mn⁴⁺(스핀 3)를 반대로 놓게 되니 셀 합계가 0이 아니라 1로 남습니다. 이런 배열을
+            준강자성(ferrimagnetic)이라고 부릅니다. MAGMOM의 <em>순서</em>가 중요했습니다.
+            실습 [6]에서 Mn#1이 3+, Mn#2가 4+였으니 Mn#1에 +4, Mn#2에 −3을 줘서 전하 배치는
+            그대로 두고 스핀만 뒤집었습니다. 순서를 반대로 주면 전하 배치까지 바뀐 다른 계산이
+            되어 비교가 흐려집니다.
+          </p>
+          <pre><code>MAGMOM = 1*0.0 4.0 -3.0 4*0.0   ! Na, Mn#1(3+) 위, Mn#2(4+) 아래</code></pre>
+          <p>
+            결과는 셀 합계 1.0000, Mn#1 +3.819, Mn#2 −3.124로 의도대로였습니다. 그런데
+            에너지는 FM보다 셀당 <strong>72 meV 높았습니다.</strong> 두 구조를 나란히 놓으면:
+          </p>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th></th><th>FM (eV/셀)</th><th>반대 스핀 배열 (eV/셀)</th><th>더 안정한 쪽</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Na₂Mn₂O₄ (원래)</td><td>−50.780359</td><td>−50.807393 (AFM)</td><td><strong>AFM</strong>, 27 meV 낮음</td></tr>
+                <tr><td>NaMn₂O₄ (Na 뺀 것)</td><td>−47.076213</td><td>−47.003930 (준강자성)</td><td><strong>FM</strong>, 72 meV 낮음</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            두 구조의 선호가 정반대입니다. Mn³⁺끼리만 있는 원래 구조는 스핀을 엇갈리게 놓는 걸
+            좋아하고, Mn³⁺와 Mn⁴⁺가 이웃한 Na 뺀 구조는 스핀을 나란히 놓는 걸 좋아합니다. 혼합
+            원자가 망간 산화물에서 Mn³⁺–Mn⁴⁺ 쌍이 강자성 결합을 선호하는 경향(망가나이트의
+            이중교환 등)이 잘 알려져 있어서, 그 계열의 효과일 가능성이 높다고 봅니다. 가장
+            단순한 배열 두 개씩만 비교한 결과라는 단서는 붙여둡니다.
+          </p>
+
+          <h2>4. 그럼 전압은: 바닥 상태끼리 2.42 V</h2>
+          <p>
+            물리적으로 맞는 선택은 <strong>각 조성의 바닥 상태끼리</strong> 비교하는 것입니다.
+            원래 구조는 AFM, Na를 뺀 구조는 FM. 세 가지 조합을 모두 계산해봤습니다.
+          </p>
+
+          <figure>
+            <div class="fig-scroll"><svg viewBox="0 0 640 220" role="img" aria-label="자기 배열 조합별 전압 비교">
+              <line x1="120" y1="170" x2="600" y2="170" class="svg-stroke-rule" stroke-width="1.2" />
+              <text class="svg-label-sm svg-muted" x="120" y="192" text-anchor="middle">2.35</text>
+              <text class="svg-label-sm svg-muted" x="280" y="192" text-anchor="middle">2.40</text>
+              <text class="svg-label-sm svg-muted" x="440" y="192" text-anchor="middle">2.45</text>
+              <text class="svg-label-sm svg-muted" x="600" y="192" text-anchor="middle">2.50</text>
+              <text class="svg-label-sm svg-muted" x="360" y="212" text-anchor="middle">평균 전압 (V)</text>
+              <line x1="280" y1="30" x2="280" y2="170" class="svg-stroke-rule" stroke-width="0.6" stroke-dasharray="3 4" />
+              <line x1="440" y1="30" x2="440" y2="170" class="svg-stroke-rule" stroke-width="0.6" stroke-dasharray="3 4" />
+
+              <text class="svg-label-sm svg-muted" x="110" y="54" text-anchor="end">FM / FM</text>
+              <circle cx="267" cy="50" r="7" class="svg-fill-graphite" />
+              <text class="svg-label-sm svg-muted" x="282" y="54">2.396 (실습 [6])</text>
+
+              <text class="svg-label-sm svg-ink" x="110" y="99" text-anchor="end" style="font-weight:700">AFM / FM</text>
+              <circle cx="354" cy="95" r="8" class="svg-fill-accent" />
+              <text class="svg-label-sm" x="370" y="99" style="fill: var(--accent); font-weight:700">2.423 · 바닥 상태끼리</text>
+
+              <text class="svg-label-sm svg-muted" x="110" y="144" text-anchor="end">AFM / 준강자성</text>
+              <circle cx="585" cy="140" r="7" style="fill: var(--warm)" />
+              <text class="svg-label-sm" x="573" y="144" text-anchor="end" style="fill: var(--warm)">2.495 · 전부 반대 스핀</text>
+            </svg></div>
+            <figcaption>
+              자기 배열 조합(원래 구조 / Na 뺀 구조)에 따른 전압. 바닥 상태끼리 비교한 값(강조)은
+              FM 통일과 0.027 V 차이지만, "실험이 AFM이니 전부 반대 스핀으로"라는 그럴듯한
+              선택은 0.07 V 더 벗어납니다.
+            </figcaption>
+          </figure>
+
+          <div class="box kept">
+            <p class="box-label">연구 0호 데이터, 수정판</p>
+            <p>α-NaMnO₂ → Na₀.₅MnO₂ 평균 전압 ≈ 2.42 V (PBE+U, U = 3.9 eV, 조성별 바닥 자기 배열, 8원자 셀)</p>
+          </div>
+
+          <p>
+            여기서 하이스루풋 방법론에 대한 교훈이 하나 나옵니다. <strong>자기 배열은 하나로
+            통일하기보다 조성마다 바닥 상태를 따로 찾는 게 원칙이고, 통일한다면 어느 배열로
+            통일하느냐가 결과를 가른다.</strong> 이 계에서는 FM 통일이 운 좋게 바닥 상태에
+            가까웠지만, Na 함량에 따라 자기 선호가 뒤집히는 걸 봤으니 그 운이 다른 조성에서도
+            통한다는 보장은 없습니다. 수백 개 조성을 계산할 제 연구에서는 이 점검이 SI의 한
+            섹션이 될 것 같습니다. 실습 [6]이 남긴 세 가정(자기 배열, 셀 크기, 범함수) 중 첫
+            번째가 이렇게 정리됐습니다.
+          </p>
+
+          <h2>5. 다음 실험 설계: 첫 배열 열거</h2>
+          <p>
+            §1의 수수께끼, "이웃이 얀-텔러를 바꾸는가"를 시험하려면 Mn³⁺ 옆에 오는 이웃을 바꿔볼
+            수 있어야 합니다. 8원자 셀로는 불가능하니 셀을 b축 방향으로 두 배(Na₄Mn₄O₈, 16원자)로
+            키웠습니다. Na 4개 중 2개를 빼면(같은 Na₀.₅MnO₂ 조성) 경우의 수는 6가지인데,
+            pymatgen의 StructureMatcher로 대칭적으로 같은 것끼리 묶으면 서로 다른 배열은
+            <strong>2개</strong>로 줄어듭니다.
+          </p>
+          <pre><code>sc.make_supercell([1, 2, 1])                  # b축 2배
+pairs = list(combinations(na, 2))             # Na 4개 중 2개 빼기: 6가지
+groups = StructureMatcher().group_structures(cands)
+# → 대칭적으로 다른 배열 2개</code></pre>
+          <ul>
+            <li><strong>c1:</strong> Mn⁴⁺가 b축을 따라 줄지어 서는 배열. 8원자 셀 계산과 같은 배열을 두 배로 늘린 것으로 보여 대조군 역할을 합니다.</li>
+            <li><strong>c2:</strong> b축을 따라 Mn³⁺와 Mn⁴⁺가 번갈아 놓이는 배열. Mn³⁺의 이웃 구성이 c1과 달라지는 새 배열입니다.</li>
+          </ul>
+          <p>
+            작지만 이게 연구 주제의 핵심 동작, <strong>"배열 열거 → 대칭 중복 제거 → 계산"</strong>의
+            첫 실물입니다. 고엔트로피 조성에서는 경우의 수가 여섯이 아니라 수만 가지로
+            불어나겠지만, 파이프라인의 모양은 같습니다.
+          </p>
+          <p>
+            검산도 하나 심어뒀습니다. KPOINTS를 4×4×4로 두면 b축이 두 배가 된 만큼 옛 셀의
+            4×8×4와 정확히 같은 샘플링이라, c1의 에너지는 8원자 결과의 두 배(−94.152 eV)에
+            가깝게 나와야 합니다. 그게 맞으면 슈퍼셀 세팅이 옳다는 증거이고, 그 위에서 c2와
+            비교할 수 있습니다. Mn⁴⁺를 둘 자리는 "Na 빈자리 두 개와 모두 이웃한 Mn"이라는 규칙으로
+            정했는데, 초기 추측일 뿐이라 결과의 이온별 모멘트로 확인할 예정입니다. 자기 배열은
+            §3의 결론대로 Na 뺀 구조의 바닥인 FM으로 뒀습니다.
+          </p>
+          <p>
+            두 계산은 제출되어 돌고 있습니다. 부끄러운 이야기로 마무리하면, 스크립트를
+            돌리려는데 터미널을 새로 열어서 가상환경(venv)이 꺼져 있었습니다. venv는 새 터미널마다
+            다시 켜야 합니다.
+          </p>
+
+          <h2>이날 배운 것들</h2>
+          <ul>
+            <li><strong>모멘트는 같은 구조 계열끼리만 비교한다.</strong> 같은 Mn³⁺도 R-3m에서 4.35, C2/m에서 3.82. 기준값을 확인하지 않았다면 틀린 결론을 글로 남길 뻔했다.</li>
+            <li><strong>자기 선호는 조성을 따라 뒤집힐 수 있다.</strong> 원래 구조는 AFM, Na를 뺀 구조는 FM. 그래서 전압은 조성별 바닥 상태끼리 비교한다.</li>
+            <li><strong>그럴듯한 가정이 가장 위험하다.</strong> "실험이 AFM이니 전부 반대 스핀"은 FM 통일보다 더 멀리 벗어났다.</li>
+            <li><strong>MAGMOM의 순서는 전하 배치를 정한다.</strong> 스핀만 바꾸려면 어느 자리가 몇 가인지 알고 줘야 한다.</li>
+            <li><strong>OUTCAR의 첫 부피 줄은 원시 셀일 수 있다.</strong> 부피 변화는 두 번째 줄부터 본다.</li>
+            <li><strong>배열 열거 → 중복 제거 → 계산.</strong> 여섯 가지가 둘로 줄어드는 작은 실물로, 하이스루풋 파이프라인의 첫 모양을 봤다.</li>
+          </ul>
+
+          <div class="box">
+            <p style="margin: 0">
+              <strong>다음.</strong> 슈퍼셀 두 배열의 결과입니다. c1이 8원자 결과를 재현하는지
+              검산하고, c2에서 Mn³⁺의 이웃이 바뀌었을 때 얀-텔러 왜곡이 되살아나는지를 봅니다.
+              되살아난다면 "이웃이 국소 구조를 바꾼다"는 가설의 첫 증거이고, 두 배열 중 어느
+              쪽이 더 안정한지에 따라 Na₀.₅MnO₂의 전압도 다시 쓰입니다.
+            </p>
+          </div>
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하듯 사업합니다. 배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는
+                중입니다. → <a href="../?cat=dft">글 더 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하듯 사업합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="../">전체보기</a></li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 사업합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+
+    <script src="../assets/posts.js"></script>
+    <script src="../assets/site.js"></script>
+  </body>
+</html>

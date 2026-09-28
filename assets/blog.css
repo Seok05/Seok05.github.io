@@ -1501,6 +1501,42 @@ figure.shot figcaption {
   text-align: center;
 }
 
+/* 브라우저 창 프레임(웹 서비스 화면) */
+figure.shot.web {
+  max-width: 100%;
+  margin-top: 0;
+}
+
+.shot-browser {
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 22px 36px -18px rgba(20, 22, 28, 0.35), 0 0 0 1px rgba(20, 22, 28, 0.1);
+}
+
+.shot-browser .browser-bar {
+  height: 22px;
+  background: #ecedf0;
+  border-bottom: 1px solid #dfe1e5;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+}
+
+.shot-browser .browser-bar i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c9ccd2;
+}
+
+.shot-browser img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 /* 그림 그대로가 카드가 되는 경우(직접 그린 삽화): 여백 없이 테두리만 */
 figure.shot.illus {
   margin-top: 0;
