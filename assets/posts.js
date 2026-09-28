@@ -72,6 +72,18 @@ window.SEOK = {
 
   posts: [
     {
+      slug: "dft-practice-8",
+      cat: "dft",
+      thumb: "assets/thumbs/dft-practice-8.webp",
+      date: "2026.09.28",
+      series: "dft",
+      order: 11,
+      related: ["dft-theory-2"],
+      title: "DFT 실습 [8] — 이웃을 세었더니 얀-텔러가 계단을 그렸다",
+      blurb:
+        "Mn³⁺의 얀-텔러는 왜 Na를 빼면 약해질까. 슈퍼셀로 배열을 바꿔봤더니 배치는 상관없었고, 이웃한 Mn⁴⁺를 0, 2, 4개로 늘리자 긴 결합이 계단처럼 짧아졌습니다. 전하 배치 열거, 그리고 전압이 거꾸로 내려가는 데서 발견한 첫 볼록 껍질까지.",
+    },
+    {
       slug: "dft-practice-7",
       cat: "dft",
       thumb: "assets/thumbs/dft-practice-7.webp",

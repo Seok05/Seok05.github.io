@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DFT 실습 [8] — 이웃을 세었더니 얀-텔러가 계단을 그렸다 · Seok Lab</title>
+    <meta
+      name="description"
+      content="Mn³⁺의 얀-텔러 왜곡은 왜 Na를 빼면 약해질까. 슈퍼셀로 배열을 바꿔봤더니 배치는 상관없었고, 이웃한 Mn⁴⁺의 개수를 0, 2, 4로 늘리자 긴 결합이 계단처럼 짧아졌습니다. 전하 배치를 전부 시도하는 열거, 그리고 전압이 거꾸로 내려가는 데서 발견한 첫 볼록 껍질까지."
+    />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 사업합니다</span>
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">VASP 실습</span><span>2026.09.28</span>
+            </div>
+            <h1>DFT 실습 [8] — 이웃을 세었더니 얀-텔러가 계단을 그렸다</h1>
+            <p class="lede">
+              <a href="dft-practice-7.html">실습 [7]</a>은 수수께끼 하나를 남겼습니다. Na를 뺀
+              구조의 Mn³⁺는 분명 온전한 Mn³⁺인데, 얀-텔러 왜곡은 원래의 절반쯤으로 약해져 있었죠.
+              "옆에 쪼그라든 Mn⁴⁺가 있어서 마음껏 늘어나지 못한다"는 가설을 세우고 셀을 키워
+              배열을 바꿔봤습니다. 첫 실험은 가설을 확인해주지 않았습니다. 대신 제 실험 설계의
+              구멍을 보여줬고, 그 구멍을 메운 두 번째 실험에서 왜곡이 이웃의 수를 따라 계단을
+              그렸습니다.
+            </p>
+          </div>
+
+          <figure class="shot wide illus">
+            <div class="shot-card"><img src="../assets/illus/dft-practice-8.webp" alt="Mn⁴⁺ 이웃이 0, 2, 4개로 늘수록 Mn³⁺의 긴 결합이 계단처럼 짧아진다" width="1280" height="800" loading="lazy" decoding="async"></div>
+            <figcaption>가운데 Mn³⁺ 둘레의 이웃 여섯 중 Mn⁴⁺(작고 진한 것)가 0, 2, 4개로 늘수록 위아래 긴 결합이 계단처럼 짧아집니다. 이웃의 배치가 아니라 개수가 왜곡을 정합니다.</figcaption>
+          </figure>
+
+          <h2>1. 슈퍼셀 두 배열: 검산은 완벽했다</h2>
+          <p>
+            실습 [7]에서 제출한 두 계산은 셀을 b축으로 두 배 키운 Na₂Mn₄O₈(Na₀.₅MnO₂)의 서로 다른
+            두 배열입니다. c1은 Mn⁴⁺가 b축을 따라 줄지어 서는 줄무늬 배열로 8원자 셀 계산과 같은
+            배열이고, c2는 b축을 따라 Mn³⁺와 Mn⁴⁺가 번갈아 놓이는 배열입니다. 둘 다 2차 이완까지
+            마쳤습니다.
+          </p>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th></th><th>1차 (eV)</th><th>2차 (eV)</th><th>Pulay 보정</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>c1 (줄무늬)</td><td>−94.158682</td><td>−94.152033</td><td>+6.6 meV</td></tr>
+                <tr><td>c2 (번갈아)</td><td>−94.177320</td><td>−94.175587</td><td>+1.7 meV</td></tr>
+                <tr><td>참고: 8원자 셀 × 2</td><td>−94.159310</td><td>−94.152426</td><td>+6.9 meV</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            c1의 2차 값은 8원자 결과의 두 배와 <strong>0.4 meV</strong> 차이로, 16원자 슈퍼셀이
+            작은 셀을 거의 정확히 재현했습니다. KPOINTS를 4×4×4로 두면 b축이 두 배가 된 만큼 옛
+            셀의 4×8×4와 같은 샘플링이 된다는 설계가 먹힌 겁니다. 그리고 두 배열의 Pulay 보정이
+            달라서(+6.6과 +1.7 meV) 1차 값보다 차이가 오히려 벌어졌습니다. 결론은
+            <strong>c2가 셀당 23.6 meV 더 안정</strong>합니다. 1차 이완 값으로 결론을 냈다면
+            차이를 20% 넘게 작게 읽었을 겁니다.
+          </p>
+
+          <div class="box obs">
+            <p class="box-label">초기 추측이 뒤집히다</p>
+            <p>
+              c1의 MAGMOM은 "Na 빈자리와 더 많이 이웃한 Mn이 4+가 된다"는 규칙으로 정했습니다. 결과는
+              정반대였습니다. 규칙이 4+ 후보로 찍은 두 Mn이 3+(3.856 μB)가 됐고, 나머지 둘이
+              4+(3.172 μB)가 됐어요. 계산이 이완 중에 전하 배치를 스스로 뒤집은 겁니다. 초기값은
+              씨앗이지 판결이 아니라는 걸 또 봤고, 방법론적으로는 <strong>빈자리 이웃 수로 Mn⁴⁺
+              자리를 정하는 규칙은 믿을 만하지 않다</strong>는 교훈입니다. 전하 배치도 여러 개
+              시도해야 할 변수라는 뜻이고, §3에서 바로 그렇게 했습니다.
+            </p>
+          </div>
+
+          <h2>2. 얀-텔러는 되살아나지 않았다, 그리고 설계의 구멍</h2>
+          <p>
+            이번 실험의 진짜 질문은 결합 길이였습니다. c2에서 Mn³⁺의 이웃이 바뀌면 얀-텔러가
+            되살아날까?
+          </p>
+          <pre><code>c1 Mn³⁺: 1.986 ×4  /  2.239 ×2        긴/짧은 비 1.13
+c2 Mn³⁺: 1.947 ×2, 1.981 ×2  /  2.243 ×2   긴/짧은 비 1.14</code></pre>
+          <p>
+            거의 안 변했습니다. 긴 결합은 2.239와 2.243으로 사실상 같고, c2에서는 짧은 결합 넷이
+            둘씩 갈라진 정도입니다. 이유를 따지다가 구멍을 찾았습니다. 삼각 격자에서 각 Mn은 이웃
+            Mn이 여섯 개인데, 세어보면 <strong>c1에서도 c2에서도 모든 Mn³⁺가 Mn⁴⁺ 이웃 4개, Mn³⁺
+            이웃 2개</strong>를 갖습니다. 두 배열은 이웃의 개수는 같고 공간 배치만 다른 거였어요.
+            "c2에서 Mn³⁺의 이웃 구성이 달라진다"는 제 설명은 틀렸고, 계산 전에 이웃을 세어봤어야
+            했습니다.
+          </p>
+          <p>
+            그래서 이 결과를 제대로 읽으면 이렇습니다. <strong>Mn⁴⁺ 이웃의 수가 같으면 배치를
+            바꿔도 얀-텔러는 거의 같다.</strong> 가설을 기각한 게 아니라, "이웃이 어떻게 놓였나"보다
+            "Mn⁴⁺가 몇 개인가"가 왜곡을 좌우한다는 더 좁고 시험 가능한 가설로 다듬어준 겁니다.
+          </p>
+
+          <h2>3. 두 번째 실험: 이번엔 세고 들어간다</h2>
+          <p>
+            Mn⁴⁺ 이웃의 수를 바꾸려면 Mn⁴⁺의 비율을 바꾸면 됩니다. 같은 16원자 슈퍼셀에서 Na를
+            하나만 빼면 Na₃Mn₄O₈(x = 0.75)이 되고, Mn 넷 중 하나만 4+가 됩니다. 이번엔 계산을
+            제출하기 전에 스크립트가 각 Mn³⁺의 Mn⁴⁺ 이웃 수를 먼저 세게 했습니다. 그리고 세어보니
+            제가 또 틀렸더군요. "Mn⁴⁺ 이웃이 0개인 자리와 2개인 자리가 섞여 생긴다"고 예상했는데,
+            이 셀에서는 <strong>모든 Mn³⁺가 Mn⁴⁺ 이웃을 정확히 2개</strong>씩 갖습니다. 이번엔
+            제출 전에 잡았습니다.
+          </p>
+          <p>
+            그래도 실험은 여전히 가설을 시험합니다. 조성을 가로지르면 이웃 수가 0(x = 1), 2(x =
+            0.75), 4(x = 0.5)로 계단을 이루니까요. 이웃 수가 왜곡을 좌우한다면 x = 0.75의 비는
+            1.24와 1.13 사이에 떨어져야 합니다.
+          </p>
+          <p>
+            §1의 교훈도 반영했습니다. 어느 Mn이 4+가 될지 추측하지 않고 네 가지를 전부 만든 뒤
+            대칭으로 중복을 뺐습니다. 요령은 4+ 후보 자리에 표식 원소(Fe)를 잠깐 심어 StructureMatcher로
+            묶는 것입니다.
+          </p>
+          <pre><code>for m in mn:
+    t = sc.copy(); t.replace(m, "Fe"); marked.append(t)   # 4+ 자리를 Fe로 표시
+groups = StructureMatcher().group_structures(marked)
+# Mn4+ 자리 후보 4개 → 대칭적으로 다른 전하 배치 3개 (q1, q2, q3)</code></pre>
+          <p>
+            세 계산을 돌렸더니 놀라운 일이 있었습니다. 최종 에너지가 셋 다
+            <strong>−97.861031 eV로 소수점 여섯째 자리까지 같았고</strong>, 이온별 모멘트도 완전히
+            같았습니다. 초기에 4+를 서로 다른 세 자리에 뒀는데, 셋 다 같은 자리가 4+인 상태로
+            끝났어요. 두 계산은 이완 중에 전하가 스스로 옮겨가 나머지 하나에 합류한 겁니다. 하나만
+            돌렸다면 "이게 바닥인가?"를 알 수 없었을 텐데, 세 출발점이 한 곳에 모였으니 이 셀에서
+            x = 0.75의 전하 배치는 하나뿐이라고 꽤 자신 있게 말할 수 있습니다.
+          </p>
+
+          <h2>4. 결과: 얀-텔러의 계단</h2>
+
+          <figure>
+            <div class="fig-scroll"><svg viewBox="0 0 640 260" role="img" aria-label="Mn4+ 이웃 수에 따른 Mn3+ 얀-텔러 긴/짧은 결합 비">
+              <line x1="100" y1="210" x2="600" y2="210" class="svg-stroke-rule" stroke-width="1.2" />
+              <line x1="100" y1="30" x2="100" y2="210" class="svg-stroke-rule" stroke-width="1" />
+              <text class="svg-label-sm svg-muted" x="92" y="214" text-anchor="end">1.10</text>
+              <text class="svg-label-sm svg-muted" x="92" y="154" text-anchor="end">1.16</text>
+              <text class="svg-label-sm svg-muted" x="92" y="94" text-anchor="end">1.22</text>
+              <text class="svg-label-sm svg-muted" x="92" y="44" text-anchor="end">1.27</text>
+              <line x1="100" y1="150" x2="600" y2="150" class="svg-stroke-rule" stroke-width="0.6" stroke-dasharray="3 4" />
+              <line x1="100" y1="90" x2="600" y2="90" class="svg-stroke-rule" stroke-width="0.6" stroke-dasharray="3 4" />
+              <text class="svg-label-sm svg-muted" x="160" y="232" text-anchor="middle">0</text>
+              <text class="svg-label-sm svg-muted" x="350" y="232" text-anchor="middle">2</text>
+              <text class="svg-label-sm svg-muted" x="540" y="232" text-anchor="middle">4</text>
+              <text class="svg-label-sm svg-muted" x="350" y="252" text-anchor="middle">Mn³⁺ 하나가 가진 Mn⁴⁺ 이웃 수 (6개 중)</text>
+              <text class="svg-label-sm svg-muted" x="108" y="22">긴/짧은 결합 비</text>
+              <polyline points="160,73.5 350,132 540,175.3" fill="none" class="svg-stroke-accent" stroke-width="1.6" stroke-dasharray="5 4" />
+              <circle cx="160" cy="73.5" r="7" class="svg-fill-accent" />
+              <circle cx="350" cy="137.2" r="6" class="svg-fill-accent" />
+              <circle cx="350" cy="126.8" r="6" class="svg-fill-accent" />
+              <circle cx="540" cy="182.6" r="6" class="svg-fill-graphite" />
+              <circle cx="540" cy="167.9" r="6" class="svg-fill-graphite" />
+              <text class="svg-label-sm svg-ink" x="176" y="70">x = 1 · 1.24</text>
+              <text class="svg-label-sm svg-ink" x="366" y="124">x = 0.75 · 1.17, 1.18</text>
+              <text class="svg-label-sm svg-ink" x="470" y="200" text-anchor="end">x = 0.5 · c1 1.13, c2 1.14</text>
+            </svg></div>
+            <figcaption>
+              Mn³⁺의 긴/짧은 결합 비. 이웃한 Mn⁴⁺가 두 개 늘 때마다 왜곡이 계단처럼 줄어듭니다.
+              같은 이웃 수 안에서 배치만 다른 두 점(x = 0.75의 두 종류, x = 0.5의 c1과 c2)은 거의
+              겹칩니다.
+            </figcaption>
+          </figure>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>Mn⁴⁺ 이웃 수</th><th>조성</th><th>Mn³⁺ 긴 결합 (Å)</th><th>긴/짧은 비</th><th>왜곡 지수</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>0</td><td>x = 1</td><td>2.436</td><td>1.24</td><td>1.1×10⁻²</td></tr>
+                <tr><td><strong>2</strong></td><td><strong>x = 0.75</strong></td><td><strong>2.32</strong></td><td><strong>1.17~1.18</strong></td><td><strong>6.0~6.6×10⁻³</strong></td></tr>
+                <tr><td>4</td><td>x = 0.5</td><td>2.24</td><td>1.13~1.14</td><td>3.3~4.1×10⁻³</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <strong>정확히 예측한 사이에 떨어졌습니다.</strong> 긴 결합이 2.436 → 2.32 → 2.24로,
+            Mn⁴⁺ 이웃이 두 개 늘 때마다 계단처럼 짧아집니다. 게다가 x = 0.75 안에는 Mn⁴⁺ 이웃
+            2개를 서로 다른 방향에 둔 Mn³⁺가 두 종류 있는데, 둘의 비는 1.17과 1.18로 거의
+            같습니다. x = 0.5의 c1과 c2에서 본 것과 똑같이, 이웃의 배치는 거의 영향이 없고 개수가
+            왜곡을 좌우한다는 그림이 세 조성에 걸쳐 일관되게 나왔습니다.
+          </p>
+          <p>
+            특징으로서의 견고성도 한 번 더 확인됐습니다. 모든 계산에서 Mn³⁺의 왜곡 지수는
+            10⁻³~10⁻²대, Mn⁴⁺는 10⁻⁴ 이하로 한 자릿수 이상 벌어져 있습니다. 왜곡 지수는 산화
+            상태를 구분하는 동시에, 이웃 환경에 따라 연속적으로 움직이는 특징입니다.
+          </p>
+
+          <div class="box obs">
+            <p class="box-label">연구와의 연결</p>
+            <p>
+              고엔트로피 층상산화물에서 국소 구조를 설명하려면 "그 자리가 무슨 이온인가"만으로는
+              부족하고 <strong>"이웃에 무엇이 몇 개 있나"</strong>가 필요하다는 걸, 가장 단순한 Mn
+              한 원소 계에서 정량적으로 보인 겁니다. 이웃 조성을 세는 특징은 단거리 질서(SRO)
+              파라미터와 같은 계열이라, 본 연구의 특징 설계로 곧장 이어집니다.
+            </p>
+          </div>
+
+          <p>
+            단서는 하나입니다. 이웃 수가 바뀔 때 Na 함량도 함께 바뀌었으니(x = 1, 0.75, 0.5), 지금
+            데이터로는 이웃 효과와 Na 함량 효과를 완전히 분리하지 못합니다. 그걸 가르려면 같은
+            조성 안에서 이웃 수가 다른 Mn³⁺가 공존하는 더 큰 셀이 필요합니다.
+          </p>
+
+          <h2>5. 덤으로 찾은 것: 전압이 거꾸로 내려갔다</h2>
+          <p>
+            세 조성의 에너지가 다 모였으니 전압을 구간별로 나눠 계산할 수 있게 됐습니다. 원래
+            구조는 바닥인 AFM, 나머지는 FM, Na 금속은 원자당 −1.308221 eV입니다.
+          </p>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>구간</th><th>전압</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>x = 1 → 0.75</td><td>2.446 V</td></tr>
+                <tr><td>x = 0.75 → 0.5</td><td>2.377 V</td></tr>
+                <tr><td>x = 1 → 0.5 평균</td><td><strong>2.411 V</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            평균 2.411 V는 실습 [7]의 2.42 V에서 0.01 V 내려간 값입니다. x = 0.5의 바닥 배열이
+            c2로 바뀐 만큼이고, 작은 셀이 강제한 배열 가정이 전압에 주는 영향이 이 정도라는
+            뜻입니다. 실습 [6]이 남긴 세 가정 중 두 번째(셀 크기)에 대한 첫 측정입니다.
+          </p>
+          <p>
+            그런데 표를 보면 이상합니다. 정상적인 충전 곡선은 Na를 뺄수록 전압이
+            <strong>올라가야</strong> 하는데, 뒤 구간이 앞 구간보다 낮습니다. 이건 x = 0.75 상태의
+            에너지가 양 끝(x = 1과 0.5)을 섞은 것보다 높다는 뜻입니다.
+          </p>
+
+          <figure>
+            <div class="fig-scroll"><svg viewBox="0 0 640 250" role="img" aria-label="Na 함량에 따른 형성 에너지와 볼록 껍질">
+              <line x1="120" y1="180" x2="560" y2="180" class="svg-stroke-graphite" stroke-width="2" />
+              <line x1="120" y1="40" x2="120" y2="210" class="svg-stroke-rule" stroke-width="1" />
+              <text class="svg-label-sm svg-muted" x="112" y="184" text-anchor="end">0</text>
+              <text class="svg-label-sm svg-muted" x="112" y="114" text-anchor="end">+20</text>
+              <text class="svg-label-sm svg-muted" x="112" y="44" text-anchor="end">+40</text>
+              <line x1="120" y1="110" x2="560" y2="110" class="svg-stroke-rule" stroke-width="0.6" stroke-dasharray="3 4" />
+              <text class="svg-label-sm svg-muted" x="128" y="30">두 끝점을 잇는 선 기준 에너지 (meV/셀)</text>
+              <text class="svg-label-sm svg-muted" x="140" y="228" text-anchor="middle">x = 0.5</text>
+              <text class="svg-label-sm svg-muted" x="340" y="228" text-anchor="middle">x = 0.75</text>
+              <text class="svg-label-sm svg-muted" x="540" y="228" text-anchor="middle">x = 1</text>
+              <line x1="340" y1="180" x2="340" y2="60" class="svg-stroke-rule" stroke-width="1" stroke-dasharray="2 3" />
+              <circle cx="140" cy="180" r="7" class="svg-fill-graphite" />
+              <circle cx="540" cy="180" r="7" class="svg-fill-graphite" />
+              <circle cx="340" cy="60.4" r="8" style="fill: var(--warm)" />
+              <circle cx="340" cy="155.1" r="6" class="svg-fill-card svg-stroke-graphite" stroke-width="2" />
+              <text class="svg-label-sm" x="356" y="64" style="fill: var(--warm); font-weight:700">+34 meV (원래 구조 AFM 기준)</text>
+              <text class="svg-label-sm svg-muted" x="356" y="159">+7 meV (자기 배열 FM 통일)</text>
+              <text class="svg-label-sm svg-ink" x="560" y="170" text-anchor="end">볼록 껍질</text>
+            </svg></div>
+            <figcaption>
+              x = 0.5와 x = 1을 잇는 직선(볼록 껍질)을 기준으로 본 x = 0.75의 에너지. 선보다
+              위에 있는 조성은 스스로 존재하지 못하고 양 끝의 두 상으로 갈라집니다. 다만 +7 meV라는
+              작은 차이는 자기 배열 가정 하나로 뒤집힐 수 있는 크기입니다.
+            </figcaption>
+          </figure>
+
+          <p>
+            x = 0.75의 에너지는 두 끝점을 잇는 직선보다 셀당 34 meV 위에 있습니다. 이런 중간 조성은
+            스스로 존재하지 못하고 두 상(x = 1과 x = 0.5)으로 갈라지는데, 이게
+            <strong>볼록 껍질(convex hull)</strong>의 개념이고, 전압 곡선에서는 2.41 V의 평탄
+            구간(plateau)으로 나타납니다. 연구 주제의 목표 물성 중 하나인 E_hull을 처음으로 직접
+            계산한 셈입니다.
+          </p>
+          <p>
+            하지만 결론으로 적을 수는 없습니다. 원래 구조만 AFM이고 x = 0.75는 FM으로만
+            계산했어요. 자기 배열을 FM으로 통일해서 다시 재면 직선 위로 <strong>7 meV</strong>밖에
+            뜨지 않는데, 실습 [7]에서 본 자기 배열 에너지(27, 72 meV)보다 작은 차이입니다. x =
+            0.75의 반대 스핀 배열을 확인하기 전까지 "x = 0.75는 불안정하다"는
+            <strong>가설</strong>입니다.
+          </p>
+
+          <h2>이날 배운 것들</h2>
+          <ul>
+            <li><strong>실험을 설계하면 변수부터 센다.</strong> 두 배열이 이웃 수가 같다는 걸 계산 전에 셌다면 첫 실험을 다르게 짰을 것이다. 두 번째엔 세고 들어가서 제출 전에 제 예측의 오류를 잡았다.</li>
+            <li><strong>가설이 틀린 게 아니라 좁혀질 때가 있다.</strong> "이웃이 왜곡을 바꾼다"는 "Mn⁴⁺ 이웃의 수가 왜곡을 바꾼다"가 되어 시험을 통과했다.</li>
+            <li><strong>전하 배치는 추측하지 말고 열거한다.</strong> 규칙은 한 번 뒤집혔고, 세 출발점을 모두 돌려서야 바닥이 하나뿐임을 알았다. 표식 원소로 대칭 중복을 빼는 요령은 고엔트로피에서도 그대로 쓴다.</li>
+            <li><strong>1차 이완 값으로 에너지 차이를 결론 내지 않는다.</strong> 배열마다 Pulay 보정이 달라, 차이가 18.6에서 23.6 meV로 바뀌었다.</li>
+            <li><strong>전압이 거꾸로 가면 볼록 껍질을 의심한다.</strong> 중간 조성이 두 끝점을 잇는 선보다 위에 있으면 그 조성은 존재하지 않고 평탄 구간이 생긴다. 단, 그 판정은 에너지 스케일이 비슷한 다른 가정(자기 배열)에 흔들릴 수 있다.</li>
+            <li><strong>PBS의 E는 에러가 아니라 Exiting.</strong> 끝난 잡이 뒷정리를 하는 중이다.</li>
+          </ul>
+
+          <div class="box">
+            <p style="margin: 0">
+              <strong>다음.</strong> 오늘 가설 수준에 오른 두 가지를 하나씩 굳힙니다. 하나는
+              "얀-텔러는 Mn⁴⁺ 이웃 수를 따른다"를 Na 함량 효과와 분리하는 것으로, 같은 조성 안에서
+              이웃 수가 다른 Mn³⁺가 공존하는 더 큰 셀이 필요합니다. 다른 하나는 x = 0.75의 반대
+              스핀 배열을 계산해 "x = 0.75는 볼록 껍질 위에 있다"가 자기 배열 가정에도 살아남는지
+              확인하는 것입니다.
+            </p>
+          </div>
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하듯 사업합니다. 배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는
+                중입니다. → <a href="../?cat=dft">글 더 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하듯 사업합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="../">전체보기</a></li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 사업합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+
+    <script src="../assets/posts.js"></script>
+    <script src="../assets/site.js"></script>
+  </body>
+</html>

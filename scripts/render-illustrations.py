@@ -357,6 +357,34 @@ def dft_practice_7():
     save(fig, "dft-practice-7")
 
 
+# ── 실습 [8] 이웃을 세었더니: Mn⁴⁺ 이웃이 0·2·4개일 때 얀-텔러 계단 ──
+def dft_practice_8():
+    fig, ax = canvas(BG_DFT)
+    centers = [(260, 380), (640, 380), (1020, 380)]
+    n4 = [0, 2, 4]
+    stretch = [150, 118, 92]  # 축 결합 길이(왜곡)
+    tops = []
+    for (cx, cy), k, st in zip(centers, n4, stretch):
+        # 이웃 여섯: 육각형. 앞 k개는 Mn⁴⁺(작고 진함), 나머지는 Mn³⁺(연함)
+        for i in (0, 2, 3, 5):  # 위아래(1, 4)는 긴 결합의 O 뒤에 가려지므로 그리지 않는다
+            ang = np.radians(30 + i * 60)
+            nx, ny = cx + 150 * np.cos(ang), cy + 150 * np.sin(ang) * 0.5
+            is4 = i in ([], [0, 3], [0, 2, 3, 5])[n4.index(k)]
+            ax.plot([cx, nx], [cy, ny], color=mix(GRAPH, 0.6), lw=2, zorder=2)
+            sphere(ax, nx, ny, 22 if is4 else 28, mix(MN, 0.0, INK) if is4 else mix(MN, 0.55), z=3, shadow=False)
+        # 축 방향 O 둘 (왜곡): 위아래로
+        for sgn in (1, -1):
+            bond(ax, (cx, cy), (cx, cy + sgn * st), color=INDIGO, lw=8, z=5)
+            sphere(ax, cx, cy + sgn * st, 20, O, z=7, shadow=False)
+        sphere(ax, cx, cy, 44, MN, z=6)
+        tops.append((cx, cy + st + 34))
+    # 계단: 위쪽 O 높이를 잇는 점선
+    xs = [tops[0][0] - 60, tops[0][0] + 60, tops[1][0] - 60, tops[1][0] + 60, tops[2][0] - 60, tops[2][0] + 60]
+    ys = [tops[0][1], tops[0][1], tops[1][1], tops[1][1], tops[2][1], tops[2][1]]
+    ax.plot(xs, ys, color=mix(INDIGO, 0.3), lw=3, ls=(0, (5, 5)), zorder=1, solid_capstyle="round")
+    save(fig, "dft-practice-8")
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     os.makedirs(FULL, exist_ok=True)
@@ -372,3 +400,4 @@ if __name__ == "__main__":
     dft_practice_6()
     laptop_to_server()
     dft_practice_7()
+    dft_practice_8()
