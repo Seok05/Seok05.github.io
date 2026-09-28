@@ -137,6 +137,13 @@
       '" style="--hue:' + (c.hue || 245) + '" aria-hidden="true">' + inner + "</div>"
     );
   }
+  // 카드 썸네일: 글에 thumb가 있으면 그 그림, 없으면 카테고리 표지
+  function thumb(p) {
+    if (p.thumb) return '<div class="thumb"><img src="' + root + p.thumb + '" alt="" loading="lazy" decoding="async"></div>';
+    var c = catOf(p.cat);
+    return '<div class="thumb thumb-cover">' + (c ? cover(c) : "") + "</div>";
+  }
+
   function metaRow(p, withCat) {
     var c = catOf(p.cat);
     return (
@@ -294,10 +301,10 @@
             .slice(0, 6)
             .map(function (p) {
               return (
-                '<a class="post-card" href="' + href(p) + '">' +
-                metaRow(p, true) +
+                '<a class="post-card" href="' + href(p) + '">' + thumb(p) +
+                '<div class="post-card-body">' + metaRow(p, true) +
                 "<h3>" + esc(p.title) + "</h3>" +
-                "<p>" + esc(p.blurb) + "</p></a>"
+                "<p>" + esc(p.blurb) + "</p></div></a>"
               );
             })
             .join("") +
@@ -377,7 +384,7 @@
             series
               .map(function (p) {
                 return (
-                  '<li><a href="' + href(p) + '"><span class="num">' + pad2(p.order || 0) + "</span>" +
+                  '<li><a href="' + href(p) + '"><span class="num">' + pad2(p.order || 0) + "</span>" + thumb(p) +
                   '<span class="body"><span class="t">' + esc(bareTitle(p.title)) + "</span>" +
                   '<span class="b">' + esc(p.blurb) + "</span></span>" +
                   '<time datetime="' + isoDate(p.date) + '">' + p.date + "</time></a></li>"
@@ -393,8 +400,9 @@
             loose
               .map(function (p) {
                 return (
-                  '<a class="post-card" href="' + href(p) + '">' + metaRow(p, false) +
-                  "<h3>" + esc(p.title) + "</h3><p>" + esc(p.blurb) + "</p></a>"
+                  '<a class="post-card" href="' + href(p) + '">' + thumb(p) +
+                  '<div class="post-card-body">' + metaRow(p, false) +
+                  "<h3>" + esc(p.title) + "</h3><p>" + esc(p.blurb) + "</p></div></a>"
                 );
               })
               .join("") +

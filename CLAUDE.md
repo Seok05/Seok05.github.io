@@ -15,6 +15,13 @@
   DFT는 첫 계산 구조였던 O3형 NaMnO₂를 `scripts/render-namno2.py`(numpy+matplotlib, VESTA 기본색)로
   그린 `dft-namno2.webp`. VESTA에서 직접 내보낸 PNG가 생기면 같은 이름으로 바꿔 끼우면 된다.
   site.js의 `ART`(인라인 SVG 배터리·격자·문서)는 그림 파일이 없을 때의 예비다.
+- `assets/thumbs/<slug>.webp`(640×400, 16:10 카드 썸네일)와 `assets/shots/*.webp`(480px 폭, 글 안의 실제 화면).
+  DFT·Paper 글의 썸네일은 `scripts/render-illustrations.py`가 글 내용을 그림으로 그린 것(밀도 지형, 단위 격자,
+  스핀 화살표, 평면파 컷오프, k점 격자, 국재화, d 오비탈, 늘어난 팔면체, Na가 빠지는 층, 녹스는 금속 구).
+  새 DFT 글이 생기면 함수 하나를 더해 그린다. EValue·배터리 글은 아직 각 글의 첫 도해를 확대한 캡처다.
+  첫잔 글은 제품소개서 v1.4에 박힌 캡처와 헤드리스 크롬으로 찍은 `/settings`·`/first-steps`에서 뽑았다.
+  글 안에서는 `<figure class="shot">`(폰 프레임) 또는 `<figure class="shot wide">`(카드)로 넣는다.
+  캡처 시점이 글 날짜보다 뒤면 캡션에 "(9월 22일 기준 화면)"처럼 적는다.
 - `assets/site.js` — posts.js를 읽어 페이지를 조립한다.
   - 홈: 소개(정적) → 지금 쓰는 시리즈(`featured` 카테고리) → 시리즈 카드 → 최근 글 6편.
     `?view=all`은 전체 글을 달별로, `?cat=<key>`는 카테고리 하나(시리즈면 읽는 순서로 번호).
@@ -58,4 +65,4 @@
 
 ## 로컬 미리보기
 
-`.claude/launch.json`의 "blog" 설정(python3 http.server 8940). `.claude/`는 커밋하지 않는다.
+`.claude/launch.json`의 "blog" 설정이 `scripts/serve.py 8940`을 띄운다(캐시 금지 헤더를 붙인 정적 서버라 고친 CSS·JS가 새로고침만으로 보인다). `.claude/`는 커밋하지 않는다.

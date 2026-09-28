@@ -22,6 +22,7 @@
      series : 시리즈 묶음 (같은 series끼리 order 순으로 이전/다음 연결)
      order  : 시리즈 안에서의 순서 (읽는 순서)
      related: 시리즈 밖 관련 글의 slug 목록 ("관련"으로 연결)
+     thumb  : 카드 썸네일(4:3, assets/thumbs/<slug>.webp). 없으면 카테고리 표지 그림을 대신 쓴다
    ───────────────────────────────────────────────────────────── */
 
 window.SEOK = {
@@ -72,6 +73,7 @@ window.SEOK = {
   posts: [
     {
       slug: "dft-practice-6",
+      thumb: "assets/thumbs/dft-practice-6.webp",
       cat: "dft",
       date: "2026.09.27",
       series: "dft",
@@ -83,6 +85,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-5",
+      thumb: "assets/thumbs/dft-practice-5.webp",
       cat: "dft",
       date: "2026.09.27",
       series: "dft",
@@ -94,6 +97,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-4",
+      thumb: "assets/thumbs/dft-practice-4.webp",
       cat: "dft",
       date: "2026.09.27",
       series: "dft",
@@ -106,6 +110,7 @@ window.SEOK = {
     {
       slug: "cheotjan-two-fingerprints",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-two-fingerprints.webp",
       date: "2026.09.22",
       series: "cheotjan",
       order: 11,
@@ -116,6 +121,7 @@ window.SEOK = {
     {
       slug: "cheotjan-first-steps",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-first-steps.webp",
       date: "2026.09.22",
       series: "cheotjan",
       order: 10,
@@ -126,6 +132,7 @@ window.SEOK = {
     {
       slug: "cheotjan-fingerprint",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-fingerprint.webp",
       date: "2026.09.19",
       series: "cheotjan",
       order: 9,
@@ -136,6 +143,7 @@ window.SEOK = {
     {
       slug: "cheotjan-no-numbers",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-no-numbers.webp",
       date: "2026.09.18",
       series: "cheotjan",
       order: 8,
@@ -147,6 +155,7 @@ window.SEOK = {
     {
       slug: "cheotjan-delete-account",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-delete-account.webp",
       date: "2026.09.06",
       series: "cheotjan",
       order: 7,
@@ -157,6 +166,7 @@ window.SEOK = {
     {
       slug: "cheotjan-things-removed",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-things-removed.webp",
       date: "2026.09.04",
       series: "cheotjan",
       order: 6,
@@ -167,6 +177,7 @@ window.SEOK = {
     {
       slug: "cheotjan-ai-smell",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-ai-smell.webp",
       date: "2026.09.03",
       series: "cheotjan",
       order: 5,
@@ -177,6 +188,7 @@ window.SEOK = {
     {
       slug: "cheotjan-apk-103mb",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-apk-103mb.webp",
       date: "2026.09.02",
       series: "cheotjan",
       order: 4,
@@ -187,6 +199,7 @@ window.SEOK = {
     {
       slug: "cheotjan-mfds-504",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-mfds-504.webp",
       date: "2026.08.29",
       series: "cheotjan",
       order: 3,
@@ -197,6 +210,7 @@ window.SEOK = {
     {
       slug: "cheotjan-robots-gsshop",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-robots-gsshop.webp",
       date: "2026.08.28",
       series: "cheotjan",
       order: 2,
@@ -208,6 +222,7 @@ window.SEOK = {
     {
       slug: "cheotjan-score-60",
       cat: "cheotjan",
+      thumb: "assets/thumbs/cheotjan-score-60.webp",
       date: "2026.08.27",
       series: "cheotjan",
       order: 1,
@@ -218,6 +233,7 @@ window.SEOK = {
     },
     {
       slug: "paper-1-wang2006",
+      thumb: "assets/thumbs/paper-1-wang2006.webp",
       cat: "paper",
       date: "2026.08.25",
       series: "paper",
@@ -229,6 +245,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-3",
+      thumb: "assets/thumbs/dft-practice-3.webp",
       cat: "dft",
       date: "2026.08.25",
       series: "dft",
@@ -239,6 +256,7 @@ window.SEOK = {
     },
     {
       slug: "dft-theory-3",
+      thumb: "assets/thumbs/dft-theory-3.webp",
       cat: "dft",
       date: "2026.08.25",
       series: "dft",
@@ -250,6 +268,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-2",
+      thumb: "assets/thumbs/dft-practice-2.webp",
       cat: "dft",
       date: "2026.08.24",
       series: "dft",
@@ -260,6 +279,7 @@ window.SEOK = {
     },
     {
       slug: "dft-theory-2",
+      thumb: "assets/thumbs/dft-theory-2.webp",
       cat: "dft",
       date: "2026.08.24",
       series: "dft",
@@ -270,6 +290,7 @@ window.SEOK = {
     },
     {
       slug: "first-dft-run",
+      thumb: "assets/thumbs/first-dft-run.webp",
       cat: "dft",
       date: "2026.08.23",
       series: "dft",
@@ -280,6 +301,7 @@ window.SEOK = {
     },
     {
       slug: "dft-explained",
+      thumb: "assets/thumbs/dft-explained.webp",
       cat: "dft",
       date: "2026.08.23",
       series: "dft",
@@ -290,6 +312,7 @@ window.SEOK = {
     },
     {
       slug: "battery-soh-range",
+      thumb: "assets/thumbs/battery-soh-range.webp",
       cat: "battery",
       date: "2026.08.18",
       title: "배터리 건강, 왜 숫자 하나로 말하면 안 될까",
@@ -298,6 +321,7 @@ window.SEOK = {
     },
     {
       slug: "graph-first",
+      thumb: "assets/thumbs/graph-first.webp",
       cat: "evalue",
       date: "2026.08.18",
       title: "데이터가 얕아도 그래프는 그린다 — 표현과 해석을 갈랐다",
@@ -306,6 +330,7 @@ window.SEOK = {
     },
     {
       slug: "theil-sen",
+      thumb: "assets/thumbs/theil-sen.webp",
       cat: "evalue",
       date: "2026.08.18",
       title: "하루가 튀어도 흔들리지 않는 추세선 — Theil–Sen 회귀",
@@ -314,6 +339,7 @@ window.SEOK = {
     },
     {
       slug: "price-band",
+      thumb: "assets/thumbs/price-band.webp",
       cat: "evalue",
       date: "2026.08.18",
       title: "\"적정가\"라는 단어를 버렸다",
@@ -322,6 +348,7 @@ window.SEOK = {
     },
     {
       slug: "cohort-fallback",
+      thumb: "assets/thumbs/cohort-fallback.webp",
       cat: "evalue",
       date: "2026.08.18",
       title: "표본이 부족할 때 무엇을 먼저 포기할까 — 폴백 사다리",
@@ -330,6 +357,7 @@ window.SEOK = {
     },
     {
       slug: "sold-day-attribution",
+      thumb: "assets/thumbs/sold-day-attribution.webp",
       cat: "evalue",
       date: "2026.08.18",
       title: "수집이 하루 빠지면 통계가 거짓말을 한다 — 소진일 귀속",
@@ -338,6 +366,7 @@ window.SEOK = {
     },
     {
       slug: "laptop-to-server",
+      thumb: "assets/thumbs/laptop-to-server.webp",
       cat: "evalue",
       date: "2026.08.18",
       title: "노트북을 24시간 서버로 만들어 본 기록",
