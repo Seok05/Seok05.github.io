@@ -390,8 +390,13 @@
     var c = catOf(p.cat);
     var st = seriesTag(p);
     var meta = [esc(st || (c ? c.mark || c.name : p.cat))];
-    if (p.tag) meta.push(esc(p.tag));
-    meta.push('<time datetime="' + isoDate(p.date) + '">' + p.date + "</time>");
+    if (p.tag) meta.push('<span class="row-tag">' + esc(p.tag) + "</span>");
+    // 날짜는 폰에서 연도를 뗀 "09.30"으로(같은 해 글뿐이고, 메타 줄이 한 줄에 들어가야 한다)
+    meta.push(
+      '<time datetime="' + isoDate(p.date) + '"><span class="d-full">' + p.date + '</span><span class="d-short">' + shortDate(p.date) + "</span></time>"
+    );
+    // 그날의 숫자: 그 글에서 나온 값 하나(posts.js의 figure). 요약이 아니라 "그날 무엇이 나왔나"
+    if (p.figure) meta.push('<b class="row-fig">' + esc(p.figure) + "</b>");
     return (
       '<a class="post-row" href="' + href(p) + '">' +
       '<span class="row-text">' +

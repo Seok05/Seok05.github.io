@@ -709,6 +709,22 @@ kbd {
   font-style: normal;
 }
 
+/* 그날의 숫자: 메타 줄 끝, 다른 메타보다 한 단 진하게. 색은 쓰지 않는다(통계 블록처럼 보이면 실패).
+   값은 한 덩어리로만 줄이 바뀐다(단위가 다음 줄로 떨어지지 않게) */
+.row-meta .row-fig,
+.row-meta time {
+  white-space: nowrap;
+}
+
+.row-meta .row-fig {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.row-meta .d-short {
+  display: none;
+}
+
 .row-title {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -2131,6 +2147,17 @@ body.pal-open {
 
   .row-desc {
     font-size: var(--fs-ui);
+  }
+
+  /* 폰의 메타 줄: 연도를 뗀 날짜(09.30), 꼬리표는 숨긴다. 갈래·날짜·그날의 숫자가 한 줄에 들어가야 한다 */
+  .row-meta .d-full,
+  .row-meta .row-tag,
+  .row-meta .row-tag + i {
+    display: none;
+  }
+
+  .row-meta .d-short {
+    display: inline;
   }
 
   .layout {

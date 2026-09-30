@@ -90,6 +90,7 @@ window.SEOK = {
   posts: [
     {
       slug: "dft-practice-11",
+      figure: "오차 0.24 V", // 그날의 숫자: CHGNet 전압 2.156 V vs DFT 2.391 V (x = 1 → 0.75)
       cat: "dft",
       thumb: "assets/thumbs/dft-practice-11.webp",
       date: "2026.09.30",
@@ -102,6 +103,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-10",
+      figure: "Ni²⁺ 1.74 μB", // 그날의 숫자: Ni의 자기모멘트 1.74 μB, 어떤 출발점에서도 2+
       cat: "dft",
       thumb: "assets/thumbs/dft-practice-10.webp",
       date: "2026.09.30",
@@ -114,6 +116,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-9",
+      figure: "계산 27개", // 그날의 숫자: Na 절반을 뺄 때의 전압을 27개 계산으로 따라감
       cat: "dft",
       tag: "복습",
       thumb: "assets/thumbs/dft-practice-9.webp",
@@ -127,6 +130,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-8",
+      figure: "이웃 0·2·4개", // 그날의 숫자: Mn⁴⁺ 이웃 수를 0·2·4개로 바꿔 얀-텔러 계단을 봄
       cat: "dft",
       thumb: "assets/thumbs/dft-practice-8.webp",
       date: "2026.09.28",
@@ -139,6 +143,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-7",
+      figure: "2.42 V", // 그날의 숫자: 스핀을 바로잡은 뒤의 평균 전압(수정판)
       cat: "dft",
       thumb: "assets/thumbs/dft-practice-7.webp",
       date: "2026.09.27",
@@ -151,6 +156,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-6",
+      figure: "2.40 V", // 그날의 숫자: α-NaMnO₂ → Na₀.₅MnO₂ 첫 평균 전압(FM)
       thumb: "assets/thumbs/dft-practice-6.webp",
       cat: "dft",
       date: "2026.09.27",
@@ -163,6 +169,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-5",
+      figure: "부피 +5.9%", // 그날의 숫자: 1차 이완 9스텝 뒤 부피 변화, 세 축 약 2%씩
       thumb: "assets/thumbs/dft-practice-5.webp",
       cat: "dft",
       date: "2026.09.27",
@@ -175,6 +182,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-4",
+      figure: "+0.49 μB", // 그날의 숫자: U를 걸자 Mn d 모멘트가 3.85에서 4.35로
       thumb: "assets/thumbs/dft-practice-4.webp",
       cat: "dft",
       date: "2026.09.27",
@@ -187,6 +195,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-two-fingerprints",
+      figure: "발행 2번", // 그날의 숫자: 지문이 둘이라 업데이트를 두 번 발행
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-two-fingerprints.webp",
       date: "2026.09.22",
@@ -198,6 +207,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-first-steps",
+      figure: "35개 → 4걸음", // 그날의 숫자: 용어 사전 35개 대신 안내 네 걸음
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-first-steps.webp",
       date: "2026.09.22",
@@ -209,6 +219,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-fingerprint",
+      figure: "3번째 함정", // 그날의 숫자: 같은 지문 함정에 빠진 세 번째
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-fingerprint.webp",
       date: "2026.09.19",
@@ -220,6 +231,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-no-numbers",
+      figure: "629병", // 그날의 숫자: '전체 629병 훑어보기'를 지운 날
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-no-numbers.webp",
       date: "2026.09.18",
@@ -232,6 +244,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-delete-account",
+      figure: "탈퇴에 하루", // 그날의 숫자: 로그인 반나절, 계정 삭제 하루
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-delete-account.webp",
       date: "2026.09.06",
@@ -243,6 +256,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-things-removed",
+      figure: "지운 필드 4개", // 그날의 숫자: 잔량·개봉일·위시·연령 확인
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-things-removed.webp",
       date: "2026.09.04",
@@ -254,6 +268,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-ai-smell",
+      figure: "모티프 2 → 1", // 그날의 숫자: 표지와 부팅에 같은 모티프 두 번 → 한 번만
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-ai-smell.webp",
       date: "2026.09.03",
@@ -265,6 +280,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-apk-103mb",
+      figure: "103 → 52MB", // 그날의 숫자: arm64 하나로만 빌드하자 52MB
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-apk-103mb.webp",
       date: "2026.09.02",
@@ -276,6 +292,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-mfds-504",
+      figure: "15만 → 504건", // 그날의 숫자: 수입신고 151,000건에서 위스키 504건
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-mfds-504.webp",
       date: "2026.08.29",
@@ -287,6 +304,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-robots-gsshop",
+      figure: "공개 데이터 0건", // 그날의 숫자: 공공데이터포털의 위스키 소매가 데이터셋 0건
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-robots-gsshop.webp",
       date: "2026.08.28",
@@ -299,6 +317,7 @@ window.SEOK = {
     },
     {
       slug: "cheotjan-score-60",
+      figure: "60점", // 그날의 숫자: 기획서의 '60 무난'을 지운 첫날
       cat: "cheotjan",
       thumb: "assets/thumbs/cheotjan-score-60.webp",
       date: "2026.08.27",
@@ -311,6 +330,7 @@ window.SEOK = {
     },
     {
       slug: "paper-1-wang2006",
+      figure: "1.36 eV/O₂", // 그날의 숫자: GGA의 O₂ 결합 에너지 보정량
       thumb: "assets/thumbs/paper-1-wang2006.webp",
       cat: "paper",
       date: "2026.08.25",
@@ -323,6 +343,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-3",
+      figure: "mag = 10.51", // 그날의 숫자: 2×2×1 k점에서 자기모멘트가 12에서 10.51로 깨짐
       thumb: "assets/thumbs/dft-practice-3.webp",
       cat: "dft",
       date: "2026.08.25",
@@ -334,6 +355,7 @@ window.SEOK = {
     },
     {
       slug: "dft-theory-3",
+      figure: "U = 3.9 eV", // 그날의 숫자: Mn에 걸 U 값
       thumb: "assets/thumbs/dft-theory-3.webp",
       cat: "dft",
       date: "2026.08.25",
@@ -346,6 +368,7 @@ window.SEOK = {
     },
     {
       slug: "dft-practice-2",
+      figure: "ENCUT = 520", // 그날의 숫자: 400~700 eV 8점 수렴 테스트 뒤 동결한 값
       thumb: "assets/thumbs/dft-practice-2.webp",
       cat: "dft",
       date: "2026.08.24",
@@ -357,6 +380,7 @@ window.SEOK = {
     },
     {
       slug: "dft-theory-2",
+      figure: "12 μB", // 그날의 숫자: mag = 11.9991, Mn³⁺ 셋 × 4 μB
       thumb: "assets/thumbs/dft-theory-2.webp",
       cat: "dft",
       date: "2026.08.24",
@@ -368,6 +392,7 @@ window.SEOK = {
     },
     {
       slug: "first-dft-run",
+      figure: "89.5초", // 그날의 숫자: 첫 에너지 −66.67098103 eV까지 걸린 시간
       thumb: "assets/thumbs/first-dft-run.webp",
       cat: "dft",
       date: "2026.08.23",
@@ -379,6 +404,7 @@ window.SEOK = {
     },
     {
       slug: "dft-explained",
+      figure: "1964년", // 그날의 숫자: 호헨베르크·콘 정리(밀도만 있으면 된다)가 나온 해. 본문 '1964년의 우회로'
       thumb: "assets/thumbs/dft-explained.webp",
       cat: "dft",
       date: "2026.08.23",
@@ -390,6 +416,7 @@ window.SEOK = {
     },
     {
       slug: "battery-soh-range",
+      figure: "96.0~98.2%", // 그날의 숫자: 점 대신 범위로 바꾼 배터리 건강 출력
       thumb: "assets/thumbs/battery-soh-range.webp",
       cat: "battery",
       date: "2026.08.18",
@@ -399,6 +426,7 @@ window.SEOK = {
     },
     {
       slug: "graph-first",
+      figure: "관측 18일치", // 그날의 숫자: 추세 화면을 만들 때의 관측 일수
       thumb: "assets/thumbs/graph-first.webp",
       cat: "evalue",
       date: "2026.08.18",
@@ -408,6 +436,7 @@ window.SEOK = {
     },
     {
       slug: "theil-sen",
+      figure: "이상치 29.3%", // 그날의 숫자: Theil–Sen이 견디는 오염 비율(최소제곱법은 0%)
       thumb: "assets/thumbs/theil-sen.webp",
       cat: "evalue",
       date: "2026.08.18",
@@ -417,6 +446,7 @@ window.SEOK = {
     },
     {
       slug: "price-band",
+      figure: "25~75번째", // 그날의 숫자: 단일 값 대신 사분위 구간(25·75번째)
       thumb: "assets/thumbs/price-band.webp",
       cat: "evalue",
       date: "2026.08.18",
@@ -426,6 +456,7 @@ window.SEOK = {
     },
     {
       slug: "cohort-fallback",
+      figure: "매물 3대", // 그날의 숫자: 갓 나온 차종의 같은 조건 매물 수
       thumb: "assets/thumbs/cohort-fallback.webp",
       cat: "evalue",
       date: "2026.08.18",
@@ -435,6 +466,7 @@ window.SEOK = {
     },
     {
       slug: "sold-day-attribution",
+      figure: "중앙 귀속 0.5일", // 그날의 숫자: 매일 수집됐을 때 중앙 귀속이 내는 차이
       thumb: "assets/thumbs/sold-day-attribution.webp",
       cat: "evalue",
       date: "2026.08.18",
@@ -444,6 +476,7 @@ window.SEOK = {
     },
     {
       slug: "laptop-to-server",
+      figure: "24시간", // 그날의 숫자: 노트북을 24시간 서버로
       thumb: "assets/thumbs/laptop-to-server.webp",
       cat: "evalue",
       date: "2026.08.18",
