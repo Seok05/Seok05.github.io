@@ -261,13 +261,7 @@
   }
   var nav = document.querySelector(".site-nav");
   if (nav) {
-    nav.innerHTML =
-      '<a href="' + root + '" data-nav="all">글</a>' +
-      '<a href="' + GITHUB + '">GitHub</a>';
-    if (isIndex) {
-      var onA = nav.querySelector('[data-nav="all"]');
-      if (onA) onA.classList.add("on");
-    }
+    nav.innerHTML = '<a href="' + GITHUB + '">GitHub</a>'; // 홈으로 가는 길은 로고가 맡는다
 
     var isMac = /Mac|iP(hone|ad|od)/.test(navigator.platform || "");
     var sbtn = el("button", "icon-btn search-btn", ICONS.search + "<kbd>" + (isMac ? "⌘K" : "Ctrl K") + "</kbd>");
@@ -311,19 +305,24 @@
   /* ── 푸터 통일 ──────────────────────────────────────────── */
   var footWrap = document.querySelector(".site-footer .wrap");
   if (footWrap) {
+    // 분류에 붙은 주의 문구(예: EValue의 "실제 시세가 아닙니다")는 그 분류의 글 아래에만
+    var footCat = !isIndex && current ? catOf(current.cat) : null;
+    var footNote = footCat && footCat.note ? esc(footCat.note) : "";
     footWrap.innerHTML =
       '<p class="foot-copy">© ' + new Date().getFullYear() + " Seok Lab · 연구하면서, 개발합니다</p>" +
       '<nav class="foot-nav" aria-label="바닥 메뉴">' +
       '<a href="' + root + '">글</a>' +
       '<a href="' + root + 'feed.xml">RSS</a>' +
       '<a href="' + GITHUB + '">GitHub</a></nav>' +
-      '<p class="foot-note">글의 예시 수치는 설명용이며 실제 시세가 아닙니다.<span class="views" data-foot-views hidden></span></p>';
+      '<p class="foot-note"' + (footNote ? "" : " hidden") + ">" + footNote +
+      '<span class="views" data-foot-views hidden></span></p>';
     // 이 페이지의 조회수 (수집이 켜져 있고 집계가 잡힐 때만 조용히 나타난다)
     fetchViews(location.pathname, function (n) {
       var v = footWrap.querySelector("[data-foot-views]");
       if (v) {
         v.textContent = "이 페이지 조회 " + n;
         v.hidden = false;
+        v.parentNode.hidden = false;
       }
     });
   }
@@ -369,6 +368,13 @@
   }
 
   if (isIndex) {
+    // 소개 카드의 이름·문구도 posts.js의 site.author에서(index.html에 박힌 것은 예비)
+    if (SITE.author) {
+      var pName = document.querySelector(".profile-name");
+      var pBio = document.querySelector(".profile-bio");
+      if (pName) pName.textContent = SITE.author.name;
+      if (pBio) pBio.textContent = SITE.author.bio;
+    }
     var homeEl = document.getElementById("home");
     var baseTitle = document.title;
     var tabItems = [{ key: "", label: "전체", n: posts.length }].concat(
@@ -517,6 +523,17 @@
     var sidebar = document.querySelector(".sidebar");
     if (sidebar) sidebar.hidden = true; // 예비 사이드바는 접는다
     document.body.classList.add("is-post");
+
+    // 작가 카드: 글에 박힌 문구 대신 posts.js의 site.author 한 곳에서 읽는다(박힌 것은 JS 없는 환경용 예비)
+    var acard = article.querySelector(".author-card");
+    if (acard && SITE.author) {
+      var ac = current ? catOf(current.cat) : null;
+      acard.innerHTML =
+        '<img src="' + root + 'assets/profile.png" alt="" width="48" height="48">' +
+        '<div><p class="who">' + esc(SITE.author.name) + "</p><p>" + esc(SITE.author.bio) +
+        (ac ? ' <a href="' + root + "?cat=" + current.cat + '">' + esc(ac.mark || ac.name) + " 글 더 보기</a>" : "") +
+        "</p></div>";
+    }
 
     // 읽기 진행바
     var pbar = el("div", "progress-bar");

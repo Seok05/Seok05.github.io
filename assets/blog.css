@@ -488,6 +488,10 @@ kbd {
   margin: 0 0.4em;
 }
 
+.foot-note > .views:first-child::before {
+  content: none; /* 주의 문구가 없는 페이지에서는 점만 남지 않게 */
+}
+
 /* "더 보기": 목록 아래 32, 남은 편수는 흐린 색 */
 .list-more {
   margin: var(--s-7) 0 0;
