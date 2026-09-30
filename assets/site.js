@@ -393,25 +393,53 @@
           return '<li data-cat="' + esc(p.cat) + '">' + row(p) + "</li>";
         })
         .join("") +
-      "</ul>";
+      "</ul>" +
+      '<p class="list-more" hidden><button type="button" class="btn" data-more>더 보기 <span class="n"></span></button></p>';
 
+    // 처음엔 12편만. "더 보기"를 누르면 전부 보이고, 그 상태는 이 탭(브라우저 탭)이 살아 있는 동안 남아서
+    // 글을 읽고 뒤로 와도 펼쳐진 채다(브라우저의 스크롤 복원이 맞아야 한다). 탭마다 그 분류의 첫 12편
+    var PAGE = 12;
+    var expanded = false;
+    try {
+      expanded = sessionStorage.getItem("homeExpanded") === "1";
+    } catch (e) {}
+    var moreWrap = homeEl.querySelector(".list-more");
+    var moreBtn = moreWrap.querySelector("[data-more]");
     var tabBar = homeEl.querySelector(".tabs");
     var rows = homeEl.querySelectorAll(".post-list > li");
+    var curKey = "";
     var filterTo = function (key) {
       var c = key ? catOf(key) : null;
       if (!c) key = "";
+      curKey = key;
       Array.prototype.forEach.call(tabBar.children, function (a) {
         var on = a.getAttribute("data-cat") === key;
         a.classList.toggle("on", on);
         if (on) a.setAttribute("aria-current", "page");
         else a.removeAttribute("aria-current");
       });
+      var matched = 0;
+      var shown = 0;
       Array.prototype.forEach.call(rows, function (li) {
-        li.hidden = !!key && li.getAttribute("data-cat") !== key;
+        var match = !key || li.getAttribute("data-cat") === key;
+        var show = match && (expanded || matched < PAGE);
+        if (match) matched++;
+        if (show) shown++;
+        li.hidden = !show;
       });
+      var rest = matched - shown;
+      moreBtn.querySelector(".n").textContent = rest + "편";
+      moreWrap.hidden = rest === 0;
       document.title = c ? c.name + " · Seok Lab" : baseTitle;
       return key;
     };
+    moreBtn.addEventListener("click", function () {
+      expanded = true;
+      try {
+        sessionStorage.setItem("homeExpanded", "1");
+      } catch (e) {}
+      filterTo(curKey);
+    });
     var urlFor = function (key) {
       return location.pathname + (key ? "?cat=" + key : "");
     };

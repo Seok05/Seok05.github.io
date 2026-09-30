@@ -488,6 +488,18 @@ kbd {
   margin: 0 0.4em;
 }
 
+/* "더 보기": 목록 아래 32, 남은 편수는 흐린 색 */
+.list-more {
+  margin: var(--s-7) 0 0;
+}
+
+.list-more .n {
+  margin-left: 0.3em;
+  color: var(--text-faint);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+
 /* ── 홈: 왼쪽 소개 카드 + 오른쪽 목록 ────────────────────── */
 
 .home-grid {
