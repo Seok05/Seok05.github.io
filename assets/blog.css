@@ -1,4 +1,4 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+/* 글꼴(Pretendard)은 각 HTML <head>의 <link>로 부른다. build-meta.mjs가 넣는다(@import보다 한 왕복 빠르다) */
 
 /* ───────────────────────────────────────────────────────────
    Seok Lab — 모든 숫자의 근거는 DESIGN.md.

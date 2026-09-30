@@ -1,5 +1,5 @@
 /* posts.js를 읽어 feed.xml(RSS)·sitemap.xml·robots.txt를 만들고,
-   모든 HTML의 blog.css·site.js·posts.js 링크에 내용 해시(?v=)를 찍는다.
+   모든 HTML의 blog.css·site.js·posts.js 링크에 내용 해시(?v=)를 찍고, 글꼴 CSS 링크(preconnect)를 head에 넣는다.
    새 글을 올릴 때, 그리고 CSS·JS를 고쳤을 때 한 번 실행: node scripts/build-meta.mjs */
 import { readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { createHash } from "node:crypto";
@@ -87,11 +87,21 @@ const htmlFiles = ["index.html", "404.html"].concat(
 );
 // 뿌리 페이지는 assets/…, 글은 ../assets/…, 404는 /assets/… 로 적혀 있다. 접두어는 그대로 두고 ?v=만 바꾼다
 const linkRe = /((?:\.\.\/|\/)?assets\/(blog\.css|site\.js|posts\.js))(\?v=[0-9a-f]+)?(?=["'])/g;
+/* 글꼴 CSS는 blog.css 안의 @import가 아니라 HTML에서 직접 부른다(blog.css를 기다리지 않고 나란히 받는다).
+   blog.css <link> 바로 앞에 preconnect + stylesheet 두 줄. 이미 있으면 그대로 */
+const FONT_HOST = "https://cdn.jsdelivr.net";
+const FONT_CSS = `${FONT_HOST}/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css`;
+const fontLinks = (indent) =>
+  `${indent}<link rel="preconnect" href="${FONT_HOST}" crossorigin />\n${indent}<link rel="stylesheet" href="${FONT_CSS}" />\n`;
+const withFontLinks = (html) =>
+  html.includes(FONT_CSS)
+    ? html
+    : html.replace(/^([ \t]*)<link rel="stylesheet" href="[^"]*assets\/blog\.css/m, (m, indent) => fontLinks(indent) + m);
 let stamped = 0;
 for (const rel of htmlFiles) {
   const p = join(root, rel);
   const before = readFileSync(p, "utf8");
-  const after = before.replace(linkRe, (m, path, file) => `${path}?v=${ver[file]}`);
+  const after = withFontLinks(before).replace(linkRe, (m, path, file) => `${path}?v=${ver[file]}`);
   if (after !== before) {
     writeFileSync(p, after);
     stamped++;
