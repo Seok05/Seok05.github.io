@@ -2,10 +2,8 @@
    assets/posts.js 의 데이터로 페이지를 조립한다.
 
    홈(index.html) · 디자인 기준은 DESIGN.md
-     - 기본: 소개(정적) → 분류 탭 → 최근 글 10편 → 전체 글 보기
-     - ?view=all : 전체 글을 달별로
-     - ?cat=<key>: 카테고리 하나. 시리즈면 읽는 순서대로 번호를 붙인다
-       제목에 갈래가 있으면(DFT 이론·실습) 표시를 달고 탭으로 나눠 본다(&track=이론)
+     - 소개(정적) → 분류 탭(전체·분류마다) → 글 목록(최신순)
+     - 탭은 목록 안의 글만 거른다. 틀은 그대로, 주소만 ?cat=<key>로 바뀐다
    글 페이지(posts/*.html)
      - 시리즈 띠, 읽는 시간, 읽기 진행바, 오른쪽 목차, 소제목 앵커(#),
        코드 복사 단추, 그림 라이트박스, 링크 복사, 조회수(GoatCounter),
@@ -25,7 +23,7 @@
   var doc = document.documentElement;
   var GITHUB = "https://github.com/Seok05";
 
-  var isIndex = !!document.getElementById("listing");
+  var isIndex = !!document.getElementById("home");
   // 404처럼 어느 경로에서든 열리는 페이지는 body[data-root]로 뿌리를 못박는다
   var root = document.body.getAttribute("data-root") || (isIndex ? "./" : "../");
 
@@ -43,19 +41,8 @@
   function shortDate(d) {
     return d.slice(5); // 08.27
   }
-  function monthKey(d) {
-    return d.slice(0, 7); // 2026.08
-  }
-  function monthLabel(k) {
-    return k.slice(0, 4) + "년 " + String(parseInt(k.slice(5), 10)) + "월";
-  }
   function href(p) {
     return root + "posts/" + p.slug + ".html";
-  }
-  function catPosts(key) {
-    return posts.filter(function (p) {
-      return p.cat === key;
-    });
   }
   function byOrder(a, b) {
     return (a.order || 0) - (b.order || 0);
@@ -214,9 +201,6 @@
   });
 
   var params = new URLSearchParams(location.search);
-  var view = isIndex ? (params.get("view") === "all" ? "all" : params.get("cat") ? "cat" : "home") : "post";
-  var activeCat = view === "cat" && catOf(params.get("cat")) ? params.get("cat") : null;
-  if (view === "cat" && !activeCat) view = "home";
 
   var current = null;
   if (!isIndex) {
@@ -273,9 +257,9 @@
   var nav = document.querySelector(".site-nav");
   if (nav) {
     nav.innerHTML =
-      '<a href="' + root + '?view=all" data-nav="all">글</a>' +
+      '<a href="' + root + '" data-nav="all">글</a>' +
       '<a href="' + GITHUB + '">GitHub</a>';
-    if (view === "all") {
+    if (isIndex) {
       var onA = nav.querySelector('[data-nav="all"]');
       if (onA) onA.classList.add("on");
     }
@@ -325,7 +309,7 @@
     footWrap.innerHTML =
       '<p class="foot-copy">© ' + new Date().getFullYear() + " Seok Lab · 연구하면서, 개발합니다</p>" +
       '<nav class="foot-nav" aria-label="바닥 메뉴">' +
-      '<a href="' + root + '?view=all">글</a>' +
+      '<a href="' + root + '">글</a>' +
       '<a href="' + root + 'feed.xml">RSS</a>' +
       '<a href="' + GITHUB + '">GitHub</a></nav>' +
       '<p class="foot-note">글의 예시 수치는 설명용이며 실제 시세가 아닙니다.<span class="views" data-foot-views hidden></span></p>';
@@ -355,195 +339,93 @@
     { passive: true }
   );
 
-  /* ── 홈과 목록: 소개(정적) → 분류 탭 → 글 목록 ─────────── */
-  // 목록 한 줄: 왼쪽에 메타·제목·요약, 오른쪽에 썸네일. 시리즈 목록이면 앞에 순번
-  function row(p, opt) {
-    opt = opt || {};
+  /* ── 홈: 소개(정적) → 분류 탭 → 글 목록 ──────────────────
+     탭은 목록 안의 글만 거른다. 소개·탭 자리·줄 모양·순서(최신순)는 어느 탭에서도 같고,
+     페이지를 다시 불러오지 않는다. 주소의 ?cat=만 바꿔 두어서 새로고침·공유·뒤로 가기에도 그대로다 */
+  // 목록 한 줄: 왼쪽에 메타(분류 · 꼬리표 · 날짜)·제목·요약, 오른쪽에 썸네일
+  function row(p) {
     var c = catOf(p.cat);
-    var t = trackOf(p);
-    var meta = [];
-    if (opt.cat !== false) meta.push(esc(c ? c.mark || c.name : p.cat));
-    if (opt.labels && opt.labels.length > 1 && t) meta.push(esc(t.label + " " + t.n));
+    var meta = [esc(c ? c.mark || c.name : p.cat)];
     if (p.tag) meta.push(esc(p.tag));
     meta.push('<time datetime="' + isoDate(p.date) + '">' + p.date + "</time>");
     return (
-      '<a class="post-row' + (opt.num ? " numbered" : "") + '" href="' + href(p) + '">' +
-      (opt.num ? '<span class="row-num">' + (p.order || "") + "</span>" : "") +
+      '<a class="post-row" href="' + href(p) + '">' +
       '<span class="row-text">' +
       '<span class="row-meta">' + meta.join('<i aria-hidden="true">·</i>') + "</span>" +
-      '<span class="row-title">' + esc(opt.bare ? bareTitle(p.title) : p.title) + "</span>" +
+      '<span class="row-title">' + esc(p.title) + "</span>" +
       '<span class="row-desc">' + esc(p.blurb) + "</span>" +
       "</span>" +
       thumb(p) +
       "</a>"
     );
   }
-  // 분류 탭: 최근 · 분류마다 · 전체
-  function tabs(active) {
-    var on = function (k) {
-      return active === k ? ' class="on" aria-current="page"' : "";
-    };
-    var items = ['<a href="' + root + '"' + on("home") + ">최근</a>"];
-    cats.forEach(function (c) {
-      items.push(
-        '<a href="' + root + "?cat=" + c.key + '"' + on(c.key) + ">" + esc(c.mark || c.name) +
-          ' <span class="n">' + (counts[c.key] || 0) + "</span></a>"
-      );
-    });
-    items.push('<a href="' + root + '?view=all"' + on("all") + '>전체 <span class="n">' + posts.length + "</span></a>");
-    return '<nav class="tabs" aria-label="분류">' + items.join("") + "</nav>";
-  }
 
   if (isIndex) {
-    var introEl = document.getElementById("intro");
     var homeEl = document.getElementById("home");
-    var listingEl = document.getElementById("listing");
+    var baseTitle = document.title;
+    var tabItems = [{ key: "", label: "전체", n: posts.length }].concat(
+      cats.map(function (c) {
+        return { key: c.key, label: c.mark || c.name, n: counts[c.key] || 0 };
+      })
+    );
+    homeEl.innerHTML =
+      '<nav class="tabs" aria-label="분류">' +
+      tabItems
+        .map(function (t) {
+          return (
+            '<a href="' + root + (t.key ? "?cat=" + t.key : "") + '" data-cat="' + t.key + '">' +
+            esc(t.label) + ' <span class="n">' + t.n + "</span></a>"
+          );
+        })
+        .join("") +
+      "</nav>" +
+      '<ul class="post-list">' +
+      posts
+        .map(function (p) {
+          return '<li data-cat="' + esc(p.cat) + '">' + row(p) + "</li>";
+        })
+        .join("") +
+      "</ul>";
 
-    if (view === "home") {
-      var LATEST = 10;
-      if (homeEl) {
-        homeEl.innerHTML =
-          tabs("home") +
-          '<ul class="post-list">' +
-          posts
-            .slice(0, LATEST)
-            .map(function (p) {
-              return "<li>" + row(p) + "</li>";
-            })
-            .join("") +
-          "</ul>" +
-          (posts.length > LATEST
-            ? '<p class="list-more"><a href="' + root + '?view=all">전체 글 ' + posts.length + '편 보기 <span aria-hidden="true">→</span></a></p>'
-            : "");
-      }
-      if (listingEl) listingEl.hidden = true;
-    } else {
-      if (introEl) introEl.hidden = true;
-      if (homeEl) homeEl.hidden = true;
-      var html = "";
-      if (view === "all") {
-        document.title = "전체 글 · Seok Lab";
-        html +=
-          '<header class="list-head"><h1>전체 글</h1><p class="list-desc">' + posts.length + "편을 최신순으로 모았습니다.</p></header>" +
-          tabs("all");
-        var groups = [];
-        var idx = {};
-        posts.forEach(function (p) {
-          var k = monthKey(p.date);
-          if (idx[k] === undefined) {
-            idx[k] = groups.length;
-            groups.push({ key: k, items: [] });
-          }
-          groups[idx[k]].items.push(p);
-        });
-        html +=
-          '<div class="archive">' +
-          groups
-            .map(function (g) {
-              return (
-                '<section class="month"><h2>' + monthLabel(g.key) + ' <span class="n">' + g.items.length + "편</span></h2><ul>" +
-                g.items
-                  .map(function (p) {
-                    var c = catOf(p.cat);
-                    return (
-                      '<li><a class="arc-row" href="' + href(p) + '"><time datetime="' + isoDate(p.date) + '">' + shortDate(p.date) + "</time>" +
-                      '<span class="arc-title">' + esc(p.title) + "</span>" +
-                      '<span class="arc-cat">' + esc(c ? c.mark || c.name : p.cat) + "</span></a></li>"
-                    );
-                  })
-                  .join("") +
-                "</ul></section>"
-              );
-            })
-            .join("") +
-          "</div>";
-      } else {
-        var c = catOf(activeCat);
-        var cp = catPosts(activeCat);
-        var series = cp.filter(function (p) {
-          return p.series;
-        }).sort(byOrder);
-        var loose = cp.filter(function (p) {
-          return !p.series;
-        });
-        document.title = c.name + " · Seok Lab";
-        html +=
-          '<header class="list-head cat-head">' + cover(c) + "<div><h1>" + esc(c.name) + "</h1>" +
-          '<p class="list-desc">' + esc(c.desc || "") + "</p>" +
-          '<p class="list-meta">' + cp.length + "편" + (cp[0] ? " · 최근 " + cp[0].date : "") + "</p></div></header>" +
-          tabs(activeCat);
-        var labels = tracksIn(series);
-        var wantTrack = labels.indexOf(params.get("track")) >= 0 ? params.get("track") : "";
-        if (series.length) {
-          html +=
-            '<div class="sub-row"><h2 class="sub">읽는 순서</h2>' +
-            (labels.length > 1
-              ? '<div class="track-tabs" role="group" aria-label="갈래별로 보기">' +
-                [""].concat(labels)
-                  .map(function (l, k) {
-                    var key = k ? l : "";
-                    var n = k
-                      ? series.filter(function (p) {
-                          var t = trackOf(p);
-                          return t && t.label === l;
-                        }).length
-                      : series.length;
-                    return (
-                      '<button type="button" data-track="' + esc(key) + '" aria-pressed="' + (key === wantTrack) + '">' +
-                      (k ? esc(l) : "전체") + ' <span class="n">' + n + "</span></button>"
-                    );
-                  })
-                  .join("") +
-                "</div>"
-              : "") +
-            '</div><ol class="post-list series">' +
-            series
-              .map(function (p) {
-                var t = trackOf(p);
-                var off = wantTrack && (!t || t.label !== wantTrack);
-                return (
-                  "<li" + (t ? ' data-track="' + esc(t.label) + '"' : "") + (off ? " hidden" : "") + ">" +
-                  row(p, { num: true, bare: true, cat: false, labels: labels }) +
-                  "</li>"
-                );
-              })
-              .join("") +
-            "</ol>";
-        }
-        if (loose.length) {
-          html +=
-            (series.length ? '<h2 class="sub">그 밖의 글</h2>' : "") +
-            '<ul class="post-list">' +
-            loose
-              .map(function (p) {
-                return "<li>" + row(p, { cat: false }) + "</li>";
-              })
-              .join("") +
-            "</ul>";
-        }
-      }
-      if (listingEl) {
-        listingEl.innerHTML = html;
-        listingEl.hidden = false;
-        // 갈래 탭: 읽는 순서에서 한 갈래(이론·실습)만 남긴다. 주소에 적어 두어 뒤로 오면 그대로다
-        var trackBtns = listingEl.querySelectorAll(".track-tabs button");
-        Array.prototype.forEach.call(trackBtns, function (b) {
-          b.addEventListener("click", function () {
-            var want = b.getAttribute("data-track");
-            Array.prototype.forEach.call(trackBtns, function (o) {
-              o.setAttribute("aria-pressed", String(o === b));
-            });
-            Array.prototype.forEach.call(listingEl.querySelectorAll(".post-list.series li"), function (li) {
-              li.hidden = !!want && li.getAttribute("data-track") !== want;
-            });
-            var q = new URLSearchParams(location.search);
-            if (want) q.set("track", want);
-            else q.delete("track");
-            history.replaceState(null, "", "?" + q.toString());
-          });
-        });
-      }
+    var tabBar = homeEl.querySelector(".tabs");
+    var rows = homeEl.querySelectorAll(".post-list > li");
+    var filterTo = function (key) {
+      var c = key ? catOf(key) : null;
+      if (!c) key = "";
+      Array.prototype.forEach.call(tabBar.children, function (a) {
+        var on = a.getAttribute("data-cat") === key;
+        a.classList.toggle("on", on);
+        if (on) a.setAttribute("aria-current", "page");
+        else a.removeAttribute("aria-current");
+      });
+      Array.prototype.forEach.call(rows, function (li) {
+        li.hidden = !!key && li.getAttribute("data-cat") !== key;
+      });
+      document.title = c ? c.name + " · Seok Lab" : baseTitle;
+      return key;
+    };
+    var urlFor = function (key) {
+      return location.pathname + (key ? "?cat=" + key : "");
+    };
+
+    // 처음 열 때: ?cat=만 읽는다. 예전 주소(?view=all, &track=)는 같은 화면의 깨끗한 주소로 바꿔 둔다
+    var startKey = filterTo(params.get("cat") || "");
+    if (location.search !== (startKey ? "?cat=" + startKey : "")) history.replaceState(null, "", urlFor(startKey));
+
+    // 좁은 화면에서 탭 줄이 옆으로 밀릴 때, 고른 탭이 가려져 있으면 보이는 곳으로 옮긴다
+    var onTab = tabBar.querySelector(".on");
+    if (onTab && tabBar.scrollWidth > tabBar.clientWidth) {
+      var barBox = tabBar.getBoundingClientRect();
+      var tabBox = onTab.getBoundingClientRect();
+      if (tabBox.right > barBox.right || tabBox.left < barBox.left) tabBar.scrollLeft += tabBox.left - barBox.left - 24;
     }
+
+    tabBar.addEventListener("click", function (e) {
+      var a = e.target.closest("a[data-cat]");
+      if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // 새 탭으로 열기는 그대로 둔다
+      e.preventDefault();
+      history.replaceState(null, "", urlFor(filterTo(a.getAttribute("data-cat"))));
+    });
   }
 
   /* ── 글 페이지 ─────────────────────────────────────────── */
@@ -856,8 +738,7 @@
   var palItems = [];
 
   var COMMANDS = [
-    { label: "홈으로", run: function () { location.href = root; } },
-    { label: "전체 글 보기", run: function () { location.href = root + "?view=all"; } },
+    { label: "홈으로 (전체 글)", run: function () { location.href = root; } },
     {
       label: "무작위 글 열기",
       run: function () {
@@ -1034,6 +915,11 @@
     pal.hidden = true;
     document.body.classList.remove("pal-open");
   }
+
+  // 페이지 안의 "글 찾기" 단추(404 등)
+  Array.prototype.forEach.call(document.querySelectorAll("[data-open-palette]"), function (b) {
+    b.addEventListener("click", openPalette);
+  });
 
   document.addEventListener("keydown", function (e) {
     if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {

@@ -27,14 +27,14 @@
           Seok Lab
         </a>
         <nav class="site-nav">
-          <a href="./?view=all" data-nav="all">글</a>
+          <a href="./" data-nav="all">글</a>
           <a href="https://github.com/Seok05">GitHub</a>
         </nav>
       </div>
     </header>
 
     <main>
-      <!-- 홈: 소개(정적) → 분류 탭 + 최근 글(site.js가 posts.js로 채운다). 디자인 기준은 DESIGN.md -->
+      <!-- 홈: 소개(정적) → 분류 탭 + 글 목록(site.js가 posts.js로 채운다). 디자인 기준은 DESIGN.md -->
       <section class="intro page" id="intro">
         <h1>연구하면서, 개발합니다</h1>
         <p>
@@ -43,10 +43,8 @@
         </p>
       </section>
 
-      <section class="page" id="home" aria-label="최근 글"></section>
-
-      <!-- ?view=all (전체 글, 달별) · ?cat=<key> (분류) 일 때만 보인다 -->
-      <section class="page listing" id="listing" hidden>
+      <!-- 분류 탭 + 글 목록. 탭은 목록 안의 글만 거르고 틀은 그대로 둔다(?cat=<key>) -->
+      <section class="page" id="home" aria-label="글 목록">
         <noscript>
           <p>
             이 목록은 자바스크립트로 그려집니다. 글은
@@ -61,7 +59,7 @@
       <div class="wrap">
         <p class="foot-copy">© 2026 Seok Lab · 연구하면서, 개발합니다</p>
         <nav class="foot-nav" aria-label="바닥 메뉴">
-          <a href="./?view=all">글</a>
+          <a href="./">글</a>
           <a href="./feed.xml">RSS</a>
           <a href="https://github.com/Seok05">GitHub</a>
         </nav>

@@ -140,7 +140,12 @@ html {
   }
 }
 
+/* 글이 적은 화면에서도 바닥글은 화면 아래에 머문다(탭을 바꿔도 바닥글이 위로 튀지 않게) */
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   background: var(--bg);
   color: var(--text);
@@ -208,7 +213,7 @@ time,
 }
 
 main {
-  min-height: 60vh;
+  flex: 1 0 auto;
   padding-bottom: var(--s-11);
 }
 
@@ -247,9 +252,12 @@ kbd {
 }
 
 .btn {
+  appearance: none;
   display: inline-flex;
   align-items: center;
   height: 40px;
+  font-family: inherit;
+  cursor: pointer;
   padding: 0 var(--s-5);
   border: 1px solid var(--line);
   border-radius: var(--r-pill);
@@ -489,16 +497,6 @@ kbd {
   padding-bottom: var(--s-8);
 }
 
-.intro-avatar {
-  display: block;
-  width: 56px;
-  height: 56px;
-  margin-bottom: var(--s-5);
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  object-fit: cover;
-}
-
 .intro h1 {
   margin: 0 0 var(--s-3);
   color: var(--text-strong);
@@ -534,7 +532,7 @@ kbd {
   font-size: var(--fs-sm);
   font-weight: 500;
   white-space: nowrap;
-  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.15s ease; /* 고른 탭의 색은 바로 바뀐다(중간색이 비치지 않게) */
 }
 
 .tabs a:hover {
@@ -564,15 +562,12 @@ kbd {
 .post-list {
   margin: var(--s-6) 0 0;
   padding: 0;
+  border-bottom: 1px solid var(--line);
   list-style: none;
 }
 
 .post-list li {
   border-top: 1px solid var(--line);
-}
-
-.post-list li:last-child {
-  border-bottom: 1px solid var(--line);
 }
 
 .post-row {
@@ -582,18 +577,6 @@ kbd {
   align-items: start;
   padding: var(--s-7) 0;
   color: inherit;
-}
-
-.post-row.numbered {
-  grid-template-columns: 32px minmax(0, 1fr) 160px;
-}
-
-.row-num {
-  padding-top: 1px;
-  color: var(--text-faint);
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
 }
 
 .row-text {
@@ -671,186 +654,13 @@ kbd {
   aspect-ratio: auto;
 }
 
-.list-more {
-  margin: var(--s-6) 0 0;
-  font-size: var(--fs-sm);
-  font-weight: 600;
-}
-
-.list-more a:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-/* ── 목록 페이지: 전체 글 · 분류 ────────────────────────── */
-
-.list-head {
-  padding-top: var(--s-10);
-  margin-bottom: var(--s-6);
-}
-
-.list-head h1 {
-  margin: 0 0 var(--s-2);
-  color: var(--text-strong);
-  font-size: var(--fs-h1);
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: -0.02em;
-}
-
-.list-desc {
-  max-width: 600px;
-  margin: 0;
-  color: var(--text-sub);
-}
-
-.list-meta {
-  margin: var(--s-2) 0 0;
-  color: var(--text-sub);
-  font-size: var(--fs-xs);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-}
-
-.cat-head {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
-  gap: var(--s-6);
-  align-items: center;
-}
-
-.cat-head .cover {
-  aspect-ratio: 1 / 1;
-}
-
-.listing h2.sub {
-  margin: var(--s-8) 0 0;
-  color: var(--text-strong);
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-.sub-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-3);
-  margin-top: var(--s-8);
-}
-
-.listing .sub-row h2.sub {
-  margin: 0;
-}
-
 .post-list.series {
   margin-top: var(--s-4);
 }
 
 /* 갈래 탭 (이론·실습): 작은 분할 단추 */
-.track-tabs {
-  display: inline-flex;
-  gap: 2px;
-  padding: 3px;
-  border-radius: var(--r-pill);
-  background: var(--surface);
-}
-
-.track-tabs button {
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  height: 28px;
-  padding: 0 var(--s-3);
-  border: 0;
-  border-radius: var(--r-pill);
-  background: none;
-  color: var(--text-sub);
-  font: inherit;
-  font-size: var(--fs-ui);
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.track-tabs button:hover {
-  color: var(--text-strong);
-}
-
-.track-tabs button[aria-pressed="true"] {
-  background: var(--bg);
-  color: var(--text-strong);
-  box-shadow: 0 0 0 1px var(--line);
-}
-
-.track-tabs .n {
-  margin-left: 0.3em;
-  color: var(--text-faint);
-  font-size: var(--fs-2xs);
-}
 
 /* 전체 글: 달별 */
-.archive {
-  margin-top: var(--s-8);
-}
-
-.archive .month {
-  display: grid;
-  grid-template-columns: 140px minmax(0, 1fr);
-  gap: var(--s-6);
-  padding: var(--s-6) 0;
-  border-top: 1px solid var(--line);
-}
-
-.archive .month h2 {
-  margin: 0;
-  color: var(--text-strong);
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  line-height: 1.8;
-}
-
-.archive .month h2 .n {
-  color: var(--text-faint);
-  font-size: var(--fs-xs);
-  font-weight: 500;
-}
-
-.archive ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.arc-row {
-  display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) auto;
-  gap: var(--s-4);
-  align-items: baseline;
-  padding: var(--s-1) 0;
-  color: inherit;
-}
-
-.arc-row time {
-  color: var(--text-faint);
-  font-size: var(--fs-xs);
-}
-
-.arc-title {
-  color: var(--text-strong);
-  font-weight: 500;
-  line-height: 1.6;
-}
-
-.arc-row:hover .arc-title {
-  color: var(--accent);
-}
-
-.arc-cat {
-  color: var(--text-faint);
-  font-size: var(--fs-xs);
-  white-space: nowrap;
-}
 
 /* 분류 표지: 평평한 한 톤 위에 그림 */
 .cover {
@@ -2131,10 +1941,6 @@ body.pal-open {
     padding-top: var(--s-8);
   }
 
-  .list-head {
-    padding-top: var(--s-8);
-  }
-
   /* 탭은 한 줄로 두고 옆으로 민다 */
   .tabs {
     flex-wrap: nowrap;
@@ -2154,37 +1960,12 @@ body.pal-open {
     padding: var(--s-6) 0;
   }
 
-  .post-row.numbered {
-    grid-template-columns: 24px minmax(0, 1fr) 96px;
-    gap: var(--s-3);
-  }
-
   .row-title {
     font-size: var(--fs-body);
   }
 
   .row-desc {
     font-size: var(--fs-ui);
-  }
-
-  .cat-head {
-    grid-template-columns: 72px minmax(0, 1fr);
-    gap: var(--s-4);
-  }
-
-  .archive .month {
-    grid-template-columns: 1fr;
-    gap: var(--s-2);
-    padding: var(--s-5) 0;
-  }
-
-  .arc-row {
-    grid-template-columns: 44px minmax(0, 1fr);
-    gap: var(--s-3);
-  }
-
-  .arc-cat {
-    display: none;
   }
 
   .layout {
