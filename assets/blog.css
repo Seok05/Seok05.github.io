@@ -200,16 +200,14 @@ time,
   max-width: calc(var(--w-list) + 2 * var(--gutter));
 }
 
+.home .site-header .wrap,
+.home .site-footer .wrap {
+  max-width: calc(var(--w-site) + 2 * var(--gutter));
+}
+
 .is-post .site-header .wrap,
 .is-post .site-footer .wrap {
   max-width: calc(var(--w-read) + 2 * var(--gutter));
-}
-
-.page {
-  width: 100%;
-  max-width: calc(var(--w-list) + 2 * var(--gutter));
-  margin: 0 auto;
-  padding: 0 var(--gutter);
 }
 
 main {
@@ -490,26 +488,71 @@ kbd {
   margin: 0 0.4em;
 }
 
-/* ── 홈: 소개 ────────────────────────────────────────────── */
+/* ── 홈: 왼쪽 소개 카드 + 오른쪽 목록 ────────────────────── */
 
-.intro {
-  padding-top: var(--s-10);
-  padding-bottom: var(--s-8);
+.home-grid {
+  display: grid;
+  grid-template-columns: 240px minmax(0, var(--w-list));
+  column-gap: var(--s-8);
+  align-items: start;
+  width: 100%;
+  max-width: calc(var(--w-site) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: var(--s-10) var(--gutter) 0;
 }
 
-.intro h1 {
-  margin: 0 0 var(--s-3);
+/* 소개 카드는 스크롤해도 머리글 아래에 붙어 있다 */
+.profile {
+  position: sticky;
+  top: calc(var(--header-h) + var(--s-6));
+}
+
+.profile-img {
+  display: block;
+  width: 88px;
+  height: 88px;
+  margin-bottom: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-name {
+  margin: 0;
   color: var(--text-strong);
-  font-size: var(--fs-h1);
+  font-size: var(--fs-h3);
   font-weight: 700;
   line-height: 1.4;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
 }
 
-.intro p {
-  max-width: 600px;
-  margin: 0;
+.profile-tagline {
+  margin: var(--s-1) 0 0;
   color: var(--text-sub);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.profile-bio {
+  margin: var(--s-4) 0 0;
+  color: var(--text-sub);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  margin-top: var(--s-5);
+  font-size: var(--fs-ui);
+  font-weight: 600;
+}
+
+.profile-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 /* ── 분류 탭 ─────────────────────────────────────────────── */
@@ -1923,6 +1966,47 @@ body.pal-open {
   }
 }
 
+/* 소개 카드가 옆에 설 자리가 없으면 위로 올라가 가로형이 된다 */
+@media (max-width: 999px) {
+  .home .site-header .wrap,
+  .home .site-footer .wrap {
+    max-width: calc(var(--w-list) + 2 * var(--gutter));
+  }
+
+  .home-grid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s-8);
+    max-width: calc(var(--w-list) + 2 * var(--gutter));
+  }
+
+  .profile {
+    position: static;
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    column-gap: var(--s-4);
+    align-items: center;
+  }
+
+  .profile-img {
+    width: 56px;
+    height: 56px;
+    margin: 0;
+  }
+
+  .profile-text {
+    min-width: 0;
+  }
+
+  .profile-bio,
+  .profile-links {
+    grid-column: 1 / -1;
+  }
+
+  .profile-links {
+    margin-top: var(--s-3);
+  }
+}
+
 @media (max-width: 720px) {
   :root {
     --gutter: 20px;
@@ -1937,7 +2021,7 @@ body.pal-open {
     display: none;
   }
 
-  .intro {
+  .home-grid {
     padding-top: var(--s-8);
   }
 

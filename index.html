@@ -34,25 +34,36 @@
     </header>
 
     <main>
-      <!-- 홈: 소개(정적) → 분류 탭 + 글 목록(site.js가 posts.js로 채운다). 디자인 기준은 DESIGN.md -->
-      <section class="intro page" id="intro">
-        <h1>연구하면서, 개발합니다</h1>
-        <p>
-          배터리 재료를 원자 단위에서 계산하는 연구와, 중고 전기차 시세 도구 EValue·위스키 기록 앱 첫잔을
-          만드는 개발을 함께 합니다. 계산이 어긋난 날도 배포가 꼬인 날도, 그날 나온 숫자 그대로 적어 둡니다.
-        </p>
-      </section>
-
-      <!-- 분류 탭 + 글 목록. 탭은 목록 안의 글만 거르고 틀은 그대로 둔다(?cat=<key>) -->
-      <section class="page" id="home" aria-label="글 목록">
-        <noscript>
-          <p>
-            이 목록은 자바스크립트로 그려집니다. 글은
-            <a href="https://github.com/Seok05/Seok05.github.io/tree/main/posts">posts/ 폴더</a>에서
-            직접 볼 수 있습니다.
+      <!-- 홈: 왼쪽 소개 카드(정적) + 오른쪽 분류 탭·글 목록(site.js가 posts.js로 채운다). 디자인 기준은 DESIGN.md -->
+      <div class="home-grid">
+        <aside class="profile" aria-label="소개">
+          <img class="profile-img" src="assets/profile.png" alt="" width="88" height="88" />
+          <div class="profile-text">
+            <h1 class="profile-name">Seok</h1>
+            <p class="profile-tagline">연구하면서, 개발합니다</p>
+          </div>
+          <p class="profile-bio">
+            배터리 재료를 원자 단위에서 계산하는 연구와, 중고 전기차 시세 도구 EValue·위스키 기록 앱 첫잔을
+            만드는 개발을 함께 합니다. 계산이 어긋난 날도 배포가 꼬인 날도, 그날 나온 숫자 그대로 적어 둡니다.
           </p>
-        </noscript>
-      </section>
+          <nav class="profile-links" aria-label="바깥 링크">
+            <a href="https://github.com/Seok05">GitHub</a>
+            <a href="https://orcid.org/0009-0000-7027-4638">ORCID</a>
+            <a href="feed.xml">RSS</a>
+          </nav>
+        </aside>
+
+        <!-- 분류 탭 + 글 목록. 탭은 목록 안의 글만 거르고 틀은 그대로 둔다(?cat=<key>) -->
+        <section class="home-main" id="home" aria-label="글 목록">
+          <noscript>
+            <p>
+              이 목록은 자바스크립트로 그려집니다. 글은
+              <a href="https://github.com/Seok05/Seok05.github.io/tree/main/posts">posts/ 폴더</a>에서
+              직접 볼 수 있습니다.
+            </p>
+          </noscript>
+        </section>
+      </div>
     </main>
 
     <footer class="site-footer">
