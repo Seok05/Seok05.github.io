@@ -6,8 +6,6 @@
 
 - `DESIGN.md` — **디자인 명세.** 글자·색·간격·폭·부품의 숫자는 전부 여기서 나온다(잘 만든 개발 블로그
   7곳을 실측한 표 포함). `assets/blog.css` 맨 위 토큰이 이 문서와 1:1이다. 화면을 고치면 이 문서의 검수 순서(§6)대로 보고, 바뀐 것은 §7 기록에 적는다.
-- `PLAN.md` — 진행 중인 2차 고도화 기획(공유 카드·다크 그림·긴 글 목차·속도·대비, 2026-09-30).
-  끝나면 확정 규칙을 DESIGN.md에 옮기고 지운다.
 - `assets/posts.js` — **단일 데이터 원장.** 카테고리 정의(`mark`·`hue`·`art` 포함, `featured`는 지금 화면에서
   쓰지 않는다) + 글 메타데이터(최신 글이 배열 맨 위).
 - `assets/covers/` — 카테고리 표지 그림(분류 페이지가 없어진 뒤로는 자기 썸네일이 없는 글의 대체 썸네일로만 쓴다). 첫잔은 앱 아이콘(`cheotjan/assets/images/icon.png` 256px)
@@ -68,8 +66,9 @@
   인쇄 스타일 포함. 글 속 인라인 SVG가 쓰는 예전 변수 이름(`--ink`·`--muted`·`--paper`·`--rule` 등)은
   새 토큰의 별칭으로 남겨 두었으니 새 도해에도 그대로 써도 된다.
 - `feed.xml`·`sitemap.xml`·`robots.txt` — `node scripts/build-meta.mjs`가 posts.js에서 생성.
-  같은 스크립트가 HTML 36장의 `assets/blog.css?v=…`·`site.js?v=…`·`posts.js?v=…` 해시도 찍는다(멱등).
-  글을 올리거나 제목을 고치거나 CSS·JS를 고치면 다시 돌린다.
+  같은 스크립트가 HTML 36장의 `assets/blog.css?v=…`·`site.js?v=…`·`posts.js?v=…` 해시, 글꼴 `<link>`(preconnect),
+  글의 og·twitter 태그(`assets/social/<slug>.jpg`가 있는 글만)도 찍는다(멱등). 글을 올리거나 제목을 고치거나 CSS·JS를 고치면 다시 돌린다.
+- `assets/social/<slug>.jpg` — 글의 공유 카드(1200×630). `scripts/render-social.py`가 posts.js와 썸네일로 그린다(DESIGN.md §4 공유 카드).
 - **로고마크**: 층상 산화물 사이를 떠나는 Na 이온(실습 [6]의 2.40 V 이야기). 세 벌이 있다 —
   site.js의 `MARK`(헤더·푸터용, CSS 변수로 테마 대응), `assets/favicon.svg`(파랑 #2f6fed 타일, JS가
   주입), `assets/favicon.png`(256px 폴백, favicon.svg를 헤드리스 크롬으로 투명 배경 캡처해서 만든다).
@@ -87,9 +86,12 @@
    요약이 아니라 "그날 무엇이 나왔나"다. 애매하면 비운다.
    `thumb`은 `assets/thumbs/<slug>.webp`로 적고, 그림은 위 썸네일 절차대로 스크립트로 두 벌(라이트·다크)을 만든다.
 3. 새 카테고리면 `cats` 배열에도 추가.
-4. `node scripts/build-meta.mjs` 로 feed.xml·sitemap.xml 갱신 + 모든 HTML의 CSS·JS 링크에 내용 해시(`?v=`) 찍기.
+4. `python3 scripts/render-social.py assets/social <slug>` 로 공유 카드(1200×630 JPG) 한 장을 그린다.
+5. `node scripts/build-meta.mjs` 로 feed.xml·sitemap.xml 갱신 + 모든 HTML의 CSS·JS 링크에 내용 해시(`?v=`) +
+   글꼴 `<link>` + 글의 og·twitter 태그(카드가 있는 글만) 찍기. 멱등이다.
    **blog.css·site.js·posts.js를 고친 뒤에도 꼭 실행한다.** GitHub Pages가 10분 캐시하므로 해시가 안 바뀌면 재방문자에게 옛 CSS가 붙는다.
-5. 커밋·푸시. 카운트·목록·필터·내비게이션·검색·잔디 달력은 자동.
+   검사는 `python3 scripts/check-thumbs.py`, `python3 scripts/check-social.py`.
+6. 커밋·푸시. 카운트·목록·필터·내비게이션·검색은 자동.
 
 ## 방문 통계 (GoatCounter)
 
