@@ -237,7 +237,8 @@
   }
   function fetchViews(path, cb) {
     if (!GC || !window.fetch) return;
-    fetch("https://" + GC + ".goatcounter.com/counter/" + path + ".json")
+    // count.js의 visit_count와 같은 규칙: 경로를 통째로 인코딩한다("/" → "%2F")
+    fetch("https://" + GC + ".goatcounter.com/counter/" + encodeURIComponent(path) + ".json")
       .then(function (r) {
         return r.ok ? r.json() : null;
       })
