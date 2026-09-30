@@ -27,6 +27,15 @@
    ───────────────────────────────────────────────────────────── */
 
 window.SEOK = {
+  /* 사이트 설정. goatcounter: GoatCounter 계정 코드(<코드>.goatcounter.com).
+     계정을 만들기 전까지는 방문 수집·조회수 표시가 조용히 꺼져 있다. */
+  site: {
+    title: "Seok Lab",
+    url: "https://seok05.github.io",
+    since: "2026.08.18",
+    goatcounter: "seok05",
+  },
+
   cats: [
     {
       key: "cheotjan",
