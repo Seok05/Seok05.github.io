@@ -1232,8 +1232,78 @@ article a:hover {
 .anchor-a,
 .post-nav a,
 .series-box a,
-.author-card a {
+.author-card a,
+.toc-inline a {
   text-decoration: none;
+}
+
+/* 접힌 목차: 1200px 미만에서 글 머리 아래. 레일(.rail)과 같은 목록을 site.js가 만든다 */
+.toc-inline {
+  display: none;
+  margin: var(--s-6) 0 var(--s-7);
+  padding: 0 var(--s-5);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.toc-inline summary {
+  display: flex;
+  align-items: center;
+  padding: var(--s-4) 0;
+  color: var(--text-strong);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.5;
+  list-style: none;
+  cursor: pointer;
+}
+
+.toc-inline summary::-webkit-details-marker {
+  display: none;
+}
+
+.toc-inline summary .n {
+  margin-left: 0.3em;
+  color: var(--text-faint);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+
+.toc-inline summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-left: auto;
+  margin-right: 3px;
+  border-right: 1.5px solid var(--text-sub);
+  border-bottom: 1.5px solid var(--text-sub);
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+.toc-inline[open] summary::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+.toc-inline ol {
+  margin: 0;
+  padding: 0 0 var(--s-4);
+  list-style: none;
+}
+
+.toc-inline li + li {
+  margin-top: var(--s-2);
+}
+
+.toc-inline a {
+  display: block;
+  color: var(--text-sub);
+  font-size: var(--fs-ui);
+  line-height: 1.5;
+}
+
+.toc-inline a:hover {
+  color: var(--text-strong);
 }
 
 article sub,
@@ -2023,6 +2093,9 @@ body.pal-open {
 @media (max-width: 1199px) {
   .rail {
     display: none;
+  }
+  .toc-inline {
+    display: block;
   }
   .layout {
     grid-template-columns: minmax(0, 1fr);

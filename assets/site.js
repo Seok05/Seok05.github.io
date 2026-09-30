@@ -621,7 +621,7 @@
       var kids = article.children;
       for (var k = 0; k < kids.length; k++) {
         var kEl = kids[k];
-        if (/(^|\s)(post-head|author-card|post-nav|series-strip|series-box)(\s|$)/.test(kEl.className)) continue;
+        if (/(^|\s)(post-head|author-card|post-nav|series-strip|series-box|toc-inline)(\s|$)/.test(kEl.className)) continue;
         text += kEl.textContent || "";
       }
       var chars = text.replace(/\s+/g, "").length;
@@ -696,6 +696,22 @@
       };
       pick();
       window.addEventListener("scroll", pick, { passive: true });
+    }
+    // 1200px 미만에는 오른쪽 레일이 없다. h2가 4개 이상인 글은 글 머리 아래에 접힌 목차 상자를 둔다
+    // (CSS가 폭에 따라 레일과 상자 중 하나만 보인다)
+    var headForToc = article.querySelector(".post-head");
+    if (h2s.length >= 4 && headForToc) {
+      var det = document.createElement("details");
+      det.className = "toc-inline";
+      det.innerHTML =
+        '<summary>목차 <span class="n">' + h2s.length + "</span></summary><ol>" +
+        h2s
+          .map(function (h) {
+            return '<li><a href="#' + h.id + '">' + esc(h.textContent.replace(/#\s*$/, "").trim()) + "</a></li>";
+          })
+          .join("") +
+        "</ol>";
+      headForToc.parentNode.insertBefore(det, headForToc.nextSibling);
     }
 
     // 코드 복사 단추
