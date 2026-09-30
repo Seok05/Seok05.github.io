@@ -462,6 +462,52 @@
       e.preventDefault();
       history.replaceState(null, "", urlFor(filterTo(a.getAttribute("data-cat"))));
     });
+
+    // 처음이라면: 글이 2편 이상인 갈래(DFT 이론·DFT 실습·첫잔)의 1편. 분류 순서, 그 안에서는 읽는 순서로 처음 나온 갈래 순.
+    // 소개 카드 안에 그린다. 탭과 무관하게 늘 같은 자리
+    var starts = [];
+    cats.forEach(function (c) {
+      var seen = {};
+      var order = [];
+      posts
+        .filter(function (p) {
+          return p.cat === c.key && p.series;
+        })
+        .sort(byOrder)
+        .forEach(function (p) {
+          var m = /^(.+?)\s\[(\d+)\]\s—\s/.exec(p.title);
+          if (!m) return;
+          var n = parseInt(m[2], 10);
+          if (!seen[m[1]]) {
+            seen[m[1]] = { label: m[1], count: 0, n: n, post: p };
+            order.push(m[1]);
+          }
+          var t = seen[m[1]];
+          t.count++;
+          if (n < t.n) {
+            t.n = n;
+            t.post = p;
+          }
+        });
+      order.forEach(function (k) {
+        if (seen[k].count >= 2) starts.push(seen[k]);
+      });
+    });
+    var startEl = document.querySelector(".profile-start");
+    if (startEl && starts.length) {
+      startEl.innerHTML =
+        '<p class="side-title">처음이라면</p><ul>' +
+        starts
+          .map(function (t) {
+            return (
+              '<li><a href="' + href(t.post) + '"><span class="n">' + esc(t.label + " " + t.n) + "</span>" +
+              '<span class="t">' + esc(bareTitle(t.post.title)) + "</span></a></li>"
+            );
+          })
+          .join("") +
+        "</ul>";
+      startEl.hidden = false;
+    }
   }
 
   /* ── 글 페이지 ─────────────────────────────────────────── */

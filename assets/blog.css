@@ -567,6 +567,50 @@ kbd {
   text-underline-offset: 0.2em;
 }
 
+/* 처음이라면: 갈래마다 1편. 제목 13·700, 항목은 갈래·번호(13 흐린 색) 위에 본 제목(14, 한 줄) */
+.profile-start {
+  margin-top: var(--s-6);
+}
+
+.profile-start .side-title {
+  margin: 0 0 var(--s-2);
+}
+
+.profile-start ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.profile-start li + li {
+  margin-top: var(--s-2);
+}
+
+.profile-start a {
+  display: block;
+  color: var(--text);
+  font-size: var(--fs-ui);
+  line-height: 1.5;
+}
+
+.profile-start .n {
+  display: block;
+  color: var(--text-faint);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+
+.profile-start .t {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.profile-start a:hover .t {
+  color: var(--accent);
+}
+
 /* ── 분류 탭 ─────────────────────────────────────────────── */
 
 .tabs {
@@ -2016,6 +2060,49 @@ body.pal-open {
 
   .profile-links {
     margin-top: var(--s-3);
+  }
+
+  /* 가로형 카드에서는 한 줄 칩: 처음이라면 · DFT 이론 1 · DFT 실습 1 · 첫잔 1 */
+  .profile-start {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1) var(--s-3);
+    align-items: baseline;
+    grid-column: 1 / -1;
+    margin-top: var(--s-3);
+  }
+
+  .profile-start .side-title {
+    margin: 0;
+  }
+
+  .profile-start ul {
+    display: contents;
+  }
+
+  .profile-start li + li {
+    margin: 0;
+  }
+
+  .profile-start li + li::before {
+    content: "·";
+    margin-right: var(--s-3);
+    color: var(--text-faint);
+  }
+
+  .profile-start a,
+  .profile-start .n {
+    display: inline;
+  }
+
+  .profile-start .n {
+    color: var(--accent);
+    font-size: var(--fs-ui);
+    font-weight: 600;
+  }
+
+  .profile-start .t {
+    display: none;
   }
 }
 
