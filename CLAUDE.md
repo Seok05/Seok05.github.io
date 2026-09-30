@@ -19,17 +19,21 @@
   DFT는 첫 계산 구조였던 O3형 NaMnO₂를 `scripts/render-namno2.py`(numpy+matplotlib, VESTA 기본색)로
   그린 `dft-namno2.webp`. VESTA에서 직접 내보낸 PNG가 생기면 같은 이름으로 바꿔 끼우면 된다.
   site.js의 `ART`(인라인 SVG 배터리·격자·문서)는 그림 파일이 없을 때의 예비다.
-- `assets/thumbs/<slug>.webp`(640×400, 16:10 카드 썸네일)와 `assets/shots/*.webp`(480px 폭, 글 안의 실제 화면).
-  DFT·Paper 글의 썸네일은 `scripts/render-illustrations.py`가 글 내용을 그림으로 그린 것(밀도 지형, 단위 격자,
-  스핀 화살표, 평면파 컷오프, k점 격자, 국재화, d 오비탈, 늘어난 팔면체, Na가 빠지는 층, 녹스는 금속 구,
-  두 Mn에 퍼진 구멍, DFT·CHGNet 에너지 준위 사다리).
-  새 DFT 글이 생기면 함수 하나를 더해 그린다. 함수 이름을 인자로 주면 그 그림만 다시 그린다
-  (`python3 scripts/render-illustrations.py assets/thumbs assets/illus dft_practice_11`). EValue·배터리 글은 EValue 개발 서버(3011)의 매물 상세·리포트·
-  결과 화면을 헤드리스 크롬으로 찍어 글마다 다른 구간을 잘랐다(시세 밴드·같은 조건 매물·추세 차트·결과 머리·
-  배터리 추정 상태). 본문에는 `<figure class="shot web">`(브라우저 창 프레임)로 넣는다. 노트북 서버 글만 삽화.
-  첫잔 글은 제품소개서 v1.4에 박힌 캡처와 헤드리스 크롬으로 찍은 `/settings`·`/first-steps`에서 뽑았다.
-  글 안에서는 `<figure class="shot">`(폰 프레임) 또는 `<figure class="shot wide">`(카드)로 넣는다.
-  캡처 시점이 글 날짜보다 뒤면 캡션에 "(9월 22일 기준 화면)"처럼 적는다.
+- `assets/thumbs/<slug>.webp`(640×400, 16:10 카드 썸네일, 라이트)와 `assets/thumbs/dark/<slug>.webp`(다크 벌),
+  `assets/shots/*.webp`(글 안의 실제 화면 캡처: 폰 480px · 브라우저 1200px · 카드 960px 폭). 썸네일 33장은 한 배경 토큰
+  (`--thumb-bg` 라이트 #eaeef3 · 다크 #1a1f27) 위에 스크립트로 만든다(DESIGN.md §3, PLAN.md 4.5). 손으로 고치지 않는다.
+  - 직접 그린 그림(DFT·Paper·노트북 서버 16장): `python3 scripts/render-illustrations.py assets/thumbs assets/illus`가
+    두 벌을 낸다(`--theme=light|dark`로 한 벌만, 함수 이름을 뒤에 주면 그 그림만). 새 DFT 글이 생기면 함수 하나를 더해
+    ALL 목록에 넣는다. 글 안 그림(`assets/illus`, 1280×800)은 라이트만.
+  - 화면 캡처(첫잔 11 · EValue 5 · 배터리 1): `python3 scripts/render-thumbs.py assets/shots assets/thumbs`가
+    `assets/shots`의 캡처를 폰(가운데 46%)·브라우저(오른쪽 아래 80%)·카드(가운데 80%) 프레임에 넣어 두 벌을 낸다.
+    새 글은 스크립트의 SHOTS 표에 한 줄(종류·캡처 파일·시작 높이) 추가. EValue 캡처는 개발 서버(3011)를 헤드리스
+    크롬으로 1200px 폭으로 찍고, 첫잔은 제품소개서 v1.4의 캡처와 `/settings`·`/first-steps` 캡처(480px 폭)를 쓴다.
+  - 검사: `python3 scripts/check-thumbs.py`(크기·두 벌·(8,8) 배경 픽셀, 어긋나면 종료 코드 1),
+    `python3 scripts/contact-sheet.py assets/thumbs /tmp/sheet`(6열 콘택트 시트 라이트·다크 한 장씩).
+  - site.js는 지금 테마의 벌을 넣고 토글·OS 설정 변화에 바꿔 끼운다. 다크 파일이 없으면 라이트로 되돌아간다.
+  - 본문 그림은 `<figure class="shot">`(폰 프레임) · `<figure class="shot wide">`(카드) · `<figure class="shot web">`
+    (브라우저 창)로 넣는다. 캡처 시점이 글 날짜보다 뒤면 캡션에 "(9월 22일 기준 화면)"처럼 적는다.
 - `assets/site.js` — posts.js를 읽어 페이지를 조립한다.
   - 홈: 왼쪽 소개 카드(index.html에 정적: 그림·이름·한 줄·소개·GitHub/ORCID/RSS, 스크롤에 고정)
     + 오른쪽 분류 탭(전체·카테고리별, 글 수) → 글 목록(전체, 최신순). 홈이 곧 전체 글 목록이다.
@@ -70,8 +74,9 @@
   site.js의 `MARK`(헤더·푸터용, CSS 변수로 테마 대응), `assets/favicon.svg`(파랑 #2f6fed 타일, JS가
   주입), `assets/favicon.png`(256px 폴백, favicon.svg를 헤드리스 크롬으로 투명 배경 캡처해서 만든다).
   사용자 생성 일러스트(책상 위 연구 노트, 2026-09-30)가 `assets/note-desk.webp`(원본 1254px)에
-  있고, 여기서 `assets/og.jpg`(1200×630 공유 이미지)와 `assets/profile.png`(작가 카드용, 이온이
-  빠져나가는 부분 512px 크롭)를 잘랐다. 그림을 바꾸면 세 파일을 같은 요령으로 다시 만든다.
+  있고, 여기서 `assets/og.jpg`(1200×630 공유 이미지), `assets/profile.png`(글 끝 작가 카드용, 이온이
+  빠져나가는 부분 512px 원형 크롭), `assets/profile-card.webp`(홈 소개 카드용, 같은 부분을 원본 (40,500)-(640,875)에서
+  16:10으로 잘라 480×300)를 만들었다. 그림을 바꾸면 네 파일을 같은 요령으로 다시 만든다.
 
 ## 새 글 올리기 (전부 여기서 끝)
 
