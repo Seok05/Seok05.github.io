@@ -64,7 +64,8 @@
   인쇄 스타일 포함. 글 속 인라인 SVG가 쓰는 예전 변수 이름(`--ink`·`--muted`·`--paper`·`--rule` 등)은
   새 토큰의 별칭으로 남겨 두었으니 새 도해에도 그대로 써도 된다.
 - `feed.xml`·`sitemap.xml`·`robots.txt` — `node scripts/build-meta.mjs`가 posts.js에서 생성.
-  글을 올리거나 제목을 고치면 다시 돌린다.
+  같은 스크립트가 HTML 36장의 `assets/blog.css?v=…`·`site.js?v=…`·`posts.js?v=…` 해시도 찍는다(멱등).
+  글을 올리거나 제목을 고치거나 CSS·JS를 고치면 다시 돌린다.
 - **로고마크**: 층상 산화물 사이를 떠나는 Na 이온(실습 [6]의 2.40 V 이야기). 세 벌이 있다 —
   site.js의 `MARK`(헤더·푸터용, CSS 변수로 테마 대응), `assets/favicon.svg`(파랑 #2f6fed 타일, JS가
   주입), `assets/favicon.png`(256px 폴백, favicon.svg를 헤드리스 크롬으로 투명 배경 캡처해서 만든다).
@@ -78,7 +79,8 @@
 2. `assets/posts.js`의 `posts` 배열에 항목 추가 — **날짜 순으로 최신이 맨 위**
    (slug/cat/date/title/blurb, 시리즈 글이면 series+order, 관련 글은 related).
 3. 새 카테고리면 `cats` 배열에도 추가.
-4. `node scripts/build-meta.mjs` 로 feed.xml·sitemap.xml 갱신.
+4. `node scripts/build-meta.mjs` 로 feed.xml·sitemap.xml 갱신 + 모든 HTML의 CSS·JS 링크에 내용 해시(`?v=`) 찍기.
+   **blog.css·site.js·posts.js를 고친 뒤에도 꼭 실행한다.** GitHub Pages가 10분 캐시하므로 해시가 안 바뀌면 재방문자에게 옛 CSS가 붙는다.
 5. 커밋·푸시. 카운트·목록·필터·내비게이션·검색·잔디 달력은 자동.
 
 ## 방문 통계 (GoatCounter)

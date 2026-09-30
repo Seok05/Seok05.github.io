@@ -1,6 +1,8 @@
-/* posts.js를 읽어 feed.xml(RSS)·sitemap.xml을 만든다.
-   새 글을 올릴 때 한 번 실행: node scripts/build-meta.mjs               */
-import { readFileSync, writeFileSync } from "node:fs";
+/* posts.js를 읽어 feed.xml(RSS)·sitemap.xml·robots.txt를 만들고,
+   모든 HTML의 blog.css·site.js·posts.js 링크에 내용 해시(?v=)를 찍는다.
+   새 글을 올릴 때, 그리고 CSS·JS를 고쳤을 때 한 번 실행: node scripts/build-meta.mjs */
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -70,3 +72,29 @@ ${urls.join("\n")}
 writeFileSync(join(root, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 
 console.log(`feed.xml · sitemap.xml · robots.txt — ${posts.length}편 반영`);
+
+/* ── 자산 버전 ──
+   GitHub Pages는 파일을 600초 캐시한다. 링크에 해시가 없으면 배포 직후 10분 동안 재방문자가
+   새 HTML에 옛 CSS·JS를 받아 화면이 깨진다. 내용이 바뀐 파일만 해시가 바뀌므로 다시 받는다. */
+const ASSETS = ["blog.css", "site.js", "posts.js"];
+const ver = Object.fromEntries(
+  ASSETS.map((f) => [f, createHash("sha1").update(readFileSync(join(root, "assets", f))).digest("hex").slice(0, 8)])
+);
+const htmlFiles = ["index.html", "404.html"].concat(
+  readdirSync(join(root, "posts"))
+    .filter((f) => f.endsWith(".html"))
+    .map((f) => join("posts", f))
+);
+// 뿌리 페이지는 assets/…, 글은 ../assets/…, 404는 /assets/… 로 적혀 있다. 접두어는 그대로 두고 ?v=만 바꾼다
+const linkRe = /((?:\.\.\/|\/)?assets\/(blog\.css|site\.js|posts\.js))(\?v=[0-9a-f]+)?(?=["'])/g;
+let stamped = 0;
+for (const rel of htmlFiles) {
+  const p = join(root, rel);
+  const before = readFileSync(p, "utf8");
+  const after = before.replace(linkRe, (m, path, file) => `${path}?v=${ver[file]}`);
+  if (after !== before) {
+    writeFileSync(p, after);
+    stamped++;
+  }
+}
+console.log(`자산 버전 ${ASSETS.map((f) => f + "=" + ver[f]).join(" · ")} — HTML ${stamped}개 갱신`);
