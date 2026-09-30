@@ -539,6 +539,17 @@ kbd {
   object-fit: cover;
 }
 
+/* 종이 위 일러스트라 다크에서는 살짝 낮춘다 */
+:root[data-theme="dark"] .profile-pic {
+  filter: brightness(0.9);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .profile-pic {
+    filter: brightness(0.9);
+  }
+}
+
 .profile-name {
   margin: 0;
   color: var(--text-strong);

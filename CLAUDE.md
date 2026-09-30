@@ -24,7 +24,7 @@
   (`--thumb-bg` 라이트 #eaeef3 · 다크 #1a1f27) 위에 스크립트로 만든다(DESIGN.md §3, PLAN.md 4.5). 손으로 고치지 않는다.
   - 직접 그린 그림(DFT·Paper·노트북 서버 16장): `python3 scripts/render-illustrations.py assets/thumbs assets/illus`가
     두 벌을 낸다(`--theme=light|dark`로 한 벌만, 함수 이름을 뒤에 주면 그 그림만). 새 DFT 글이 생기면 함수 하나를 더해
-    ALL 목록에 넣는다. 글 안 그림(`assets/illus`, 1280×800)은 라이트만.
+    ALL 목록에 넣는다. 글 안 그림(`assets/illus`, 1280×800)도 두 벌(`illus/dark/`)이고 site.js가 테마에 맞춰 바꿔 끼운다.
   - 화면 캡처(첫잔 11 · EValue 5 · 배터리 1): `python3 scripts/render-thumbs.py assets/shots assets/thumbs`가
     `assets/shots`의 캡처를 폰(가운데 46%)·브라우저(오른쪽 아래 80%)·카드(가운데 80%) 프레임에 넣어 두 벌을 낸다.
     새 글은 스크립트의 SHOTS 표에 한 줄(종류·캡처 파일·시작 높이) 추가. EValue 캡처는 개발 서버(3011)를 헤드리스

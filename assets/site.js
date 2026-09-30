@@ -566,6 +566,21 @@
     if (sidebar) sidebar.hidden = true; // 예비 사이드바는 접는다
     document.body.classList.add("is-post");
 
+    // 글 안 그림(assets/illus)도 썸네일처럼 두 벌. 지금 테마의 벌을 넣고, 토글 때 swapThumbs()가 같이 바꾼다
+    Array.prototype.forEach.call(article.querySelectorAll('img[src*="assets/illus/"]'), function (img) {
+      var light = img.getAttribute("src");
+      if (/assets\/illus\/dark\//.test(light)) return;
+      img.setAttribute("data-light", light);
+      img.setAttribute("data-dark", light.replace(/assets\/illus\//, "assets/illus/dark/"));
+      if (isDark()) {
+        img.onerror = function () {
+          this.onerror = null;
+          this.src = this.getAttribute("data-light");
+        };
+        img.src = img.getAttribute("data-dark");
+      }
+    });
+
     // 작가 카드: 글에 박힌 문구 대신 posts.js의 site.author 한 곳에서 읽는다(박힌 것은 JS 없는 환경용 예비)
     var acard = article.querySelector(".author-card");
     if (acard && SITE.author) {

@@ -1,7 +1,7 @@
 """연구 글(DFT·Paper) 카드 썸네일: 글 내용을 그림으로. 도표 캡처 대신 직접 그린다.
 matplotlib(Agg)로 1280×800에 그려 640×400 webp로 줄인다. 글자는 넣지 않는다.
 라이트·다크 두 벌을 만든다(assets/thumbs/<slug>.webp, assets/thumbs/dark/<slug>.webp).
-글 안 그림(assets/illus, 1280×800)은 라이트 한 벌만.
+글 안 그림(assets/illus, 1280×800)도 두 벌(assets/illus/dark).
 사용: python3 scripts/render-illustrations.py assets/thumbs assets/illus [--theme=light|dark|both] [함수 이름 …]
 색 규칙은 DESIGN.md §3·PLAN.md 4.5: 배경 --thumb-bg, 선 --graphite, 강조 --accent, 경고 --warm. 원자 색은 VESTA."""
 import sys
@@ -17,7 +17,7 @@ from PIL import Image
 
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
 OUT = ARGS[0] if ARGS else "assets/thumbs"      # 640×400 썸네일 (다크는 OUT/dark)
-FULL = ARGS[1] if len(ARGS) > 1 else "assets/illus"      # 1280×800 글 안 그림 (라이트만)
+FULL = ARGS[1] if len(ARGS) > 1 else "assets/illus"      # 1280×800 글 안 그림 (다크는 FULL/dark)
 FUNCS = ARGS[2:]                                  # 함수 이름을 주면 그 그림만
 _theme_arg = [a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--theme=")]
 THEMES_TO_RUN = ["light", "dark"] if not _theme_arg or _theme_arg[0] == "both" else [_theme_arg[0]]
@@ -102,9 +102,9 @@ def save(fig, name):
     fig.savefig(p, dpi=100, facecolor=fig.get_facecolor())
     plt.close(fig)
     full = Image.open(p).convert("RGB")
-    if THEME == "light":  # 글 안 그림은 라이트 한 벌만
-        os.makedirs(FULL, exist_ok=True)
-        full.save(os.path.join(FULL, name + ".webp"), "WEBP", quality=84, method=6)
+    full_dir = FULL if THEME == "light" else os.path.join(FULL, "dark")
+    os.makedirs(full_dir, exist_ok=True)
+    full.save(os.path.join(full_dir, name + ".webp"), "WEBP", quality=84, method=6)
     full.resize((640, 400), Image.LANCZOS).save(os.path.join(out_dir, name + ".webp"), "WEBP", quality=84, method=6)
     os.remove(p)
     print("ok", THEME, name)
