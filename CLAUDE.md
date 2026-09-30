@@ -56,6 +56,11 @@
   다크(미드나잇)는 CSS 변수로 전환. 인쇄 스타일 포함.
 - `feed.xml`·`sitemap.xml`·`robots.txt` — `node scripts/build-meta.mjs`가 posts.js에서 생성.
   글을 올리거나 제목을 고치면 다시 돌린다.
+- **로고마크**: 층상 산화물 사이를 떠나는 Na 이온(실습 [6]의 2.40 V 이야기). 세 벌이 있다 —
+  site.js의 `MARK`(헤더·푸터용, CSS 변수로 테마 대응), `assets/favicon.svg`(인디고 타일, JS가
+  주입), `assets/favicon.png`(폴백, 재생성은 그리기 코드가 커밋 a076767 다음 커밋 메시지 참고).
+  `assets/profile.png`(인물 그림)는 이제 작가 카드와 og:image에만 쓰인다. 새 인물 그림이 생기면
+  같은 파일명으로 덮어쓰면 끝(512×512 정사각).
 
 ## 새 글 올리기 (전부 여기서 끝)
 

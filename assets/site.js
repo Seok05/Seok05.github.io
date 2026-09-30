@@ -113,6 +113,17 @@
     up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 14 7-7 7 7"/></svg>',
   };
 
+  /* 로고마크: 층상 산화물 사이를 떠나는 Na 이온 (실습 [6]의 2.40 V 이야기).
+     층은 잉크, 떠난 자리는 점선, 떠나는 이온만 인디고. */
+  var MARK =
+    '<svg viewBox="0 0 64 64" aria-hidden="true">' +
+    '<g fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M7 21 17 13 27 21 37 13 47 21 57 13"/>' +
+    '<path d="M7 51 17 43 27 51 37 43 47 51 57 43"/></g>' +
+    '<circle cx="21" cy="32" r="6" fill="none" stroke="var(--faint)" stroke-width="3" stroke-dasharray="2.6 3"/>' +
+    '<circle cx="43" cy="32" r="7.2" fill="var(--accent)"/>' +
+    "</svg>";
+
   /* 표지 그림(draw). currentColor가 카테고리 색이고, 종이색은 --paper를 쓴다. */
   var ART = {
     battery:
@@ -252,8 +263,13 @@
   });
   document.body.insertBefore(skip, document.body.firstChild);
 
-  /* ── 헤더: 메뉴 통일 + 검색 + 테마 토글 + 스크롤 밑줄 ─── */
+  /* ── 헤더: 로고마크 + 메뉴 통일 + 검색 + 테마 토글 ─────── */
   var header = document.querySelector(".site-header");
+  var brandImg = document.querySelector(".site-name .avatar-sm");
+  if (brandImg) {
+    var markEl = el("span", "logo-mark", MARK);
+    brandImg.parentNode.replaceChild(markEl, brandImg);
+  }
   var nav = document.querySelector(".site-nav");
   if (nav) {
     nav.innerHTML =
@@ -265,7 +281,8 @@
       if (onA) onA.classList.add("on");
     }
 
-    var sbtn = el("button", "icon-btn search-btn", ICONS.search + "<kbd>⌘K</kbd>");
+    var isMac = /Mac|iP(hone|ad|od)/.test(navigator.platform || "");
+    var sbtn = el("button", "icon-btn search-btn", ICONS.search + "<kbd>" + (isMac ? "⌘K" : "Ctrl K") + "</kbd>");
     sbtn.type = "button";
     sbtn.setAttribute("aria-label", "글 찾기");
     sbtn.addEventListener("click", function () {
@@ -307,7 +324,7 @@
   var footWrap = document.querySelector(".site-footer .wrap");
   if (footWrap) {
     footWrap.innerHTML =
-      '<div class="foot-brand"><p class="foot-name">Seok Lab</p><p>연구하면서, 개발합니다</p></div>' +
+      '<div class="foot-brand"><p class="foot-name"><span class="logo-mark sm">' + MARK + "</span>Seok Lab</p><p>연구하면서, 개발합니다</p></div>" +
       '<nav class="foot-nav" aria-label="바닥 메뉴">' +
       '<a href="' + root + '?view=all">글</a>' +
       '<a href="' + root + '#series">시리즈</a>' +
@@ -938,7 +955,7 @@
     document.head.appendChild(s);
   }
 
-  /* RSS 자동 발견 */
+  /* RSS 자동 발견 + SVG 파비콘 (지원 브라우저는 이 쪽을 쓴다) */
   (function () {
     var l = document.createElement("link");
     l.rel = "alternate";
@@ -946,6 +963,11 @@
     l.title = "Seok Lab";
     l.href = root + "feed.xml";
     document.head.appendChild(l);
+    var f = document.createElement("link");
+    f.rel = "icon";
+    f.type = "image/svg+xml";
+    f.href = root + "assets/favicon.svg";
+    document.head.appendChild(f);
   })();
 
   function copyText(text, ok) {

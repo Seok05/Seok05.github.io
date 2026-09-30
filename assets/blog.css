@@ -359,6 +359,37 @@ kbd {
   box-shadow: 0 0 0 1px var(--rule);
 }
 
+/* 로고마크: 층 사이를 떠나는 이온. 손을 올리면 이온이 조금 더 간다 */
+.logo-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.logo-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.logo-mark circle[fill] {
+  transition: transform 0.25s ease;
+}
+
+.site-name:hover .logo-mark circle[fill] {
+  transform: translateX(4px);
+}
+
+.logo-mark.sm {
+  width: 19px;
+  height: 19px;
+  margin-right: 0.5rem;
+  vertical-align: -0.26em;
+  display: inline-grid;
+}
+
 .site-name .tagline {
   display: none;
 }
@@ -547,6 +578,16 @@ kbd {
   border: 1px solid color-mix(in srgb, var(--warm) 22%, transparent);
   border-radius: 2px;
   z-index: 2;
+}
+
+:root[data-theme="dark"] .hero-fig::before {
+  opacity: 0.55;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero-fig::before {
+    opacity: 0.55;
+  }
 }
 
 .hero-plate {
@@ -1845,6 +1886,23 @@ a.chip-cat:hover {
   text-wrap: pretty;
 }
 
+/* 목차·앵커로 도착한 소제목은 잠깐 형광을 켠다 */
+@keyframes target-flash {
+  0%,
+  45% {
+    background: var(--accent-soft);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+article h2:target,
+article h3:target {
+  animation: target-flash 1.8s ease-out 1;
+  border-radius: 6px;
+}
+
 article h2 {
   margin: 3.4rem 0 0.95rem;
   font-family: var(--serif);
@@ -2217,6 +2275,34 @@ figcaption {
 }
 
 /* ── 코드 ────────────────────────────────────────────────── */
+
+/* 가로 스크롤 영역의 스크롤바는 얇고 조용하게 */
+pre,
+.fig-scroll,
+.table-scroll,
+.heatmap,
+.pal-list {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-strong) transparent;
+}
+
+pre::-webkit-scrollbar,
+.fig-scroll::-webkit-scrollbar,
+.table-scroll::-webkit-scrollbar,
+.heatmap::-webkit-scrollbar,
+.pal-list::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+pre::-webkit-scrollbar-thumb,
+.fig-scroll::-webkit-scrollbar-thumb,
+.table-scroll::-webkit-scrollbar-thumb,
+.heatmap::-webkit-scrollbar-thumb,
+.pal-list::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
+  border-radius: 99px;
+}
 
 code {
   font-family: var(--mono);

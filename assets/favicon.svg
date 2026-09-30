@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Seok Lab 마크: 층상 산화물 사이를 떠나는 Na 이온 (실습 [6]의 2.40 V) -->
+  <rect x="3" y="3" width="58" height="58" rx="14" fill="#4f46e5"/>
+  <g fill="none" stroke="#f6f4ee" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 21 18 14 27 21 36 14 45 21 54 14"/>
+    <path d="M9 50 18 43 27 50 36 43 45 50 54 43"/>
+  </g>
+  <circle cx="22.5" cy="32" r="5.6" fill="none" stroke="#f6f4ee" stroke-width="2.6" stroke-dasharray="2.2 2.6" opacity=".62"/>
+  <circle cx="42.5" cy="32" r="6.4" fill="#f6f4ee"/>
+</svg>
