@@ -58,6 +58,11 @@
   function bareTitle(t) {
     return t.replace(/^.+?\s\[\d+\]\s—\s/, "");
   }
+  // 목록 메타용 시리즈 표기. "DFT 실습 [9] — …" → "DFT 실습 9", "첫잔 [10] — …" → "첫잔 10". 시리즈가 아니면 null
+  function seriesTag(p) {
+    var m = /^(.+?)\s\[(\d+)\]\s—\s/.exec(p.title);
+    return m ? m[1] + " " + parseInt(m[2], 10) : null;
+  }
   // 시리즈 안의 갈래. "DFT 이론 [2] — …"는 표지 이름(mark) "DFT" 뒤의 "이론"이 갈래이고,
   // "첫잔 [2] — …"처럼 mark만 있으면 갈래가 없다(null)
   function trackOf(p) {
@@ -342,17 +347,20 @@
   /* ── 홈: 소개(정적) → 분류 탭 → 글 목록 ──────────────────
      탭은 목록 안의 글만 거른다. 소개·탭 자리·줄 모양·순서(최신순)는 어느 탭에서도 같고,
      페이지를 다시 불러오지 않는다. 주소의 ?cat=만 바꿔 두어서 새로고침·공유·뒤로 가기에도 그대로다 */
-  // 목록 한 줄: 왼쪽에 메타(분류 · 꼬리표 · 날짜)·제목·요약, 오른쪽에 썸네일
+  // 목록 한 줄: 왼쪽에 메타·제목·요약, 오른쪽에 썸네일.
+  // 시리즈 글은 접두어를 메타로 내린다: 메타 "DFT 실습 9 · 복습 · 2026.09.28", 제목은 본 제목만.
+  // 시리즈 표기에 분류 이름이 들어 있으므로 분류를 따로 반복하지 않는다. 시리즈가 아니면 "EValue · 날짜"
   function row(p) {
     var c = catOf(p.cat);
-    var meta = [esc(c ? c.mark || c.name : p.cat)];
+    var st = seriesTag(p);
+    var meta = [esc(st || (c ? c.mark || c.name : p.cat))];
     if (p.tag) meta.push(esc(p.tag));
     meta.push('<time datetime="' + isoDate(p.date) + '">' + p.date + "</time>");
     return (
       '<a class="post-row" href="' + href(p) + '">' +
       '<span class="row-text">' +
       '<span class="row-meta">' + meta.join('<i aria-hidden="true">·</i>') + "</span>" +
-      '<span class="row-title">' + esc(p.title) + "</span>" +
+      '<span class="row-title">' + esc(st ? bareTitle(p.title) : p.title) + "</span>" +
       '<span class="row-desc">' + esc(p.blurb) + "</span>" +
       "</span>" +
       thumb(p) +
