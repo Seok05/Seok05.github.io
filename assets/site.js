@@ -180,14 +180,43 @@
     }
     return (
       '<div class="cover' + (size ? " cover-" + size : "") + (inner.indexOf("cover-mark") < 0 ? " has-art" : "") +
-      '" style="--hue:' + (c.hue || 245) + '" aria-hidden="true">' + inner + "</div>"
+      '" aria-hidden="true">' + inner + "</div>"
     );
   }
-  // 카드 썸네일: 글에 thumb가 있으면 그 그림, 없으면 카테고리 표지
+  // 지금 화면이 어두운가. 사용자가 고른 테마(data-theme)가 있으면 그것, 없으면 OS 설정
+  function isDark() {
+    var fixed = doc.getAttribute("data-theme");
+    return fixed ? fixed === "dark" : !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  }
+  // 카드 썸네일: 글에 thumb가 있으면 그 그림, 없으면 카테고리 표지.
+  // 썸네일은 라이트·다크 두 벌(assets/thumbs/<slug>.webp · assets/thumbs/dark/<slug>.webp). 처음부터 지금 테마의 것을
+  // 넣고, 다크 파일이 없으면 라이트로 되돌린다(새 글이 다크 벌을 빠뜨려도 깨지지 않게)
   function thumb(p) {
-    if (p.thumb) return '<div class="thumb"><img src="' + root + p.thumb + '" alt="" loading="lazy" decoding="async"></div>';
+    if (p.thumb) {
+      var light = root + p.thumb;
+      var dark = root + p.thumb.replace(/^assets\/thumbs\//, "assets/thumbs/dark/");
+      return (
+        '<div class="thumb"><img src="' + (isDark() ? dark : light) + '" data-light="' + light + '" data-dark="' + dark +
+        '" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=this.getAttribute(\'data-light\')"></div>'
+      );
+    }
     var c = catOf(p.cat);
     return '<div class="thumb thumb-cover">' + (c ? cover(c) : "") + "</div>";
+  }
+  // 테마가 바뀌면 화면에 있는 썸네일을 다른 벌로 바꾼다
+  function swapThumbs() {
+    var dark = isDark();
+    Array.prototype.forEach.call(document.querySelectorAll("img[data-dark]"), function (img) {
+      var want = img.getAttribute(dark ? "data-dark" : "data-light");
+      if (img.getAttribute("src") === want) return;
+      img.onerror = dark
+        ? function () {
+            this.onerror = null;
+            this.src = this.getAttribute("data-light");
+          }
+        : null;
+      img.src = want;
+    });
   }
 
   function metaRow(p, withCat) {
@@ -286,13 +315,21 @@
     nav.appendChild(btn);
   }
   function toggleTheme() {
-    var fixed = doc.getAttribute("data-theme");
-    var dark = fixed ? fixed === "dark" : window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    var next = dark ? "light" : "dark";
+    var next = isDark() ? "light" : "dark";
     doc.setAttribute("data-theme", next);
     try {
       localStorage.setItem("theme", next);
     } catch (e) {}
+    swapThumbs();
+  }
+  // 사용자가 테마를 고르지 않았을 때 OS 설정이 바뀌면 썸네일도 따라간다
+  if (window.matchMedia) {
+    var mqDark = window.matchMedia("(prefers-color-scheme: dark)");
+    var onMq = function () {
+      if (!doc.getAttribute("data-theme")) swapThumbs();
+    };
+    if (mqDark.addEventListener) mqDark.addEventListener("change", onMq);
+    else if (mqDark.addListener) mqDark.addListener(onMq);
   }
   if (header) {
     var onScroll = function () {

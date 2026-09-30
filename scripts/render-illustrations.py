@@ -1,6 +1,9 @@
 """연구 글(DFT·Paper) 카드 썸네일: 글 내용을 그림으로. 도표 캡처 대신 직접 그린다.
 matplotlib(Agg)로 1280×800에 그려 640×400 webp로 줄인다. 글자는 넣지 않는다.
-사용: python3 scripts/render-illustrations.py assets/thumbs assets/illus [함수 이름 …]"""
+라이트·다크 두 벌을 만든다(assets/thumbs/<slug>.webp, assets/thumbs/dark/<slug>.webp).
+글 안 그림(assets/illus, 1280×800)은 라이트 한 벌만.
+사용: python3 scripts/render-illustrations.py assets/thumbs assets/illus [--theme=light|dark|both] [함수 이름 …]
+색 규칙은 DESIGN.md §3·PLAN.md 4.5: 배경 --thumb-bg, 선 --graphite, 강조 --accent, 경고 --warm. 원자 색은 VESTA."""
 import sys
 import os
 import numpy as np
@@ -12,34 +15,56 @@ from matplotlib.patches import Circle, Polygon, FancyArrowPatch, Ellipse, Regula
 from matplotlib.colors import to_rgb
 from PIL import Image
 
-OUT = sys.argv[1] if len(sys.argv) > 1 else "assets/thumbs"      # 640×400 썸네일
-FULL = sys.argv[2] if len(sys.argv) > 2 else "assets/illus"      # 1280×800 글 안 그림
+ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
+OUT = ARGS[0] if ARGS else "assets/thumbs"      # 640×400 썸네일 (다크는 OUT/dark)
+FULL = ARGS[1] if len(ARGS) > 1 else "assets/illus"      # 1280×800 글 안 그림 (라이트만)
+FUNCS = ARGS[2:]                                  # 함수 이름을 주면 그 그림만
+_theme_arg = [a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--theme=")]
+THEMES_TO_RUN = ["light", "dark"] if not _theme_arg or _theme_arg[0] == "both" else [_theme_arg[0]]
 W, H = 12.8, 8.0  # inches @100dpi → 1280×800
-BG_DFT = "#f8efe6"    # hue 30 종이
-BG_PAPER = "#e6eef8"  # hue 210 종이
+
+# 테마 토큰(DESIGN.md §3). 관측은 회색(GRAPH), 판단·강조는 파랑(INDIGO라는 옛 이름을 그대로 쓰되 값은 --accent),
+# 경고는 WARM. 원자 색(VESTA 관례)과 구의 빛·그늘은 테마를 따르지 않는다.
+THEMES = {
+    "light": dict(BG="#eaeef3", INK="#191f28", GRAPH="#6b7684", ACCENT="#2f6fed", WARM="#c2570c"),
+    "dark": dict(BG="#1a1f27", INK="#eceef1", GRAPH="#8f98a4", ACCENT="#6ea2ff", WARM="#f0a35e"),
+}
 MN, O, NA = "#9C7AC7", "#E8483C", "#F1D24B"
-INK, INDIGO, GRAPH, WARM = "#2a2530", "#4F46E5", "#7a7f88", "#b45309"
+SHADE, HILITE = "#2a2530", "#ffffff"
+THEME = "light"
+BG = INK = GRAPH = INDIGO = WARM = None
 
 
-def mix(c, t, to="#ffffff"):
-    a, b = np.array(to_rgb(c)), np.array(to_rgb(to))
+def set_theme(name):
+    global THEME, BG, INK, GRAPH, INDIGO, WARM
+    THEME = name
+    t = THEMES[name]
+    BG, INK, GRAPH, INDIGO, WARM = t["BG"], t["INK"], t["GRAPH"], t["ACCENT"], t["WARM"]
+
+
+set_theme("light")
+
+
+def mix(c, t, to=None):
+    """c를 t만큼 to 쪽으로. to를 안 주면 캔버스 배경 쪽으로(옅게). 그래서 다크에서는 어두워지고 라이트에서는 밝아진다."""
+    a, b = np.array(to_rgb(c)), np.array(to_rgb(BG if to is None else to))
     return tuple(a * (1 - t) + b * t)
 
 
 def sphere(ax, x, y, r, color, z=5, alpha=1.0, shadow=True):
     """동심원 겹치기로 명암을 낸 구. 빛은 왼쪽 위."""
     if shadow:
-        ax.add_patch(Ellipse((x + r * 0.25, y - r * 1.05), r * 2.1, r * 0.55, color=mix(INK, 0.82), alpha=0.35 * alpha, zorder=z - 0.5, lw=0))
+        ax.add_patch(Ellipse((x + r * 0.25, y - r * 1.05), r * 2.1, r * 0.55, color=mix(SHADE, 0.82), alpha=0.35 * alpha, zorder=z - 0.5, lw=0))
     n = 16
     for i in range(n):
         t = i / n
         rr = r * (1 - t * 0.92)
-        ax.add_patch(Circle((x - r * 0.28 * t, y + r * 0.28 * t), rr, color=mix(mix(color, 0.35, INK), t ** 1.4 * 0.9), alpha=alpha, zorder=z + i * 1e-3, lw=0))
+        ax.add_patch(Circle((x - r * 0.28 * t, y + r * 0.28 * t), rr, color=mix(mix(color, 0.35, SHADE), t ** 1.4 * 0.9, HILITE), alpha=alpha, zorder=z + i * 1e-3, lw=0))
 
 
 def bond(ax, p, q, color=GRAPH, lw=6, z=4, alpha=1):
-    ax.plot([p[0], q[0]], [p[1], q[1]], color=mix(color, 0.15), lw=lw, solid_capstyle="round", zorder=z, alpha=alpha)
-    ax.plot([p[0], q[0]], [p[1], q[1]], color=mix(color, 0.55), lw=lw * 0.35, solid_capstyle="round", zorder=z + 1e-3, alpha=alpha)
+    ax.plot([p[0], q[0]], [p[1], q[1]], color=mix(color, 0.15, HILITE), lw=lw, solid_capstyle="round", zorder=z, alpha=alpha)
+    ax.plot([p[0], q[0]], [p[1], q[1]], color=mix(color, 0.55, HILITE), lw=lw * 0.35, solid_capstyle="round", zorder=z + 1e-3, alpha=alpha)
 
 
 def cloud(ax, x, y, sx, sy, color, alpha=0.9, z=2, n=24):
@@ -58,7 +83,8 @@ def proj(p, elev=18, azim=-32):
     return np.array([x1, z2, -y2])
 
 
-def canvas(bg):
+def canvas(bg=None):
+    bg = BG if bg is None else bg
     fig = plt.figure(figsize=(W, H), dpi=100)
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, 1280)
@@ -70,19 +96,23 @@ def canvas(bg):
 
 
 def save(fig, name):
-    p = os.path.join(OUT, name + ".png")
+    out_dir = OUT if THEME == "light" else os.path.join(OUT, "dark")
+    os.makedirs(out_dir, exist_ok=True)
+    p = os.path.join(out_dir, name + ".png")
     fig.savefig(p, dpi=100, facecolor=fig.get_facecolor())
     plt.close(fig)
     full = Image.open(p).convert("RGB")
-    full.save(os.path.join(FULL, name + ".webp"), "WEBP", quality=84, method=6)
-    full.resize((640, 400), Image.LANCZOS).save(os.path.join(OUT, name + ".webp"), "WEBP", quality=84, method=6)
+    if THEME == "light":  # 글 안 그림은 라이트 한 벌만
+        os.makedirs(FULL, exist_ok=True)
+        full.save(os.path.join(FULL, name + ".webp"), "WEBP", quality=84, method=6)
+    full.resize((640, 400), Image.LANCZOS).save(os.path.join(out_dir, name + ".webp"), "WEBP", quality=84, method=6)
     os.remove(p)
-    print("ok", name)
+    print("ok", THEME, name)
 
 
 # ── 이론 [1] 밀도: 원자 주변 전자 밀도 지형 ─────────────────────
 def dft_explained():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     xs, ys = np.meshgrid(np.linspace(0, 1280, 320), np.linspace(0, 800, 200))
     atoms = [(420, 400, 1.0), (760, 470, 1.0), (590, 250, 0.55), (600, 590, 0.55), (930, 300, 0.5), (260, 560, 0.45)]
     d = np.zeros_like(xs)
@@ -99,7 +129,7 @@ def dft_explained():
 
 # ── 실습 [1] 첫 계산: 단위 격자 상자 안의 원자 12개 ────────────
 def first_dft_run():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     a, c = 2.95, 15.8
     # 긴 c축을 화면 가로로 눕힌다 (12원자 셀은 바늘처럼 길다)
     a3, a1, a2 = np.array([c, 0, 0]), np.array([0, a, 0]), np.array([0, -a / 2, a * np.sqrt(3) / 2])
@@ -145,7 +175,7 @@ def first_dft_run():
 
 # ── 이론 [2] 자기모멘트 12: Mn 셋, 각각 위로 선 스핀 화살표 ─────
 def dft_theory_2():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     for i, x in enumerate((360, 640, 920)):
         cloud(ax, x, 400, 150, 150, MN, alpha=0.5)
         sphere(ax, x, 330, 70, MN, z=5)
@@ -158,7 +188,7 @@ def dft_theory_2():
 
 # ── 실습 [2] 평면파 기저와 컷오프 ───────────────────────────────
 def dft_practice_2():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     xs = np.linspace(120, 1160, 900)
     cut = 860
     for i in range(8):
@@ -176,7 +206,7 @@ def dft_practice_2():
 
 # ── 이론 [3] 국재화: 퍼진 d 전자(GGA)와 제자리에 앉은 d 전자(+U) ──
 def dft_theory_3():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     cloud(ax, 400, 400, 300, 240, INDIGO, alpha=0.55)
     sphere(ax, 400, 400, 46, MN, z=6)
     for k in range(3):
@@ -190,7 +220,7 @@ def dft_theory_3():
 
 # ── 실습 [3] k점: 촘촘한 격자와 성긴 네 점 ─────────────────────
 def dft_practice_3():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     ax.add_patch(RegularPolygon((640, 400), 6, radius=330, orientation=np.pi / 6, fill=False, ec=mix(GRAPH, 0.2), lw=3, zorder=2))
     # 촘촘한 육각 격자점
     pts = []
@@ -210,7 +240,7 @@ def dft_practice_3():
 
 # ── Paper [1] 산화 에너지: 녹스는 금속 구와 다가오는 O₂ ─────────
 def paper_1():
-    fig, ax = canvas(BG_PAPER)
+    fig, ax = canvas()
     sphere(ax, 520, 400, 190, "#8d939c", z=4)
     # 녹 자국
     rng = np.random.default_rng(2)
@@ -233,7 +263,7 @@ def paper_1():
 
 # ── 실습 [4] U를 걸었더니: 네잎 d 오비탈이 또렷해진다 ────────────
 def dft_practice_4():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     cloud(ax, 640, 400, 330, 270, INDIGO, alpha=0.35)
     for ang in (45, 135, 225, 315):
         for i in range(14):
@@ -247,7 +277,7 @@ def dft_practice_4():
 
 # ── 실습 [5] 얀-텔러: 위아래로 늘어난 팔면체 ───────────────────
 def dft_practice_5():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     c = np.array([640, 400])
     ax_up, ax_dn = c + (0, 250), c - (0, 250)
     eq = [c + (-170, 30), c + (170, 30), c + (-95, -110), c + (95, -110)]
@@ -272,7 +302,7 @@ def dft_practice_5():
 
 # ── 실습 [6] Na 하나를 빼서: 층 사이에서 Na 하나가 떠오른다 ──────
 def dft_practice_6():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     def slab(y0):
         for i in range(6):
             x = 200 + i * 160
@@ -301,7 +331,7 @@ def dft_practice_6():
 
 # ── EValue: 노트북을 24시간 서버로 — 노트북, 터널, 고정 주소 ─────
 def laptop_to_server():
-    fig, ax = canvas("#e4f4ef")
+    fig, ax = canvas()
     # 노트북: 화면 + 받침
     ax.add_patch(Polygon([(180, 300), (560, 300), (560, 560), (180, 560)], closed=True, color=mix(INK, 0.15), zorder=3))
     ax.add_patch(Polygon([(196, 316), (544, 316), (544, 544), (196, 544)], closed=True, color="#0f1114", zorder=4))
@@ -312,25 +342,25 @@ def laptop_to_server():
     t = np.linspace(0, 1, 60)
     xs = 620 + t * 340
     ys = 420 + 120 * np.sin(t * np.pi)
-    ax.plot(xs, ys, color="#149c8a", lw=6, ls=(0, (2, 3)), zorder=5, solid_capstyle="round")
-    ax.add_patch(FancyArrowPatch((940, 430), (985, 420), arrowstyle="simple,head_length=22,head_width=26,tail_width=8", color="#149c8a", zorder=6, lw=0))
+    ax.plot(xs, ys, color=INDIGO, lw=6, ls=(0, (2, 3)), zorder=5, solid_capstyle="round")
+    ax.add_patch(FancyArrowPatch((940, 430), (985, 420), arrowstyle="simple,head_length=22,head_width=26,tail_width=8", color=INDIGO, zorder=6, lw=0))
     # 구름 = 고정 주소
     for (cx, cy, r) in ((1090, 420, 95), (1160, 470, 75), (1010, 470, 70), (1150, 380, 60)):
-        ax.add_patch(Circle((cx, cy), r, color="#ffffff", zorder=7, lw=0))
-        ax.add_patch(Circle((cx, cy), r, fill=False, ec=mix("#149c8a", 0.6), lw=2, zorder=7.5))
-    ax.add_patch(Polygon([(1010, 400), (1160, 400), (1160, 470), (1010, 470)], closed=True, color="#ffffff", zorder=7, lw=0))
+        ax.add_patch(Circle((cx, cy), r, color=HILITE, zorder=7, lw=0))
+        ax.add_patch(Circle((cx, cy), r, fill=False, ec=mix(INDIGO, 0.6), lw=2, zorder=7.5))
+    ax.add_patch(Polygon([(1010, 400), (1160, 400), (1160, 470), (1010, 470)], closed=True, color=HILITE, zorder=7, lw=0))
     # 구름 안 자물쇠(고정)
-    ax.add_patch(Polygon([(1060, 400), (1120, 400), (1120, 445), (1060, 445)], closed=True, color="#149c8a", zorder=8, lw=0))
-    ax.add_patch(Circle((1090, 452), 16, fill=False, ec="#149c8a", lw=6, zorder=8))
+    ax.add_patch(Polygon([(1060, 400), (1120, 400), (1120, 445), (1060, 445)], closed=True, color=INDIGO, zorder=8, lw=0))
+    ax.add_patch(Circle((1090, 452), 16, fill=False, ec=INDIGO, lw=6, zorder=8))
     # 달 = 24시간
     ax.add_patch(Circle((1150, 690), 46, color=mix(WARM, 0.35), zorder=3, lw=0))
-    ax.add_patch(Circle((1170, 705), 40, color="#e4f4ef", zorder=3.5, lw=0))
+    ax.add_patch(Circle((1170, 705), 40, color=BG, zorder=3.5, lw=0))
     save(fig, "laptop-to-server")
 
 
 # ── 실습 [7] 스핀을 뒤집자: 원래 구조는 엇갈림(AFM), Na 뺀 구조는 나란히(FM) ──
 def dft_practice_7():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     def arrow(x, y, up, color):
         y0, y1 = (y - 95, y + 95) if up else (y + 95, y - 95)
         ax.add_patch(FancyArrowPatch((x, y0), (x, y1), arrowstyle="simple,head_length=24,head_width=28,tail_width=10", color=color, zorder=8, lw=0))
@@ -359,7 +389,7 @@ def dft_practice_7():
 
 # ── 실습 [8] 이웃을 세었더니: Mn⁴⁺ 이웃이 0·2·4개일 때 얀-텔러 계단 ──
 def dft_practice_8():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     centers = [(260, 380), (640, 380), (1020, 380)]
     n4 = [0, 2, 4]
     stretch = [150, 118, 92]  # 축 결합 길이(왜곡)
@@ -387,7 +417,7 @@ def dft_practice_8():
 
 # ── 실습 [9] 총정리: 충전 중의 α-NaMnO₂를 원자 단위로. 왼쪽 x = 1, 오른쪽 x = 0.5, 사이는 두 상의 경계 ──
 def dft_practice_9():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     step, x_start, n = 150, 70, 7
     def slab(y0):
         for i in range(n):
@@ -433,7 +463,7 @@ NI = "#B7BBBD"  # VESTA 기본 Ni
 
 
 def dft_practice_10():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     # 전이금속 층을 위에서 본 삼각 격자 조각: 왼쪽 Mn³⁺(b축 이웃), 가운데 Ni, 오른쪽 위아래 Mn³·⁵⁺(대각 이웃)
     ni = np.array([610, 400])
     mn3 = np.array([330, 400])
@@ -467,7 +497,7 @@ def dft_practice_10():
 # ── 실습 [11] CHGNet과 G1: 배열 10개의 에너지 준위를 DFT(왼쪽)와 CHGNet(오른쪽)에 나란히.
 #    오른쪽 사다리는 절반 높이로 눌려 있고, 크게 엇갈리는 선은 g01(경고색) 하나다. 수치는 글의 표 4 ──
 def dft_practice_11():
-    fig, ax = canvas(BG_DFT)
+    fig, ax = canvas()
     dft = [0.0, 50.8, 130.5, 170.8, 179.0, 184.4, 209.1, 227.3, 263.8, 382.7]   # g05 g07 g09 g10 g06 g08 g03 g02 g01 g04
     ml = [9.1, 0.0, 37.8, 39.3, 72.3, 104.2, 121.0, 151.4, 94.1, 207.4]
     y0, k = 150, 1.4
@@ -486,28 +516,15 @@ def dft_practice_11():
         ax.plot([x, x], [y0, y0 + top * k], color=mix(GRAPH, 0.55), lw=4, solid_capstyle="round", zorder=1)
     save(fig, "dft-practice-11")
 
-if __name__ == "__main__" and len(sys.argv) > 3:
-    # 세 번째 인자부터 함수 이름을 주면 그 그림만 다시 그린다 (예: ... dft_practice_10)
+ALL = [dft_explained, first_dft_run, dft_theory_2, dft_practice_2, dft_theory_3, dft_practice_3, paper_1,
+       dft_practice_4, dft_practice_5, dft_practice_6, laptop_to_server, dft_practice_7, dft_practice_8,
+       dft_practice_9, dft_practice_10, dft_practice_11]
+
+if __name__ == "__main__":
+    # 함수 이름을 주면 그 그림만 다시 그린다 (예: ... dft_practice_10). --theme=light|dark 로 한 벌만
     os.makedirs(OUT, exist_ok=True)
-    os.makedirs(FULL, exist_ok=True)
-    for name in sys.argv[3:]:
-        globals()[name]()
-elif __name__ == "__main__":
-    os.makedirs(OUT, exist_ok=True)
-    os.makedirs(FULL, exist_ok=True)
-    dft_explained()
-    first_dft_run()
-    dft_theory_2()
-    dft_practice_2()
-    dft_theory_3()
-    dft_practice_3()
-    paper_1()
-    dft_practice_4()
-    dft_practice_5()
-    dft_practice_6()
-    laptop_to_server()
-    dft_practice_7()
-    dft_practice_8()
-    dft_practice_9()
-    dft_practice_10()
-    dft_practice_11()
+    funcs = [globals()[n] for n in FUNCS] if FUNCS else ALL
+    for th in THEMES_TO_RUN:
+        set_theme(th)
+        for fn in funcs:
+            fn()

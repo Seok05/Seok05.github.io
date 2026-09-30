@@ -20,6 +20,7 @@
   --accent-soft: #eef4ff;
   --warm: #c2570c;
   --warm-soft: #fff4e8;
+  --thumb-bg: #eaeef3; /* 썸네일·표지 배경. 그림 파일(assets/thumbs)도 이 색으로 그린다 */
 
   /* 글 속 도해와 스크립트가 쓰는 예전 이름. 뜻은 그대로, 색만 새 체계를 따른다 */
   --ink: var(--text-strong);
@@ -94,6 +95,7 @@
     --accent-soft: #16233a;
     --warm: #f0a35e;
     --warm-soft: #2a1d10;
+    --thumb-bg: #1a1f27;
     color-scheme: dark;
   }
 }
@@ -111,6 +113,7 @@
   --accent-soft: #16233a;
   --warm: #f0a35e;
   --warm-soft: #2a1d10;
+    --thumb-bg: #1a1f27;
   color-scheme: dark;
 }
 
@@ -738,7 +741,7 @@ kbd {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  background: var(--surface);
+  background: var(--thumb-bg);
 }
 
 .thumb img {
@@ -765,9 +768,8 @@ kbd {
 
 /* 전체 글: 달별 */
 
-/* 분류 표지: 평평한 한 톤 위에 그림 */
+/* 분류 표지(썸네일 없는 글의 대체): 썸네일과 같은 배경 위에 그림 */
 .cover {
-  --hue: 220;
   position: relative;
   display: grid;
   place-items: end start;
@@ -776,20 +778,8 @@ kbd {
   padding: var(--s-4);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  background: hsl(var(--hue) 34% 95%);
-  color: hsl(var(--hue) 40% 32%);
-}
-
-:root[data-theme="dark"] .cover {
-  background: hsl(var(--hue) 16% 15%);
-  color: hsl(var(--hue) 50% 78%);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .cover {
-    background: hsl(var(--hue) 16% 15%);
-    color: hsl(var(--hue) 50% 78%);
-  }
+  background: var(--thumb-bg);
+  color: var(--text-sub);
 }
 
 .cover.has-art {
