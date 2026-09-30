@@ -1,7 +1,7 @@
 /* posts.js를 읽어 feed.xml(RSS)·sitemap.xml·robots.txt를 만들고,
    모든 HTML의 blog.css·site.js·posts.js 링크에 내용 해시(?v=)를 찍고, 글꼴 CSS 링크(preconnect)를 head에 넣는다.
    새 글을 올릴 때, 그리고 CSS·JS를 고쳤을 때 한 번 실행: node scripts/build-meta.mjs */
-import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -97,14 +97,45 @@ const withFontLinks = (html) =>
   html.includes(FONT_CSS)
     ? html
     : html.replace(/^([ \t]*)<link rel="stylesheet" href="[^"]*assets\/blog\.css/m, (m, indent) => fontLinks(indent) + m);
+/* 글의 공유 카드 태그(og·twitter). assets/social/<slug>.jpg가 있는 글에만, </head> 바로 앞에, 멱등으로.
+   카드는 python3 scripts/render-social.py 로 만든다 */
+const SOCIAL_RE = /^[ \t]*<meta (?:property="(?:og|article):[^"]*"|name="twitter:[^"]*")[^>]*\/>\n/gm;
+const socialTags = (p) => {
+  const url = `${SITE}/posts/${p.slug}.html`;
+  const img = `${SITE}/assets/social/${p.slug}.jpg`;
+  return [
+    `<meta property="og:type" content="article" />`,
+    `<meta property="og:title" content="${esc(p.title)}" />`,
+    `<meta property="og:description" content="${esc(p.blurb)}" />`,
+    `<meta property="og:url" content="${url}" />`,
+    `<meta property="og:image" content="${img}" />`,
+    `<meta property="og:image:width" content="1200" />`,
+    `<meta property="og:image:height" content="630" />`,
+    `<meta property="article:published_time" content="${p.date.replace(/\./g, "-")}T09:00:00+09:00" />`,
+    `<meta name="twitter:card" content="summary_large_image" />`,
+    `<meta name="twitter:title" content="${esc(p.title)}" />`,
+    `<meta name="twitter:description" content="${esc(p.blurb)}" />`,
+    `<meta name="twitter:image" content="${img}" />`,
+  ];
+};
+const withSocial = (html, rel) => {
+  const slug = rel.replace(/^posts\//, "").replace(/\.html$/, "");
+  const p = posts.find((x) => x.slug === slug);
+  if (!p || !existsSync(join(root, "assets/social", `${slug}.jpg`))) return html;
+  const stripped = html.replace(SOCIAL_RE, "");
+  return stripped.replace(/^([ \t]*)<\/head>/m, (m, indent) => socialTags(p).map((l) => indent + "  " + l).join("\n") + "\n" + m);
+};
 let stamped = 0;
+let social = 0;
 for (const rel of htmlFiles) {
   const p = join(root, rel);
   const before = readFileSync(p, "utf8");
-  const after = withFontLinks(before).replace(linkRe, (m, path, file) => `${path}?v=${ver[file]}`);
+  const withMeta = withSocial(withFontLinks(before), rel);
+  if (withMeta.includes('property="og:image"') && rel.startsWith("posts/")) social++;
+  const after = withMeta.replace(linkRe, (m, path, file) => `${path}?v=${ver[file]}`);
   if (after !== before) {
     writeFileSync(p, after);
     stamped++;
   }
 }
-console.log(`자산 버전 ${ASSETS.map((f) => f + "=" + ver[f]).join(" · ")} — HTML ${stamped}개 갱신`);
+console.log(`자산 버전 ${ASSETS.map((f) => f + "=" + ver[f]).join(" · ")} — HTML ${stamped}개 갱신 · 공유 카드 태그 ${social}편`);
