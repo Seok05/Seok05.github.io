@@ -15,7 +15,7 @@
   --text-strong: #191f28;
   --text: #333d4b;
   --text-sub: #6b7684;
-  --text-faint: #9aa3ae;
+  --text-faint: #7f8995; /* 흰 바탕 3.55:1. 개수·번호 같은 보조 정보에만 쓴다(DESIGN.md §3) */
   --accent: #2f6fed;
   --accent-soft: #eef4ff;
   --warm: #c2570c;
