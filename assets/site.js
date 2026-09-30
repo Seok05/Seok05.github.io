@@ -262,6 +262,8 @@
           '<a class="btn primary" href="' + href(first) + '">' + esc(featuredCat.mark || featuredCat.name) + " 일지 1편부터 읽기</a>"
         );
       }
+      var allBtn = document.getElementById("hero-all");
+      if (allBtn) allBtn.textContent = "전체 글 " + posts.length + "편";
 
       // 지금 쓰는 시리즈
       if (featuredEl && fPosts.length) {

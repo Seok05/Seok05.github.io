@@ -1,6 +1,6 @@
 """연구 글(DFT·Paper) 카드 썸네일: 글 내용을 그림으로. 도표 캡처 대신 직접 그린다.
 matplotlib(Agg)로 1280×800에 그려 640×400 webp로 줄인다. 글자는 넣지 않는다.
-사용: python3 scripts/render-illustrations.py assets/thumbs assets/illus"""
+사용: python3 scripts/render-illustrations.py assets/thumbs assets/illus [함수 이름 …]"""
 import sys
 import os
 import numpy as np
@@ -427,7 +427,72 @@ def dft_practice_9():
         sphere(ax, x_start + n * step + 85, gy, 30, NA, z=6, shadow=False)
     save(fig, "dft-practice-9")
 
-if __name__ == "__main__":
+
+# ── 실습 [10] Ni 하나: Ni는 2+가 되고, 생긴 구멍은 대각 이웃 Mn 둘에 반씩 퍼진다 ──
+NI = "#B7BBBD"  # VESTA 기본 Ni
+
+
+def dft_practice_10():
+    fig, ax = canvas(BG_DFT)
+    # 전이금속 층을 위에서 본 삼각 격자 조각: 왼쪽 Mn³⁺(b축 이웃), 가운데 Ni, 오른쪽 위아래 Mn³·⁵⁺(대각 이웃)
+    ni = np.array([610, 400])
+    mn3 = np.array([330, 400])
+    half = [np.array([790, 598]), np.array([790, 202])]
+    for q in [mn3] + half:
+        ax.plot([ni[0], q[0]], [ni[1], q[1]], color=mix(GRAPH, 0.55), lw=2.2, zorder=1)
+    ax.plot([half[0][0], half[1][0]], [half[0][1], half[1][1]], color=mix(GRAPH, 0.7), lw=1.6, ls=(0, (5, 6)), zorder=1)
+    # 구멍 하나가 두 자리에 반씩: 두 Mn을 함께 감싸는 옅은 인디고 구름
+    cloud(ax, 790, 400, 125, 300, INDIGO, alpha=0.55, z=1.5, n=30)
+    # 팔면체의 긴 축(위아래 O): Mn³⁺ 길게, Mn³·⁵⁺ 짧게, Ni²⁺도 이웃에게 떠밀려 조금
+    def axis(c, st, r_o=15):
+        for sgn in (1, -1):
+            bond(ax, c, (c[0], c[1] + sgn * st), color=INDIGO, lw=7, z=4)
+            sphere(ax, c[0], c[1] + sgn * st, r_o, O, z=7, shadow=False)
+    # 길이 = 60 + 520 × (긴/짧은 비 − 1): Mn³⁺ 1.14, Ni²⁺ 1.08, Mn³·⁵⁺ 1.07 (글의 표 2)
+    axis(mn3, 133)
+    axis(ni, 102)
+    for h in half:
+        axis(h, 96, r_o=13)
+    sphere(ax, mn3[0], mn3[1], 50, MN, z=6)
+    for h in half:
+        sphere(ax, h[0], h[1], 42, mix(MN, 0.3), z=6)
+    sphere(ax, ni[0], ni[1], 52, NI, z=6)
+    # 전자 하나가 Mn 쪽에서 Ni로 건너간다
+    ax.add_patch(FancyArrowPatch((748, 452), (672, 432), connectionstyle="arc3,rad=-0.35",
+                                 arrowstyle="simple,head_length=16,head_width=18,tail_width=6", color=INDIGO, zorder=8, lw=0))
+    ax.add_patch(Circle((662, 446), 9, color=INDIGO, zorder=9, lw=0))
+    save(fig, "dft-practice-10")
+
+
+# ── 실습 [11] CHGNet과 G1: 배열 10개의 에너지 준위를 DFT(왼쪽)와 CHGNet(오른쪽)에 나란히.
+#    오른쪽 사다리는 절반 높이로 눌려 있고, 크게 엇갈리는 선은 g01(경고색) 하나다. 수치는 글의 표 4 ──
+def dft_practice_11():
+    fig, ax = canvas(BG_DFT)
+    dft = [0.0, 50.8, 130.5, 170.8, 179.0, 184.4, 209.1, 227.3, 263.8, 382.7]   # g05 g07 g09 g10 g06 g08 g03 g02 g01 g04
+    ml = [9.1, 0.0, 37.8, 39.3, 72.3, 104.2, 121.0, 151.4, 94.1, 207.4]
+    y0, k = 150, 1.4
+    lx, rx, half_w = 400, 880, 110
+    for i, (a, b) in enumerate(zip(dft, ml)):
+        ya, yb = y0 + a * k, y0 + b * k
+        low = i == 0      # DFT 최저 g05: CHGNet에서는 2위
+        odd = i == 8      # 크게 어긋난 g01: DFT 9위, CHGNet 6위
+        col = INDIGO if low else mix(GRAPH, 0.15)
+        ax.plot([lx + half_w + 8, rx - half_w - 8], [ya, yb], color=INDIGO if low else WARM if odd else mix(GRAPH, 0.5),
+                lw=3 if low else 2.2 if odd else 1.6, zorder=3 if low or odd else 2, alpha=1 if low or odd else 0.9)
+        for x, y in ((lx, ya), (rx, yb)):
+            ax.plot([x - half_w, x + half_w], [y, y], color=col, lw=7 if low else 5, solid_capstyle="round", zorder=4 if low else 3)
+    # 두 사다리의 높이 차: 오른쪽 옆에 옅은 기둥으로
+    for x, top in ((lx - half_w - 40, dft[-1]), (rx + half_w + 40, ml[-1])):
+        ax.plot([x, x], [y0, y0 + top * k], color=mix(GRAPH, 0.55), lw=4, solid_capstyle="round", zorder=1)
+    save(fig, "dft-practice-11")
+
+if __name__ == "__main__" and len(sys.argv) > 3:
+    # 세 번째 인자부터 함수 이름을 주면 그 그림만 다시 그린다 (예: ... dft_practice_10)
+    os.makedirs(OUT, exist_ok=True)
+    os.makedirs(FULL, exist_ok=True)
+    for name in sys.argv[3:]:
+        globals()[name]()
+elif __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     os.makedirs(FULL, exist_ok=True)
     dft_explained()
@@ -444,3 +509,5 @@ if __name__ == "__main__":
     dft_practice_7()
     dft_practice_8()
     dft_practice_9()
+    dft_practice_10()
+    dft_practice_11()

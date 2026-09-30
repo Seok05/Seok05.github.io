@@ -73,6 +73,30 @@ window.SEOK = {
 
   posts: [
     {
+      slug: "dft-practice-11",
+      cat: "dft",
+      thumb: "assets/thumbs/dft-practice-11.webp",
+      date: "2026.09.30",
+      series: "dft",
+      order: 14,
+      related: ["dft-practice-9"],
+      title: "DFT 실습 [11] — 계산기를 믿기 전에 시험부터: CHGNet과 G1 검증",
+      blurb:
+        "배열의 경우의 수가 폭발하는 문제를 풀려고 기계학습 퍼텐셜 CHGNet을 들였습니다. 결과 장부로 계산을 정리하고, 이미 가진 DFT 답으로 채점하고, 네 원소가 섞인 조성의 배열 10개로 정식 검증을 치렀습니다. 순위 상관 0.92로 통과했지만 믿어도 되는 곳과 안 되는 곳이 분명히 갈렸습니다.",
+    },
+    {
+      slug: "dft-practice-10",
+      cat: "dft",
+      thumb: "assets/thumbs/dft-practice-10.webp",
+      date: "2026.09.30",
+      series: "dft",
+      order: 13,
+      related: ["dft-practice-8"],
+      title: "DFT 실습 [10] — Ni 하나가 전자를 가져가자, 구멍은 두 자리로 퍼졌다",
+      blurb:
+        "첫 다성분 계산. Mn 하나를 Ni로 바꾸자 Ni는 어떤 출발점에서도 2+를 골랐고, 그 대가로 생긴 구멍은 Mn 둘에 반씩 퍼졌습니다. 얀-텔러가 가수를 연속적으로 따라간다는 것, 비활성 Ni²⁺도 이웃에게 떠밀려 늘어난다는 것, 그리고 +U의 준안정 상태가 일으킨 계산 사고와 해법까지.",
+    },
+    {
       slug: "dft-practice-9",
       cat: "dft",
       tag: "복습",

@@ -373,12 +373,114 @@ main {
   gap: 0.6rem;
 }
 
-.hero-avatar {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  object-fit: cover;
-  box-shadow: 0 0 0 1px var(--rule), 0 0 0 8px var(--paper), 0 0 0 9px var(--warm-soft);
+/* 소개 오른쪽: 연구 노트 한 장. 위는 모눈종이 위의 구조 그림, 아래는 글에서 옮긴 숫자.
+   숫자는 관측이라 잉크색이고, 링크에 손을 올렸을 때만 인디고 */
+.hero-fig {
+  margin: 0;
+  width: 27rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  background: var(--card);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.hero-plate {
+  display: block;
+  padding: 1.5rem 1.4rem 1.2rem;
+  border-bottom: 1px solid var(--rule);
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: -1px -1px;
+}
+
+.hero-plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.35s ease;
+}
+
+.hero-fig:hover .hero-plate img {
+  transform: translateY(-2px);
+}
+
+.hero-fig figcaption {
+  padding: 0.35rem 1.2rem 0.5rem;
+}
+
+.hero-cap,
+.hero-log a {
+  display: grid;
+  grid-template-columns: 4.9rem minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: baseline;
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero-cap {
+  padding: 0.85rem 0 0.9rem;
+}
+
+.hero-cap b,
+.hero-log b {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--ink);
+  transition: color 0.15s ease;
+}
+
+.hero-cap b {
+  font-size: 1.35rem;
+}
+
+.hero-cap span {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+.hero-cap em,
+.hero-log em {
+  font-style: normal;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+.hero-log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-log li {
+  border-top: 1px solid var(--rule);
+}
+
+.hero-log a {
+  padding: 0.62rem 0;
+}
+
+.hero-log b {
+  font-size: 1.02rem;
+}
+
+.hero-log span {
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.hero-cap:hover b,
+.hero-log a:hover b {
+  color: var(--accent-ink);
 }
 
 /* ── 홈: 구획 ────────────────────────────────────────────── */
@@ -2018,6 +2120,15 @@ tbody tr:hover td {
 }
 
 @media (max-width: 960px) {
+  /* 소개: 글 아래로 노트를 내린다 */
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+  .hero-fig {
+    width: 100%;
+    max-width: 34rem;
+  }
   .cat-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2044,11 +2155,14 @@ tbody tr:hover td {
     padding-bottom: 2.75rem;
   }
 
-  .hero-avatar {
-    order: -1;
-    width: 72px;
-    height: 72px;
-    box-shadow: 0 0 0 1px var(--rule), 0 0 0 5px var(--paper), 0 0 0 6px var(--warm-soft);
+  .hero-cap,
+  .hero-log a {
+    grid-template-columns: 4.6rem minmax(0, 1fr);
+  }
+
+  .hero-cap em,
+  .hero-log em {
+    display: none;
   }
 
   .hero h1 br {

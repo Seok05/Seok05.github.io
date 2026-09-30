@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DFT 실습 [10] — Ni 하나가 전자를 가져가자, 구멍은 두 자리로 퍼졌다 · Seok Lab</title>
+    <meta name="description" content="첫 다성분 계산. α-NaMnO₂의 Mn 하나를 Ni로 바꾸자 Ni는 어떤 출발점에서도 2+를 골랐고, 그 대가로 생긴 구멍은 Mn 하나가 아니라 둘에 반씩 퍼졌습니다. 얀-텔러가 가수를 연속적으로 따라간다는 것, 얀-텔러 비활성 Ni²⁺도 이웃에게 떠밀려 늘어난다는 것, 그리고 +U의 준안정 상태가 일으킨 계산 사고와 그 해법까지." />
+    <link rel="stylesheet" href="../assets/blog.css" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 개발합니다</span>
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">VASP 실습</span><span>2026.09.30</span>
+            </div>
+            <h1>DFT 실습 [10] — Ni 하나가 전자를 가져가자, 구멍은 두 자리로 퍼졌다</h1>
+            <p class="lede"><a href="dft-practice-9.html">실습 [9]</a>까지는 Mn 한 원소로 계산 절차를 검증했습니다. 이번엔 연구의 진짜 대상인 "여러 전이금속이 섞인 층상 산화물"로 가는 첫걸음으로, Mn 넷 중 하나를 Ni로 바꿔봤습니다. 질문은 단순했어요. 원소가 섞이면 전하는 누가 가져가는가. 답은 두 가설 어느 쪽과도 딱 맞지 않았고, 그래서 더 많은 걸 알려줬습니다.</p>
+          </div>
+
+          <figure class="shot wide illus">
+            <div class="shot-card"><img src="../assets/illus/dft-practice-10.webp" alt="가운데 Ni는 Mn 쪽에서 전자 하나를 가져가 Ni²⁺가 되고, 생긴 구멍은 대각선으로 이웃한 Mn 둘에 반씩 퍼진 그림" width="1280" height="800" loading="lazy" decoding="async"></div>
+            <figcaption>가운데 회색이 Ni입니다. Mn 쪽에서 전자 하나를 가져가 Ni²⁺가 되고, 그 대가로 생긴 구멍은 대각선으로 이웃한 두 Mn(오른쪽 위아래, 옅은 구름)에 반씩 퍼집니다. 위아래 결합의 길이는 얀-텔러 왜곡의 크기로, 왼쪽 Mn³⁺가 가장 길고 Ni²⁺와 Mn³·⁵⁺는 비슷하게 조금 늘어나 있습니다.</figcaption>
+          </figure>
+
+<div class="box">
+<p class="box-label">한 줄 요약</p>
+<p>NaMn₀.₇₅Ni₀.₂₅O₂에서 Ni는 늘 Ni²⁺가 되어 Mn을 산화시키지만, 생긴 구멍은 Mn⁴⁺ 하나로 붙잡히지 않고 두 Mn에 반씩 퍼진다(Mn³·⁵⁺ 둘). 그 결과 얀-텔러 왜곡은 3+와 4+ 사이의 중간값을 보이고, 전자적으로는 늘어날 이유가 없는 Ni²⁺ 팔면체마저 이웃에게 떠밀려 늘어난다. 고엔트로피 조성에서 "가수"와 "국소 구조"를 어떻게 읽어야 하는지에 대한 첫 단서다.</p>
+</div>
+
+<h2>0. 왜 Ni인가</h2>
+<p>고엔트로피 층상 산화물은 전이금속 자리에 Mn, Ni, Fe, Ti 같은 원소를 네다섯 가지 섞은 물질입니다. 원소가 섞이면 제일 먼저 정해져야 하는 게 <strong>각 원소의 가수</strong>예요. Na 하나에 전이금속 하나인 NaTMO₂에서 전이금속의 평균 가수는 +3으로 정해져 있지만, 원소마다 몇 가를 맡는지는 서로 흥정할 수 있습니다. 누가 전자를 내주고 누가 받는지가 얀-텔러 왜곡(Mn³⁺만 활성), 자성, 전압을 전부 바꾸죠. 연구 가이드의 가설 H2("저가 이온이 이웃 Mn을 산화시키고, 구멍이 어디 앉을지는 이웃 구성이 정한다")를 가장 작은 계에서 먼저 시험해본 게 이번 계산입니다. Ni를 고른 이유는 NaNi₀.₅Mn₀.₅O₂ 계열에서 Ni²⁺와 Mn⁴⁺ 조합이 잘 알려져 있어서, 계산이 알려진 화학을 재현하는지부터 확인할 수 있기 때문이에요.</p>
+
+<h2>1. 실험 설계: 가설 둘, 출발점 셋</h2>
+<p><a href="dft-practice-8.html">실습 [8]</a>의 16원자 슈퍼셀(Na₄Mn₄O₈)에서 Mn 하나를 Ni로 바꿨습니다. 이 셀에서는 Mn 네 자리가 대칭적으로 모두 같아서, Ni를 어디에 넣어도 같은 구조가 됩니다. 문제는 전하 장부를 맞추는 방법이 두 가지라는 점이었어요.</p>
+<figure>
+<div class="table-scroll"><table><thead><tr><th>가설</th><th>Ni</th><th>Mn 셋</th><th>초기 MAGMOM</th></tr></thead><tbody>
+<tr><td>A</td><td>Ni³⁺ (d⁷, 저스핀 1 μB)</td><td>Mn³⁺ 셋</td><td>Ni 1.0, Mn 4.0 × 3</td></tr>
+<tr><td>B</td><td>Ni²⁺ (d⁸, 2 μB)</td><td>Mn⁴⁺ 하나 + Mn³⁺ 둘</td><td>Ni 2.0, Mn 하나 3.0</td></tr>
+</tbody></table></div>
+<figcaption><strong>표 1.</strong> 두 가지 전하 장부. 가설 B는 어느 Mn이 4+가 되느냐에 따라 다시 두 가지(Ni와 b축으로 이웃한 자리, 대각선으로 이웃한 자리)라 계산은 모두 셋입니다.</figcaption>
+</figure>
+<p><a href="dft-practice-8.html">실습 [8]</a>의 교훈(전하 배치는 추측하지 말고 열거한다)대로 셋을 전부 돌렸습니다. 원소가 네 종류가 되면서 새로 신경 쓸 곳도 생겼어요. POTCAR를 Na_pv, Mn_pv, Ni_pv, O 순서로 잇고, U도 원소 순서대로 네 칸(0, 3.9, 6.2, 0 eV)이 되는데, POSCAR의 원소 순서와 하나라도 어긋나면 엉뚱한 원소에 U가 걸립니다. Ni의 U = 6.2 eV는 Materials Project가 쓰는 값으로, MP 데이터와의 호환을 유지하려고 그대로 따랐습니다.</p>
+
+<h2>2. 결과 ①: Ni는 어떤 출발점에서도 2+를 골랐다</h2>
+<p>세 계산 모두에서 Ni의 d 자기모멘트는 <strong>1.739 μB</strong>였습니다. 짝 없는 전자가 둘인 Ni²⁺(d⁸)의 값이에요(<a href="dft-theory-2.html">이론 [2]</a>에서 모멘트로 가수를 읽던 방법 그대로입니다). 놀라운 건 <strong>Ni³⁺로 시작한 가설 A마저 Ni²⁺로 갔다</strong>는 점입니다. 초기 모멘트 1 μB로 출발했는데 이완이 끝나고 보니 1.74 μB가 되어 있었어요. 계산이 "Ni는 전자를 하나 더 가져가야 한다"고 스스로 판정한 셈입니다.</p>
+<p>이게 무슨 뜻인지 풀면 이렇습니다. 산화물 속에서 Ni의 d 전자 준위가 Mn보다 깊은 곳에 있어서, 전자가 Mn에서 Ni로 옮겨가는 편이 에너지상 유리하다는 거예요. 그 대가로 Mn 쪽에서 전자 하나가 빠지고, 누군가는 산화되어야 합니다. 알려진 NaNi₀.₅Mn₀.₅O₂의 Ni²⁺/Mn⁴⁺ 화학과 같은 방향이라, 계산이 문헌의 화학을 제대로 재현한 첫 확인이기도 합니다.</p>
+
+<h2>3. 결과 ②: 구멍은 한 자리에 앉지 않았다</h2>
+<p>가설 B대로라면 Mn 하나가 4+가 되어 모멘트가 3.1~3.2 μB로 떨어져야 합니다. 그런데 결과는 달랐어요.</p>
+<figure>
+<div class="fig-scroll"><svg viewBox="0 0 720 280" role="img" aria-label="Ni 치환의 두 가설과 계산 결과: Ni는 2+, 구멍은 Mn 둘에 반씩">
+<text class="svg-label-sm svg-muted" x="230.0" y="28.0" text-anchor="middle">Mn (b축 이웃)</text>
+<text class="svg-label-sm svg-muted" x="330.0" y="28.0" text-anchor="middle">Mn (대각 이웃)</text>
+<text class="svg-label-sm svg-muted" x="430.0" y="28.0" text-anchor="middle">Mn (대각 이웃)</text>
+<text class="svg-label-sm svg-muted" x="550.0" y="28.0" text-anchor="middle">Ni</text>
+<line x1="490" y1="38" x2="490" y2="262" class="svg-stroke-rule" stroke-width="1" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="40.0" y="75.0" text-anchor="start">가설 A</text>
+<circle cx="230" cy="70" r="24" class="svg-fill-card svg-stroke-graphite" stroke-width="1.4" />
+<text class="svg-label svg-ink" x="230.0" y="75.0" text-anchor="middle">3+</text>
+<circle cx="330" cy="70" r="24" class="svg-fill-card svg-stroke-graphite" stroke-width="1.4" />
+<text class="svg-label svg-ink" x="330.0" y="75.0" text-anchor="middle">3+</text>
+<circle cx="430" cy="70" r="24" class="svg-fill-card svg-stroke-graphite" stroke-width="1.4" />
+<text class="svg-label svg-ink" x="430.0" y="75.0" text-anchor="middle">3+</text>
+<circle cx="550" cy="70" r="24" class="svg-fill-card svg-stroke-graphite" stroke-width="1.4" />
+<text class="svg-label svg-ink" x="550.0" y="75.0" text-anchor="middle">3+</text>
+<text class="svg-label-sm svg-muted" x="600.0" y="75.0" text-anchor="start">Ni³⁺ (d⁷)</text>
+<text class="svg-label-sm svg-muted" x="40.0" y="150.0" text-anchor="start">가설 B</text>
+<circle cx="230" cy="145" r="24" class="svg-fill-card svg-stroke-graphite" stroke-width="1.4" />
+<text class="svg-label svg-ink" x="230.0" y="150.0" text-anchor="middle">3+</text>
+<circle cx="330" cy="145" r="24" class="svg-fill-card svg-stroke-graphite" stroke-width="1.4" />
+<text class="svg-label svg-ink" x="330.0" y="150.0" text-anchor="middle">4+</text>
+<circle cx="430" cy="145" r="24" class="svg-fill-card svg-stroke-graphite" stroke-width="1.4" />
+<text class="svg-label svg-ink" x="430.0" y="150.0" text-anchor="middle">3+</text>
+<circle cx="550" cy="145" r="24" class="svg-fill-card svg-stroke-graphite" stroke-width="1.4" />
+<text class="svg-label svg-ink" x="550.0" y="150.0" text-anchor="middle">2+</text>
+<text class="svg-label-sm svg-muted" x="600.0" y="150.0" text-anchor="start">4+ 자리는 두 가지</text>
+<text class="svg-label svg-ink" x="40.0" y="230.0" text-anchor="start" style="font-weight:700">계산 결과</text>
+<circle cx="230" cy="225" r="24" class="svg-fill-card svg-stroke-graphite" stroke-width="1.4" />
+<text class="svg-label svg-ink" x="230.0" y="230.0" text-anchor="middle">3+</text>
+<circle cx="330" cy="225" r="24" class="svg-fill-card svg-stroke-accent" stroke-width="2.6" />
+<text class="svg-label" x="330.0" y="230.0" text-anchor="middle" style="fill: var(--accent); font-weight:700">3.5+</text>
+<circle cx="430" cy="225" r="24" class="svg-fill-card svg-stroke-accent" stroke-width="2.6" />
+<text class="svg-label" x="430.0" y="230.0" text-anchor="middle" style="fill: var(--accent); font-weight:700">3.5+</text>
+<circle cx="550" cy="225" r="24" class="svg-fill-card svg-stroke-graphite" stroke-width="1.4" />
+<text class="svg-label svg-ink" x="550.0" y="230.0" text-anchor="middle">2+</text>
+<text class="svg-label-sm svg-muted" x="600.0" y="230.0" text-anchor="start">세 출발점 모두</text>
+<text class="svg-label-sm" x="230.0" y="264.0" text-anchor="middle" style="fill: var(--accent)">3.82 μB</text>
+<text class="svg-label-sm" x="330.0" y="264.0" text-anchor="middle" style="fill: var(--accent)">3.645 μB</text>
+<text class="svg-label-sm" x="430.0" y="264.0" text-anchor="middle" style="fill: var(--accent)">3.645 μB</text>
+<text class="svg-label-sm" x="550.0" y="264.0" text-anchor="middle" style="fill: var(--accent)">1.74 μB</text>
+</svg></div>
+<figcaption><strong>그림 1.</strong> 두 가설과 계산 결과. Ni는 2+가 됐지만, 생긴 구멍 하나는 Mn⁴⁺ 하나로 붙잡히지 않고 Ni와 대각선으로 이웃한 두 Mn에 반씩 나뉘었습니다(강조색). 맨 아래 숫자는 각 자리의 d 모멘트입니다.</figcaption>
+</figure>
+<p>Ni와 b축으로 붙어 있는 Mn은 3.82 μB로 멀쩡한 Mn³⁺이고, <strong>대각선으로 이웃한 두 Mn이 똑같이 3.645 μB</strong>로 내려갔습니다. 전자 하나만큼의 구멍이 두 자리에 반씩 퍼진 거예요. 초기값으로 4+를 한 자리에 심어줬는데도(두 출발점이 각각 다른 자리에), 두 계산 모두 이 대칭적인 상태로 모였고 에너지도 0.02 meV까지 같았습니다.</p>
+<p>로그에도 흔적이 있었어요. 지금까지 순수 Mn 계에서는 F와 E0가 소수점 끝까지 같았는데(<a href="dft-practice-5.html">실습 [5]</a>에서 배운 "절연체의 증거"), 이 계산에서는 <strong>3.5 meV</strong> 차이가 났습니다. 페르미 준위 근처에 반쯤 찬 상태가 남아 있다는 뜻이고, 전하가 한 자리에 완전히 국재화되지 않았다는 그림과 맞아떨어집니다.</p>
+<div class="box obs">
+<p class="box-label">이게 왜 중요한가</p>
+<p>고엔트로피 조성을 분석하는 흔한 방식은 원소마다 가수를 정수로 배정하는 것입니다(Mn은 3+ 아니면 4+). 이번 결과는 <strong>전하 보상이 정수 단위로 딱 떨어지지 않을 수 있다</strong>는 걸 보여줍니다. 그래서 국소 특징을 설계할 때 가수는 "3+ 또는 4+"라는 범주가 아니라 <strong>모멘트 같은 연속값</strong>으로 다뤄야 해요. 다만 단서가 하나 있습니다. DFT+U가 전하를 실제보다 덜 국재화시키는 경우도 있어서, 한쪽 Mn에 전하가 붙잡힌 더 낮은 상태가 숨어 있을 가능성은 아직 배제하지 못했습니다. 한쪽으로 강하게 치우친 초기값으로 다시 확인하는 게 남은 숙제입니다.</p>
+</div>
+
+<h2>4. 결과 ③: 얀-텔러는 가수를 연속적으로 따라간다</h2>
+<p>구멍이 반씩 퍼진 두 Mn의 팔면체는 어떻게 생겼을까요. 지금까지 모든 계산의 Mn 자리를 모멘트와 얀-텔러 크기(긴/짧은 결합 비)로 한 그림에 놓으면 이렇습니다.</p>
+<figure>
+<div class="fig-scroll"><svg viewBox="0 0 640 300" role="img" aria-label="Mn 자리의 자기모멘트와 얀-텔러 결합 비의 관계">
+<line x1="100" y1="250" x2="600" y2="250" class="svg-stroke-rule" stroke-width="1.2" />
+<line x1="100" y1="30" x2="100" y2="250" class="svg-stroke-rule" stroke-width="1" />
+<line x1="100" y1="250.0" x2="600" y2="250.0" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="92.0" y="254.0" text-anchor="end">1.00</text>
+<line x1="100" y1="209.6" x2="600" y2="209.6" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="92.0" y="213.6" text-anchor="end">1.05</text>
+<line x1="100" y1="169.2" x2="600" y2="169.2" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="92.0" y="173.2" text-anchor="end">1.10</text>
+<line x1="100" y1="128.8" x2="600" y2="128.8" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="92.0" y="132.8" text-anchor="end">1.15</text>
+<line x1="100" y1="88.5" x2="600" y2="88.5" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="92.0" y="92.5" text-anchor="end">1.20</text>
+<line x1="100" y1="48.1" x2="600" y2="48.1" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="92.0" y="52.1" text-anchor="end">1.25</text>
+<text class="svg-label-sm svg-muted" x="170.0" y="268.0" text-anchor="middle">3.2</text>
+<text class="svg-label-sm svg-muted" x="290.0" y="268.0" text-anchor="middle">3.4</text>
+<text class="svg-label-sm svg-muted" x="410.0" y="268.0" text-anchor="middle">3.6</text>
+<text class="svg-label-sm svg-muted" x="530.0" y="268.0" text-anchor="middle">3.8</text>
+<text class="svg-label-sm svg-muted" x="350.0" y="290.0" text-anchor="middle">Mn의 d 자기모멘트 (μB, 가수의 대리 지표)</text>
+<text class="svg-label-sm svg-muted" x="106.0" y="22.0" text-anchor="start">긴/짧은 Mn–O 결합 비 (얀-텔러 크기)</text>
+<circle cx="543.2" cy="59.0" r="6" class="svg-fill-graphite" />
+<circle cx="549.2" cy="110.4" r="6" class="svg-fill-graphite" />
+<circle cx="534.2" cy="102.0" r="6" class="svg-fill-graphite" />
+<circle cx="563.6" cy="147.1" r="6" class="svg-fill-graphite" />
+<circle cx="534.8" cy="135.2" r="6" class="svg-fill-graphite" />
+<circle cx="540.8" cy="136.1" r="6" class="svg-fill-graphite" />
+<circle cx="190.4" cy="226.0" r="6" class="svg-fill-card svg-stroke-graphite" stroke-width="1.8" />
+<circle cx="153.2" cy="237.9" r="6" class="svg-fill-card svg-stroke-graphite" stroke-width="1.8" />
+<circle cx="196.4" cy="237.0" r="6" class="svg-fill-card svg-stroke-graphite" stroke-width="1.8" />
+<circle cx="437.0" cy="190.2" r="8" class="svg-fill-accent" />
+<text class="svg-label-sm" x="437.0" y="176.2" text-anchor="middle" style="fill: var(--accent); font-weight:700">Mn³·⁵⁺ (Ni 치환) 1.07</text>
+<text class="svg-label-sm svg-ink" x="534.0" y="63.0" text-anchor="end">x = 1 (이웃에 Mn⁴⁺ 없음)</text>
+<text class="svg-label-sm svg-muted" x="516.0" y="128.8" text-anchor="end">Mn³⁺: 이웃에 따라 1.13~1.18</text>
+<text class="svg-label-sm svg-muted" x="214.0" y="237.8" text-anchor="start">Mn⁴⁺ 1.02~1.03</text>
+<circle cx="470" cy="226" r="6" class="svg-fill-graphite" />
+<text class="svg-label-sm svg-muted" x="482.0" y="230.0" text-anchor="start">Mn³⁺</text>
+<circle cx="530" cy="226" r="6" class="svg-fill-card svg-stroke-graphite" stroke-width="1.8" />
+<text class="svg-label-sm svg-muted" x="542.0" y="230.0" text-anchor="start">Mn⁴⁺</text>
+</svg></div>
+<figcaption><strong>그림 2.</strong> 지금까지 계산한 모든 Mn 자리. 가로축(모멘트)이 가수를, 세로축이 얀-텔러 크기를 나타냅니다. Mn³·⁵⁺(강조색)는 Mn³⁺ 무리와 Mn⁴⁺ 무리 사이에 정확히 떨어집니다. 같은 Mn³⁺끼리의 세로 퍼짐은 이웃 구성의 효과입니다(실습 [8]).</figcaption>
+</figure>
+<p>두 가지가 한눈에 보입니다. 첫째, 모멘트 3.645의 Mn³·⁵⁺는 결합 비 <strong>1.07</strong>로 Mn³⁺(1.13~1.24)와 Mn⁴⁺(1.02~1.03) 사이에 정확히 떨어집니다. 얀-텔러 왜곡이 "켜짐/꺼짐"이 아니라 <strong>가수를 연속적으로 따라가는 양</strong>이라는 뜻이에요. 둘째, 가수가 같은 Mn³⁺끼리도 세로로 1.13에서 1.24까지 퍼져 있습니다. 이건 <a href="dft-practice-8.html">실습 [8]</a>에서 찾은 이웃 효과(이웃한 Mn⁴⁺가 많을수록 왜곡이 줄어듦)입니다. 즉 이 그림 한 장에 <strong>가로 방향은 자기 가수, 세로 방향은 이웃 환경</strong>이라는 두 성분이 함께 담겨 있습니다.</p>
+<p>그리고 예상하지 못한 결과가 하나 더 있었어요. Ni²⁺는 d⁸이라 e_g 두 칸에 전자가 하나씩 고르게 들어가서 얀-텔러 비활성입니다. 저는 Ni 팔면체가 거의 정팔면체일 거라고 예측했는데, 결과는 4×2.067 / 2×2.236 Å, <strong>비 1.08</strong>로 늘어나 있었습니다.</p>
+<figure>
+<div class="table-scroll"><table><thead><tr><th>자리</th><th>d 모멘트 (μB)</th><th>Mn–O 또는 Ni–O (Å)</th><th>긴/짧은 비</th><th>왜 이 모양인가</th></tr></thead><tbody>
+<tr><td>Mn³⁺ (Ni와 b축 이웃)</td><td>3.82</td><td>4×1.982 / 2×2.262</td><td>1.14</td><td>자기 전자(e_g¹) + 이웃이 막는 효과</td></tr>
+<tr><td>Mn³·⁵⁺ (Ni와 대각 이웃) ×2</td><td>3.645</td><td>4×1.992 / 2×2.139</td><td>1.07</td><td>e_g 전자가 반쯤만 있음</td></tr>
+<tr><td>Ni²⁺</td><td>1.74</td><td>4×2.067 / 2×2.236</td><td>1.08</td><td>자기는 비활성, 이웃에게 떠밀림</td></tr>
+</tbody></table></div>
+<figcaption><strong>표 2.</strong> Ni 치환 구조의 팔면체. 평균 Ni–O 2.12 Å은 Ni²⁺ 크기에서 예상되는 값에 PBE+U 특유의 1~2% 팽창을 얹은 수준이라 Ni²⁺ 판정을 한 번 더 받쳐줍니다.</figcaption>
+</figure>
+<p>Ni²⁺ 자신은 늘어날 전자적 이유가 없으니, 이 왜곡은 <strong>이웃에게서 떠밀린 것</strong>입니다. 주변 Mn³⁺ 팔면체들이 같은 방향으로 협동해서 늘어나 격자 전체가 단사정으로 비틀려 있고, 모서리를 공유한 Ni 팔면체도 그 틀에 맞춰 늘어날 수밖에 없어요. 사실 전조가 있었습니다. <a href="dft-practice-8.html">실습 [8]</a>에서 Mn³⁺에 둘러싸인 Mn⁴⁺도 비가 1.03으로 살짝 늘어나 있었거든요. 더 크고 무른 Ni²⁺라서 그 효과가 크게 드러난 겁니다.</p>
+<div class="box obs">
+<p class="box-label">팔면체 모양의 세 성분</p>
+<p>지금까지의 결과를 모으면, 한 팔면체의 모양은 세 가지가 합쳐진 결과로 볼 수 있습니다. ① <strong>자기 전자</strong>: e_g 칸이 불균등하게 찼는가(Mn³⁺ 1.24, Mn⁴⁺ 1.02). ② <strong>이웃이 막는 효과</strong>: 옆에 쪼그라든 고가 이온이 몇 개인가(Mn⁴⁺ 이웃 4개면 1.14). ③ <strong>이웃이 전해주는 변형</strong>: 주변 팔면체가 얼마나 늘어나 있나(Ni²⁺ 1.08). 이 셋을 구분하지 않으면 <strong>Ni²⁺(1.08)와 Mn³·⁵⁺(1.07)를 왜곡 크기만으로는 가려낼 수 없습니다.</strong> 그래서 해석 가능한 특징을 설계할 때 왜곡 지수는 원소별로 나눠 보고, 모멘트 같은 전자 상태 지표와 짝으로 써야 합니다.</p>
+</div>
+
+<h2>5. 결과 ④: Ni 스핀은 Mn과 반대를 좋아한다</h2>
+<p>가설 A(Ni³⁺ 출발)의 계산은 Ni²⁺로 가면서 Ni의 스핀까지 Mn과 반대 방향으로 뒤집혔습니다(셀 합계 mag가 13이 아니라 9). 이 두 스핀 상태의 에너지를 비교하면:</p>
+<figure>
+<div class="table-scroll"><table><thead><tr><th>단계</th><th>Ni ↑ (Mn과 평행, mag 13)</th><th>Ni ↓ (Mn과 반평행, mag 9)</th><th>Ni ↓ − Ni ↑</th></tr></thead><tbody>
+<tr><td>1차 이완</td><td>−94.616165</td><td>−94.640841</td><td>−24.7 meV/셀</td></tr>
+<tr><td>2차 이완</td><td>−94.600559</td><td>−94.625082 (미수렴)</td><td>−24.5 meV/셀</td></tr>
+<tr><td>최종 (Ni ↓는 3차)</td><td>−94.600559</td><td>−94.625170</td><td><strong>−24.6 meV/셀</strong></td></tr>
+</tbody></table></div>
+<figcaption><strong>표 3.</strong> Ni 스핀 방향별 에너지(eV/셀). 세 단계 모두 같은 차이라, 셀당 약 25 meV(화학식당 약 6 meV)로 Ni가 Mn과 반대 스핀을 선호합니다.</figcaption>
+</figure>
+<p>세 번 모두 같은 값이라 이 차이는 믿을 만합니다. 다만 이건 <strong>Mn끼리의 스핀은 전부 평행(FM)으로 고정하고 Ni 하나만 뒤집어본 비교</strong>예요. <a href="dft-practice-9.html">실습 [9]</a>에서 Mn–Mn은 b축으로 반평행을 강하게 선호한다는 걸 봤으니, 이 계의 진짜 바닥 자기 배열을 말하려면 Mn까지 포함한 스핀 샘플링이 필요합니다.</p>
+
+<h2>6. 사고 보고: 스핀이 뒤바뀌고, 계산이 멈췄다</h2>
+<p>1차 이완에서 부피가 4.2% 줄었으니 <a href="dft-practice-6.html">실습 [6]</a>의 규칙대로 2차 이완을 돌렸습니다. 그런데 두 가지 일이 벌어졌어요.</p>
+<p><strong>하나, 두 폴더의 스핀 상태가 서로 바뀌었습니다.</strong> 1차에서 Ni ↓로 끝난 계산은 2차에서 Ni ↑로, Ni ↑로 끝난 계산은 Ni ↓로 갔어요. WAVECAR를 지우고 새로 시작하면 초기 스핀은 INCAR의 MAGMOM에서 다시 출발하는데, 두 폴더 모두 MAGMOM의 Ni가 +(위쪽)로 적힌 원래 값 그대로였기 때문입니다. SCF가 경로에 따라 Ni 스핀을 한 번은 위로, 한 번은 아래로 정해버린 거죠. Ni 스핀 방향이 그만큼 쉽게 뒤집히는 부드러운 자유도라는 뜻이기도 합니다.</p>
+<p><strong>둘, Ni ↓ 상태의 계산이 ZBRENT 에러로 멈췄습니다.</strong> MAGMOM에 Ni를 −2.0으로 명시해 다시 돌렸는데도 똑같이 20스텝에서 멈췄어요. 원인은 첫 스텝에 있었습니다.</p>
+<figure>
+<div class="fig-scroll"><svg viewBox="0 0 640 290" role="img" aria-label="2차 이완의 이온 스텝별 에너지: 새로 시작한 r2와 WAVECAR를 재사용한 r3">
+<line x1="90" y1="240" x2="580" y2="240" class="svg-stroke-rule" stroke-width="1.2" />
+<line x1="90" y1="30" x2="90" y2="240" class="svg-stroke-rule" stroke-width="1" />
+<line x1="90" y1="54.4" x2="580" y2="54.4" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="82.0" y="58.4" text-anchor="end">−91.5</text>
+<line x1="90" y1="102.4" x2="580" y2="102.4" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="82.0" y="106.4" text-anchor="end">−92.5</text>
+<line x1="90" y1="150.4" x2="580" y2="150.4" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="82.0" y="154.4" text-anchor="end">−93.5</text>
+<line x1="90" y1="198.4" x2="580" y2="198.4" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
+<text class="svg-label-sm svg-muted" x="82.0" y="202.4" text-anchor="end">−94.5</text>
+<text class="svg-label-sm svg-muted" x="100.0" y="258.0" text-anchor="middle">1</text>
+<text class="svg-label-sm svg-muted" x="196.0" y="258.0" text-anchor="middle">5</text>
+<text class="svg-label-sm svg-muted" x="316.0" y="258.0" text-anchor="middle">10</text>
+<text class="svg-label-sm svg-muted" x="436.0" y="258.0" text-anchor="middle">15</text>
+<text class="svg-label-sm svg-muted" x="556.0" y="258.0" text-anchor="middle">20</text>
+<text class="svg-label-sm svg-muted" x="335.0" y="278.0" text-anchor="middle">이온 스텝</text>
+<text class="svg-label-sm svg-muted" x="96.0" y="22.0" text-anchor="start">에너지 E0 (eV/셀)</text>
+<polyline points="100.0,114.2 124.0,46.3 148.0,186.1" fill="none" style="stroke: var(--warm)" stroke-width="1.6" />
+<line x1="148.0" y1="186.1" x2="556.0" y2="204.4" style="stroke: var(--warm)" stroke-width="1.4" stroke-dasharray="3 4" />
+<circle cx="100.0" cy="114.2" r="5" style="fill: var(--warm)" />
+<circle cx="124.0" cy="46.3" r="5" style="fill: var(--warm)" />
+<circle cx="148.0" cy="186.1" r="5" style="fill: var(--warm)" />
+<circle cx="556.0" cy="204.4" r="5" style="fill: var(--warm)" />
+<text class="svg-label-sm" x="110.0" y="106.2" text-anchor="start" style="fill: var(--warm); font-weight:700">r2 첫 스텝: 1.9 eV 높음, mag 8.93</text>
+<text class="svg-label-sm" x="550.0" y="192.4" text-anchor="end" style="fill: var(--warm)">20스텝: ZBRENT 에러로 멈춤</text>
+<circle cx="100.0" cy="204.4" r="5" class="svg-fill-accent" />
+<circle cx="124.0" cy="204.4" r="5" class="svg-fill-accent" />
+<text class="svg-label-sm" x="136.0" y="224.4" text-anchor="start" style="fill: var(--accent); font-weight:700">r3 (1차 WAVECAR 재사용): 처음부터 바닥, 2스텝 수렴</text>
+</svg></div>
+<figcaption><strong>그림 3.</strong> 2차 이완의 이온 스텝별 에너지. 새로 시작한 r2(경고색)는 첫 스텝이 최종값보다 1.9 eV 높은 곳에서 출발해 3스텝째에 뚝 떨어졌습니다. 1차의 WAVECAR를 읽어 시작한 r3(강조색)는 첫 스텝부터 바닥 상태였고 두 스텝 만에 끝났습니다.</figcaption>
+</figure>
+<p>구조는 1차에서 이미 거의 수렴한 상태였으니, 첫 스텝의 1.9 eV 차이는 원자 위치가 아니라 <strong>전자가 d 오비탈을 채운 방식</strong>이 틀렸다는 뜻입니다. DFT+U는 d 오비탈의 점유 방식에 따라 에너지가 다른 준안정 상태를 여러 개 가질 수 있는데, WAVECAR 없이 새로 시작하면서 높은 쪽에 떨어진 거예요. 그 뒤 도중에 바닥 상태로 떨어지면서 에너지가 불연속으로 바뀌었고, 에너지 골짜기를 앞뒤로 좁혀가며 가두는(bracketing) 원자 이동 알고리즘(IBRION = 2)이 그 점프를 감당하지 못해 ZBRENT 에러가 났습니다.</p>
+<p>해법은 간단했습니다. <strong>1차 이완의 WAVECAR를 읽어서 시작</strong>하는 것. VASP는 셀이 조금 바뀌어도 기존 파동함수를 새 기저에 옮겨 담을 수 있어서, 기저를 새로 짜는 2차 이완의 목적(Pulay 보정)은 그대로 살리면서 전자는 처음부터 바닥 상태에 둘 수 있어요. 그렇게 돌린 r3는 첫 스텝부터 −94.625 eV, mag 9.0이었고, 두 스텝 만에 최대 힘 0.012 eV/Å로 수렴했습니다. 이후 24원자 다성분 계산 열 건에도 같은 규칙을 적용했는데, 첫 스텝 차이가 전부 0 meV였습니다.</p>
+
+<h2>7. 이 결과가 의미하는 것</h2>
+<p>작은 계산 하나지만, 본 연구를 위해 정해야 할 것 네 가지가 여기서 나왔습니다.</p>
+<ul>
+<li><strong>가설 H2의 첫 근거.</strong> 저가 이온(Ni²⁺)이 이웃 Mn을 산화시킨다는 것, 그리고 구멍이 어디에 얼마나 앉을지는 이웃과의 위치 관계(b축 이웃은 3+로 남고 대각 이웃 둘이 나눠 가짐)가 정한다는 것.</li>
+<li><strong>가수는 연속값으로.</strong> 전하 보상이 정수로 떨어지지 않을 수 있으니, 특징에서 가수는 모멘트로 읽습니다.</li>
+<li><strong>왜곡 지수는 원소별로, 모멘트와 짝으로.</strong> 팔면체 모양은 자기 전자, 이웃의 억제, 이웃이 전하는 변형의 합이라, 왜곡 하나만으로는 이온을 판정할 수 없습니다.</li>
+<li><strong>계산 절차의 안전장치.</strong> +U 계산에서 2차 이완은 1차 WAVECAR를 읽어 시작하고, 첫 스텝 에너지를 1차 최종값과 비교해 수 eV 차이가 나면 준안정 상태를 의심합니다. 수백 개 조성을 돌릴 본 계산에서 이런 사고를 자동으로 걸러내는 게 결과 장부의 "첫 스텝 차이" 열입니다(<a href="dft-practice-11.html">실습 [11]</a>).</li>
+</ul>
+
+<h2>이날 배운 것들</h2>
+<ul>
+<li><strong>원소가 섞이면 가수는 흥정된다.</strong> Ni는 어디서 출발해도 2+를 골랐고, 그 대가는 Mn이 치렀다.</li>
+<li><strong>구멍은 반씩 나뉠 수 있다.</strong> Mn³·⁵⁺ 둘, F와 E0의 3.5 meV 차이가 그 흔적이다. 국재 상태가 숨어 있는지는 숙제로 남았다.</li>
+<li><strong>얀-텔러는 가수를 연속적으로 따라가고, 이웃에게서도 전해진다.</strong> Mn³·⁵⁺ 1.07, Ni²⁺ 1.08.</li>
+<li><strong>초기값은 판결이 아니지만, 2차 이완에서는 씨앗이 중요하다.</strong> MAGMOM만으로 새로 시작하면 스핀이 뒤집히거나 준안정 상태에 떨어진다. 1차 WAVECAR를 읽어 시작한다.</li>
+<li><strong>ZBRENT 에러는 알고리즘 탓이 아닐 수 있다.</strong> 이완 도중 전자 상태가 바뀌어 에너지가 불연속이 되면 난다.</li>
+</ul>
+
+<div class="box">
+<p style="margin: 0"><strong>다음.</strong> Ni 하나로 원소가 섞이는 문을 열었으니, 다음은 네 원소(Mn, Fe, Ni, Ti)가 섞인 조성입니다. 그 전에 풀어야 할 문제가 있어요. 배열의 경우의 수가 셀을 키울수록 폭발하니, 전부 DFT로 계산할 수 없습니다. <a href="dft-practice-11.html">실습 [11]</a>은 그 문제를 풀 도구, 기계학습 원자간 퍼텐셜(CHGNet)을 시험하는 이야기입니다.</p>
+</div>
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하면서 개발합니다. 배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는
+                중입니다. → <a href="../?cat=dft">글 더 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하면서 개발합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="../">전체보기</a></li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 개발합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+
+    <script src="../assets/posts.js"></script>
+    <script src="../assets/site.js"></script>
+  </body>
+</html>
