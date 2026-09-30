@@ -1,9 +1,8 @@
 /* ─────────────────────────────────────────────────────────────
    assets/posts.js 의 데이터로 페이지를 조립한다.
 
-   홈(index.html)
-     - 기본: 소개(정적) → 기록의 리듬(달력+숫자) → 지금 쓰는 시리즈
-       → 시리즈 카드 → 최근 글
+   홈(index.html) · 디자인 기준은 DESIGN.md
+     - 기본: 소개(정적) → 분류 탭 → 최근 글 10편 → 전체 글 보기
      - ?view=all : 전체 글을 달별로
      - ?cat=<key>: 카테고리 하나. 시리즈면 읽는 순서대로 번호를 붙인다
        제목에 갈래가 있으면(DFT 이론·실습) 표시를 달고 탭으로 나눠 본다(&track=이론)
@@ -274,7 +273,6 @@
   if (nav) {
     nav.innerHTML =
       '<a href="' + root + '?view=all" data-nav="all">글</a>' +
-      '<a href="' + root + '#series" data-nav="series">시리즈</a>' +
       '<a href="' + GITHUB + '">GitHub</a>';
     if (view === "all") {
       var onA = nav.querySelector('[data-nav="all"]');
@@ -324,15 +322,12 @@
   var footWrap = document.querySelector(".site-footer .wrap");
   if (footWrap) {
     footWrap.innerHTML =
-      '<div class="foot-brand"><p class="foot-name"><span class="logo-mark sm">' + MARK + "</span>Seok Lab</p><p>연구하면서, 개발합니다</p></div>" +
+      '<p class="foot-copy">© ' + new Date().getFullYear() + " Seok Lab · 연구하면서, 개발합니다</p>" +
       '<nav class="foot-nav" aria-label="바닥 메뉴">' +
       '<a href="' + root + '?view=all">글</a>' +
-      '<a href="' + root + '#series">시리즈</a>' +
       '<a href="' + root + 'feed.xml">RSS</a>' +
       '<a href="' + GITHUB + '">GitHub</a></nav>' +
-      '<p class="foot-note"><span>글의 예시 수치는 설명용이며 실제 시세가 아닙니다.</span>' +
-      "<span>빌드 도구 없는 정적 HTML · GitHub Pages</span>" +
-      '<span class="views" data-foot-views hidden></span></p>';
+      '<p class="foot-note">글의 예시 수치는 설명용이며 실제 시세가 아닙니다.<span class="views" data-foot-views hidden></span></p>';
     // 이 페이지의 조회수 (수집이 켜져 있고 집계가 잡힐 때만 조용히 나타난다)
     fetchViews(location.pathname, function (n) {
       var v = footWrap.querySelector("[data-foot-views]");
@@ -359,133 +354,77 @@
     { passive: true }
   );
 
-  /* ── 홈 ────────────────────────────────────────────────── */
-  if (isIndex) {
-    var hero = document.getElementById("hero");
-    var pulseEl = document.getElementById("pulse");
-    var featuredEl = document.getElementById("featured");
-    var seriesEl = document.getElementById("series");
-    var recentEl = document.getElementById("recent");
-    var listingEl = document.getElementById("listing");
-    var homeOnly = [hero, pulseEl, featuredEl, seriesEl, recentEl];
+  /* ── 홈과 목록: 소개(정적) → 분류 탭 → 글 목록 ─────────── */
+  // 목록 한 줄: 왼쪽에 메타·제목·요약, 오른쪽에 썸네일. 시리즈 목록이면 앞에 순번
+  function row(p, opt) {
+    opt = opt || {};
+    var c = catOf(p.cat);
+    var t = trackOf(p);
+    var meta = [];
+    if (opt.cat !== false) meta.push(esc(c ? c.mark || c.name : p.cat));
+    if (opt.labels && opt.labels.length > 1 && t) meta.push(esc(t.label + " " + t.n));
+    if (p.tag) meta.push(esc(p.tag));
+    meta.push('<time datetime="' + isoDate(p.date) + '">' + p.date + "</time>");
+    return (
+      '<a class="post-row' + (opt.num ? " numbered" : "") + '" href="' + href(p) + '">' +
+      (opt.num ? '<span class="row-num">' + (p.order || "") + "</span>" : "") +
+      '<span class="row-text">' +
+      '<span class="row-meta">' + meta.join('<i aria-hidden="true">·</i>') + "</span>" +
+      '<span class="row-title">' + esc(opt.bare ? bareTitle(p.title) : p.title) + "</span>" +
+      '<span class="row-desc">' + esc(p.blurb) + "</span>" +
+      "</span>" +
+      thumb(p) +
+      "</a>"
+    );
+  }
+  // 분류 탭: 최근 · 분류마다 · 전체
+  function tabs(active) {
+    var on = function (k) {
+      return active === k ? ' class="on" aria-current="page"' : "";
+    };
+    var items = ['<a href="' + root + '"' + on("home") + ">최근</a>"];
+    cats.forEach(function (c) {
+      items.push(
+        '<a href="' + root + "?cat=" + c.key + '"' + on(c.key) + ">" + esc(c.mark || c.name) +
+          ' <span class="n">' + (counts[c.key] || 0) + "</span></a>"
+      );
+    });
+    items.push('<a href="' + root + '?view=all"' + on("all") + '>전체 <span class="n">' + posts.length + "</span></a>");
+    return '<nav class="tabs" aria-label="분류">' + items.join("") + "</nav>";
+  }
 
-    var featuredCat = null;
-    for (var f = 0; f < cats.length; f++) if (cats[f].featured) featuredCat = cats[f];
-    if (!featuredCat) featuredCat = cats[0];
+  if (isIndex) {
+    var introEl = document.getElementById("intro");
+    var homeEl = document.getElementById("home");
+    var listingEl = document.getElementById("listing");
 
     if (view === "home") {
-      // 소개 아래 버튼: 지금 쓰는 시리즈의 1편
-      var fPosts = catPosts(featuredCat.key);
-      var fChain = fPosts.filter(function (p) {
-        return p.series;
-      }).sort(byOrder);
-      var first = fChain[0] || fPosts[fPosts.length - 1];
-      var actions = document.getElementById("hero-actions");
-      if (actions && first) {
-        actions.insertAdjacentHTML(
-          "afterbegin",
-          '<a class="btn primary" href="' + href(first) + '">' + esc(featuredCat.mark || featuredCat.name) + " 일지 1편부터 읽기</a>"
-        );
-      }
-      var allBtn = document.getElementById("hero-all");
-      if (allBtn) allBtn.textContent = "전체 글 " + posts.length + "편";
-
-      // 기록의 리듬: 잔디 달력 + 숫자 네 개
-      if (pulseEl) renderPulse(pulseEl);
-
-      // 지금 쓰는 시리즈
-      if (featuredEl && fPosts.length) {
-        var latest = fPosts[0];
-        var listSrc = fChain.length ? fChain : fPosts;
-        var shownList = fChain.length ? listSrc.slice(-5) : listSrc.slice(0, 5);
-        featuredEl.innerHTML =
-          '<p class="eyebrow">지금 쓰는 시리즈</p>' +
-          '<article class="featured">' +
-          '<a class="featured-cover" href="' + root + "?cat=" + featuredCat.key + '">' + cover(featuredCat, "lg") + "</a>" +
-          '<div class="featured-body">' +
-          '<h2><a href="' + root + "?cat=" + featuredCat.key + '">' + esc(featuredCat.name) + "</a></h2>" +
-          '<p class="desc">' + esc(featuredCat.desc || "") + "</p>" +
-          '<p class="meta">' + fPosts.length + "편 · 최근 " + latest.date + "</p>" +
-          '<ol class="featured-list">' +
-          shownList
-            .map(function (p) {
-              var n = p.order ? pad2(p.order) : "";
-              return (
-                '<li><a href="' + href(p) + '">' +
-                (n ? '<span class="num">' + n + "</span>" : "") +
-                '<span class="t">' + esc(fChain.length ? bareTitle(p.title) : p.title) + "</span>" +
-                '<time datetime="' + isoDate(p.date) + '">' + shortDate(p.date) + "</time></a></li>"
-              );
-            })
-            .join("") +
-          "</ol>" +
-          '<a class="more" href="' + root + "?cat=" + featuredCat.key + '">이 시리즈 모두 보기 <span aria-hidden="true">→</span></a>' +
-          "</div></article>";
-      }
-
-      // 시리즈 카드
-      if (seriesEl) {
-        seriesEl.innerHTML =
-          '<div class="sec-head"><h2>시리즈</h2><p>주제별로 묶어 두었습니다. 시리즈는 1편부터 읽는 편이 좋습니다.</p></div>' +
-          '<div class="cat-grid">' +
-          cats
-            .map(function (c) {
-              var cp = catPosts(c.key);
-              var last = cp[0];
-              return (
-                '<a class="cat-card" href="' + root + "?cat=" + c.key + '">' +
-                cover(c) +
-                "<div>" +
-                "<h3>" + esc(c.name) + "</h3>" +
-                '<p class="desc">' + esc(c.desc || "") + "</p>" +
-                '<p class="meta">' + cp.length + "편" + (last ? " · 최근 " + esc(bareTitle(last.title)) : "") + "</p>" +
-                "</div></a>"
-              );
-            })
-            .join("") +
-          "</div>";
-      }
-
-      // 최근 글
-      if (recentEl) {
-        recentEl.innerHTML =
-          '<div class="sec-head row"><h2>최근 글</h2><a class="more" href="' + root + '?view=all">전체 ' + posts.length + '편 <span aria-hidden="true">→</span></a></div>' +
-          '<div class="post-grid">' +
+      var LATEST = 10;
+      if (homeEl) {
+        homeEl.innerHTML =
+          tabs("home") +
+          '<ul class="post-list">' +
           posts
-            .slice(0, 6)
+            .slice(0, LATEST)
             .map(function (p) {
-              return (
-                '<a class="post-card" href="' + href(p) + '">' + thumb(p) +
-                '<div class="post-card-body">' + metaRow(p, true) +
-                "<h3>" + esc(p.title) + "</h3>" +
-                "<p>" + esc(p.blurb) + "</p></div></a>"
-              );
+              return "<li>" + row(p) + "</li>";
             })
             .join("") +
-          "</div>";
+          "</ul>" +
+          (posts.length > LATEST
+            ? '<p class="list-more"><a href="' + root + '?view=all">전체 글 ' + posts.length + '편 보기 <span aria-hidden="true">→</span></a></p>'
+            : "");
       }
       if (listingEl) listingEl.hidden = true;
     } else {
-      // 목록 보기: 홈 구획은 숨기고 listing만
-      homeOnly.forEach(function (el2) {
-        if (el2) el2.hidden = true;
-      });
-      var filter =
-        '<nav class="filter" aria-label="카테고리"><a href="' + root + '?view=all"' + (view === "all" ? ' class="on"' : "") +
-        '>전체 <span class="n">' + posts.length + "</span></a>" +
-        cats
-          .map(function (c) {
-            return (
-              '<a href="' + root + "?cat=" + c.key + '"' + (activeCat === c.key ? ' class="on"' : "") + ">" +
-              esc(c.name) + ' <span class="n">' + (counts[c.key] || 0) + "</span></a>"
-            );
-          })
-          .join("") +
-        "</nav>";
-
+      if (introEl) introEl.hidden = true;
+      if (homeEl) homeEl.hidden = true;
       var html = "";
       if (view === "all") {
-        html += '<div class="list-head"><h1>전체 글</h1><p class="list-desc">' + posts.length + "편. 최신 글이 위에 있습니다.</p></div>" + filter;
+        document.title = "전체 글 · Seok Lab";
+        html +=
+          '<header class="list-head"><h1>전체 글</h1><p class="list-desc">' + posts.length + "편을 최신순으로 모았습니다.</p></header>" +
+          tabs("all");
         var groups = [];
         var idx = {};
         posts.forEach(function (p) {
@@ -501,14 +440,14 @@
           groups
             .map(function (g) {
               return (
-                '<section class="month"><h2>' + monthLabel(g.key) + '<span class="n">' + g.items.length + "편</span></h2><ul>" +
+                '<section class="month"><h2>' + monthLabel(g.key) + ' <span class="n">' + g.items.length + "편</span></h2><ul>" +
                 g.items
                   .map(function (p) {
                     var c = catOf(p.cat);
                     return (
-                      '<li><a class="row" href="' + href(p) + '"><time datetime="' + isoDate(p.date) + '">' + shortDate(p.date) + "</time>" +
-                      '<span class="row-title">' + esc(p.title) + "</span>" +
-                      '<span class="row-cat">' + esc(c ? c.name : p.cat) + "</span></a></li>"
+                      '<li><a class="arc-row" href="' + href(p) + '"><time datetime="' + isoDate(p.date) + '">' + shortDate(p.date) + "</time>" +
+                      '<span class="arc-title">' + esc(p.title) + "</span>" +
+                      '<span class="arc-cat">' + esc(c ? c.mark || c.name : p.cat) + "</span></a></li>"
                     );
                   })
                   .join("") +
@@ -528,10 +467,10 @@
         });
         document.title = c.name + " · Seok Lab";
         html +=
-          '<div class="list-head cat-head">' + cover(c) + "<div><h1>" + esc(c.name) + "</h1>" +
+          '<header class="list-head cat-head">' + cover(c) + "<div><h1>" + esc(c.name) + "</h1>" +
           '<p class="list-desc">' + esc(c.desc || "") + "</p>" +
-          '<p class="meta">' + cp.length + "편" + (cp[0] ? " · 최근 " + cp[0].date : "") + "</p></div></div>" +
-          filter;
+          '<p class="list-meta">' + cp.length + "편" + (cp[0] ? " · 최근 " + cp[0].date : "") + "</p></div></header>" +
+          tabs(activeCat);
         var labels = tracksIn(series);
         var wantTrack = labels.indexOf(params.get("track")) >= 0 ? params.get("track") : "";
         if (series.length) {
@@ -556,17 +495,15 @@
                   .join("") +
                 "</div>"
               : "") +
-            '</div><ol class="series-list">' +
+            '</div><ol class="post-list series">' +
             series
               .map(function (p) {
                 var t = trackOf(p);
                 var off = wantTrack && (!t || t.label !== wantTrack);
                 return (
                   "<li" + (t ? ' data-track="' + esc(t.label) + '"' : "") + (off ? " hidden" : "") + ">" +
-                  '<a href="' + href(p) + '"><span class="num">' + pad2(p.order || 0) + "</span>" + thumb(p) +
-                  '<span class="body">' + trackChip(p, labels) + '<span class="t">' + esc(bareTitle(p.title)) + "</span>" +
-                  '<span class="b">' + esc(p.blurb) + "</span></span>" +
-                  '<time datetime="' + isoDate(p.date) + '">' + p.date + "</time></a></li>"
+                  row(p, { num: true, bare: true, cat: false, labels: labels }) +
+                  "</li>"
                 );
               })
               .join("") +
@@ -575,31 +512,27 @@
         if (loose.length) {
           html +=
             (series.length ? '<h2 class="sub">그 밖의 글</h2>' : "") +
-            '<div class="post-grid">' +
+            '<ul class="post-list">' +
             loose
               .map(function (p) {
-                return (
-                  '<a class="post-card" href="' + href(p) + '">' + thumb(p) +
-                  '<div class="post-card-body">' + metaRow(p, false) +
-                  "<h3>" + esc(p.title) + "</h3><p>" + esc(p.blurb) + "</p></div></a>"
-                );
+                return "<li>" + row(p, { cat: false }) + "</li>";
               })
               .join("") +
-            "</div>";
+            "</ul>";
         }
       }
       if (listingEl) {
         listingEl.innerHTML = html;
         listingEl.hidden = false;
         // 갈래 탭: 읽는 순서에서 한 갈래(이론·실습)만 남긴다. 주소에 적어 두어 뒤로 오면 그대로다
-        var tabs = listingEl.querySelectorAll(".track-tabs button");
-        Array.prototype.forEach.call(tabs, function (b) {
+        var trackBtns = listingEl.querySelectorAll(".track-tabs button");
+        Array.prototype.forEach.call(trackBtns, function (b) {
           b.addEventListener("click", function () {
             var want = b.getAttribute("data-track");
-            Array.prototype.forEach.call(tabs, function (o) {
+            Array.prototype.forEach.call(trackBtns, function (o) {
               o.setAttribute("aria-pressed", String(o === b));
             });
-            Array.prototype.forEach.call(listingEl.querySelectorAll(".series-list li"), function (li) {
+            Array.prototype.forEach.call(listingEl.querySelectorAll(".post-list.series li"), function (li) {
               li.hidden = !!want && li.getAttribute("data-track") !== want;
             });
             var q = new URLSearchParams(location.search);
@@ -612,83 +545,13 @@
     }
   }
 
-  /* 기록의 리듬: 최근 24주 잔디 + 숫자 네 개 */
-  function renderPulse(target) {
-    var byDay = {};
-    posts.forEach(function (p) {
-      byDay[isoDate(p.date)] = (byDay[isoDate(p.date)] || 0) + 1;
-    });
-    var today = new Date();
-    today.setHours(12, 0, 0, 0);
-    // 창의 폭은 기록의 역사에 맞춘다: 첫 글 2주 전부터, 12~24주 사이
-    var sinceDate = new Date(isoDate(SITE.since || posts[posts.length - 1].date));
-    var histWeeks = Math.ceil((today - sinceDate) / (7 * 86400000)) + 2;
-    var WEEKS = Math.max(12, Math.min(24, histWeeks));
-    // 이번 주 일요일에서 (WEEKS-1)주 전 일요일까지 거슬러 올라간다
-    var start = new Date(today);
-    start.setDate(start.getDate() - start.getDay() - (WEEKS - 1) * 7);
-    var cells = "";
-    var monthSpans = [];
-    var lastMonth = "";
-    for (var w = 0; w < WEEKS; w++) {
-      var weekStart = new Date(start);
-      weekStart.setDate(start.getDate() + w * 7);
-      var mName = weekStart.getMonth() + 1 + "월";
-      if (mName !== lastMonth) {
-        monthSpans.push({ name: mName, weeks: 1 });
-        lastMonth = mName;
-      } else {
-        monthSpans[monthSpans.length - 1].weeks++;
-      }
-      for (var d = 0; d < 7; d++) {
-        var day = new Date(weekStart);
-        day.setDate(weekStart.getDate() + d);
-        var key =
-          day.getFullYear() + "-" + pad2(day.getMonth() + 1) + "-" + pad2(day.getDate());
-        var n = byDay[key] || 0;
-        var lv = day > today ? "future" : n >= 3 ? "l3" : n === 2 ? "l2" : n === 1 ? "l1" : "";
-        var label = key.replace(/-/g, ".") + (n ? " · " + n + "편" : "");
-        cells += '<i class="hm-cell ' + lv + '" title="' + label + '"></i>';
-      }
-    }
-    var since = SITE.since || posts[posts.length - 1].date;
-    var days = Math.max(1, Math.round((today - new Date(isoDate(since))) / 86400000) + 1);
-    var thisMonth = monthKey(
-      today.getFullYear() + "." + pad2(today.getMonth() + 1) + "." + pad2(today.getDate())
-    );
-    var monthN = posts.filter(function (p) {
-      return monthKey(p.date) === thisMonth;
-    }).length;
-    var seriesN = cats.length;
-    target.innerHTML =
-      '<div class="pulse-card">' +
-      '<div><p class="eyebrow">기록의 리듬</p>' +
-      '<div class="stats">' +
-      '<div class="stat"><b>' + posts.length + "<i>편</i></b><span>쌓인 글</span></div>" +
-      '<div class="stat"><b>' + seriesN + "<i>개</i></b><span>시리즈</span></div>" +
-      '<div class="stat"><b>' + days + "<i>일째</i></b><span>" + since + "부터</span></div>" +
-      '<div class="stat"><b>' + monthN + "<i>편</i></b><span>이번 달</span></div>" +
-      "</div></div>" +
-      '<div class="heatmap" role="img" aria-label="최근 ' + WEEKS + '주 동안 글을 쓴 날 달력">' +
-      '<div class="hm-months">' +
-      monthSpans
-        .map(function (s) {
-          return '<span style="width:' + s.weeks * 15 + 'px">' + (s.weeks > 1 ? s.name : "") + "</span>";
-        })
-        .join("") +
-      "</div>" +
-      '<div class="hm-body"><ul class="hm-dow"><li></li><li>월</li><li></li><li>수</li><li></li><li>금</li><li></li></ul>' +
-      '<div class="hm-grid">' + cells + "</div></div>" +
-      '<p class="hm-meta">최근 ' + WEEKS + "주 · 진한 칸일수록 그날 올린 글이 많습니다</p>" +
-      "</div></div>";
-  }
-
   /* ── 글 페이지 ─────────────────────────────────────────── */
   var article = !isIndex ? document.querySelector("article") : null;
   if (article) {
     var layout = article.parentNode;
     var sidebar = document.querySelector(".sidebar");
     if (sidebar) sidebar.hidden = true; // 예비 사이드바는 접는다
+    document.body.classList.add("is-post");
 
     // 읽기 진행바
     var pbar = el("div", "progress-bar");
@@ -710,14 +573,16 @@
       if (p.slug === current.slug) pos = k;
     });
     var head = article.querySelector(".post-head");
-    if (head && current) {
+    if (head && current && pos >= 0 && chain.length > 1) {
+      var chipDup = head.querySelector(".meta-row .chip-cat");
+      if (chipDup) chipDup.remove();
       var c = catOf(current.cat);
       var strip = document.createElement("nav");
       strip.className = "series-strip";
       strip.setAttribute("aria-label", "시리즈");
       strip.innerHTML =
         '<a class="ss-name" href="' + root + "?cat=" + current.cat + '">' + esc(c ? c.name : current.cat) + "</a>" +
-        (pos >= 0 ? '<span class="ss-pos">' + (pos + 1) + " / " + chain.length + "편</span>" : "") +
+        '<span class="ss-pos">' + (pos + 1) + " / " + chain.length + "</span>" +
         '<span class="ss-links">' +
         (pos > 0 ? '<a href="' + chain[pos - 1].slug + '.html" aria-label="이전 편">←</a>' : '<span class="dim">←</span>') +
         (pos >= 0 && pos < chain.length - 1 ? '<a href="' + chain[pos + 1].slug + '.html" aria-label="다음 편">→</a>' : '<span class="dim">→</span>') +
@@ -789,7 +654,7 @@
       var rail = document.createElement("aside");
       rail.className = "rail";
       rail.innerHTML =
-        '<nav class="toc" aria-label="이 글의 소제목"><p class="side-title">이 글에서</p><ul>' +
+        '<nav class="toc" aria-label="이 글의 소제목"><p class="side-title">목차</p><ul>' +
         h2s
           .map(function (h) {
             return '<li><a href="#' + h.id + '">' + esc(h.textContent.replace(/#\s*$/, "").trim()) + "</a></li>";
@@ -799,7 +664,7 @@
       layout.appendChild(rail);
       var links = rail.querySelectorAll("a");
       var pick = function () {
-        var y = window.scrollY + 120;
+        var y = window.scrollY + Math.min(240, window.innerHeight * 0.3);
         var last = h2s[0];
         for (var r = 0; r < h2s.length; r++) if (h2s[r].offsetTop <= y) last = h2s[r];
         for (var q = 0; q < links.length; q++)
@@ -861,19 +726,13 @@
     // 하단: 이전/다음/관련 + 같은 시리즈 목록
     if (current) {
       var items = [];
-      if (pos > 0) items.push(["prev", "이전", chain[pos - 1]]);
-      if (pos >= 0 && pos < chain.length - 1) items.push(["next", "다음", chain[pos + 1]]);
+      if (pos > 0) items.push(["prev", "이전 글", chain[pos - 1]]);
+      if (pos >= 0 && pos < chain.length - 1) items.push(["next", "다음 글", chain[pos + 1]]);
       (current.related || []).forEach(function (sl) {
-        for (var j = 0; j < posts.length; j++) if (posts[j].slug === sl) items.push(["rel", "관련", posts[j]]);
+        for (var j = 0; j < posts.length; j++) if (posts[j].slug === sl) items.push(["rel", "관련 글", posts[j]]);
       });
       var anchor = article.querySelector(".author-card");
       var pnav = article.querySelector(".post-nav");
-
-      // 글의 끝 표시
-      var endMark = el("p", "post-end", "∎");
-      endMark.setAttribute("aria-hidden", "true");
-      var endAnchor = pnav || anchor;
-      if (endAnchor) endAnchor.parentNode.insertBefore(endMark, endAnchor);
 
       if (items.length) {
         if (!pnav) {
@@ -897,7 +756,7 @@
         var sbox = document.createElement("section");
         sbox.className = "series-box";
         sbox.innerHTML =
-          '<p class="side-title">' + esc(cc ? cc.name : current.cat) + " · 전체 " + chain.length + "편</p><ol>" +
+          '<p class="side-title">' + esc(cc ? cc.name : current.cat) + ' 시리즈 <span class="n">' + chain.length + "편</span></p><ol>" +
           chain
             .map(function (p) {
               var on = p.slug === current.slug;
@@ -998,7 +857,6 @@
   var COMMANDS = [
     { label: "홈으로", run: function () { location.href = root; } },
     { label: "전체 글 보기", run: function () { location.href = root + "?view=all"; } },
-    { label: "시리즈 보기", run: function () { location.href = root + "#series"; } },
     {
       label: "무작위 글 열기",
       run: function () {
@@ -1190,4 +1048,35 @@
       openPalette();
     }
   });
+
+  /* α-NaMnO₂처럼 그리스 문자와 붙임표로 시작하는 화학식은 붙임표에서 줄이 갈리지 않게
+     한 덩어리로 묶는다. 목록까지 다 그린 뒤 한 번만 돈다. 코드·도해 안은 건드리지 않는다 */
+  var CHEM = /[αβγδλ]-[A-Za-z0-9₀-₉]+/;
+  var CHEM_ALL = /[αβγδλ]-[A-Za-z0-9₀-₉]+/g;
+  var mainEl = document.querySelector("main");
+  if (mainEl && document.createTreeWalker) {
+    var walker = document.createTreeWalker(mainEl, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (!CHEM.test(n.nodeValue)) return NodeFilter.FILTER_SKIP;
+        return n.parentNode.closest("pre, code, svg, script, style, .nobr")
+          ? NodeFilter.FILTER_REJECT
+          : NodeFilter.FILTER_ACCEPT;
+      },
+    });
+    var hits = [];
+    while (walker.nextNode()) hits.push(walker.currentNode);
+    hits.forEach(function (n) {
+      var frag = document.createDocumentFragment();
+      var text = n.nodeValue;
+      var last = 0;
+      text.replace(CHEM_ALL, function (m, at) {
+        if (at > last) frag.appendChild(document.createTextNode(text.slice(last, at)));
+        frag.appendChild(el("span", "nobr", esc(m)));
+        last = at + m.length;
+        return m;
+      });
+      if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+      n.parentNode.replaceChild(frag, n);
+    });
+  }
 })();

@@ -28,73 +28,25 @@
         </a>
         <nav class="site-nav">
           <a href="./?view=all" data-nav="all">글</a>
-          <a href="./#series" data-nav="series">시리즈</a>
           <a href="https://github.com/Seok05">GitHub</a>
         </nav>
       </div>
     </header>
 
     <main>
-      <!-- 홈: 소개 → 지금 쓰는 시리즈 → 시리즈 전체 → 최근 글.
-           목록은 assets/posts.js 데이터로 site.js가 채운다. -->
-      <section class="hero wrap" id="hero">
-        <div class="hero-text">
-          <p class="eyebrow">Seok Lab · 연구 노트와 개발 일지</p>
-          <h1>연구하면서,<br /><em class="hl">개발합니다.</em></h1>
-          <p class="hero-sub">
-            배터리 재료를 원자 단위에서 계산하는 연구와, 중고 전기차 시세 도구 EValue·위스키 기록 앱
-            첫잔을 만드는 개발을 함께 합니다. 계산이 어긋난 날도 배포가 꼬인 날도 그날 나온 숫자 그대로
-            적어 둡니다.
-          </p>
-          <div class="hero-actions" id="hero-actions">
-            <a class="btn" href="./?view=all" id="hero-all">전체 글 보기</a>
-          </div>
-        </div>
-        <!-- 그림은 scripts/render-hero.py. 숫자는 각 글 본문에서 그대로 옮겼다 -->
-        <figure class="hero-fig">
-          <a class="hero-plate" href="posts/dft-practice-6.html" tabindex="-1" aria-hidden="true">
-            <img
-              src="assets/hero-namno2.webp"
-              alt=""
-              width="1000"
-              height="515"
-              fetchpriority="high"
-            />
-          </a>
-          <figcaption>
-            <a class="hero-cap" href="posts/dft-practice-6.html">
-              <b>2.40 V</b>
-              <span>층상 NaMnO₂에서 Na 하나를 빼서 얻은 첫 전압. 점선이 Na가 떠난 빈자리입니다.</span>
-              <em>DFT 실습 [6]</em>
-            </a>
-            <ul class="hero-log" aria-label="그날 나온 숫자">
-              <li>
-                <a href="posts/first-dft-run.html"
-                  ><b>89.5초</b><span>인생 첫 DFT 계산이 끝나기까지</span><em>DFT 실습 [1]</em></a
-                >
-              </li>
-              <li>
-                <a href="posts/cheotjan-apk-103mb.html"
-                  ><b>103MB</b><span>갤럭시에 보낼 첫 APK의 크기</span><em>첫잔 [4]</em></a
-                >
-              </li>
-              <li>
-                <a href="posts/graph-first.html"
-                  ><b>18일치</b><span>첫 시세 그래프를 그릴 때 쌓인 관측</span><em>EValue</em></a
-                >
-              </li>
-            </ul>
-          </figcaption>
-        </figure>
+      <!-- 홈: 소개(정적) → 분류 탭 + 최근 글(site.js가 posts.js로 채운다). 디자인 기준은 DESIGN.md -->
+      <section class="intro page" id="intro">
+        <h1>연구하면서, 개발합니다</h1>
+        <p>
+          배터리 재료를 원자 단위에서 계산하는 연구와, 중고 전기차 시세 도구 EValue·위스키 기록 앱 첫잔을
+          만드는 개발을 함께 합니다. 계산이 어긋난 날도 배포가 꼬인 날도, 그날 나온 숫자 그대로 적어 둡니다.
+        </p>
       </section>
 
-      <section class="wrap sec" id="pulse" aria-label="기록의 리듬"></section>
-      <section class="wrap sec" id="featured" aria-label="지금 쓰는 시리즈"></section>
-      <section class="wrap sec" id="series" aria-label="시리즈"></section>
-      <section class="wrap sec" id="recent" aria-label="최근 글"></section>
+      <section class="page" id="home" aria-label="최근 글"></section>
 
-      <!-- ?view=all (전체 글, 월별) · ?cat=<key> (카테고리) 일 때만 보인다 -->
-      <section class="wrap sec listing" id="listing" hidden>
+      <!-- ?view=all (전체 글, 달별) · ?cat=<key> (분류) 일 때만 보인다 -->
+      <section class="page listing" id="listing" hidden>
         <noscript>
           <p>
             이 목록은 자바스크립트로 그려집니다. 글은
@@ -107,13 +59,10 @@
 
     <footer class="site-footer">
       <div class="wrap">
-        <div class="foot-brand">
-          <p class="foot-name">Seok Lab</p>
-          <p>연구하면서, 개발합니다</p>
-        </div>
+        <p class="foot-copy">© 2026 Seok Lab · 연구하면서, 개발합니다</p>
         <nav class="foot-nav" aria-label="바닥 메뉴">
           <a href="./?view=all">글</a>
-          <a href="./#series">시리즈</a>
+          <a href="./feed.xml">RSS</a>
           <a href="https://github.com/Seok05">GitHub</a>
         </nav>
         <p class="foot-note">글의 예시 수치는 설명용이며 실제 시세가 아닙니다.</p>
