@@ -5,9 +5,7 @@
 ## 구조
 
 - `DESIGN.md` — **디자인 명세.** 글자·색·간격·폭·부품의 숫자는 전부 여기서 나온다(잘 만든 개발 블로그
-  7곳을 실측한 표 포함). `assets/blog.css` 맨 위 토큰이 이 문서와 1:1이다. 화면을 고치면 이 문서의 검수 순서대로 본다.
-- `PLAN.md` — 진행 중인 개선 기획(홈 고도화, 2026-09-30). 과제·단계·수용 기준·결정 대기 항목이 있다.
-  단계가 끝나면 확정 수치를 DESIGN.md로 옮기고, 전부 끝나면 지운다.
+  7곳을 실측한 표 포함). `assets/blog.css` 맨 위 토큰이 이 문서와 1:1이다. 화면을 고치면 이 문서의 검수 순서(§6)대로 보고, 바뀐 것은 §7 기록에 적는다.
 - `assets/posts.js` — **단일 데이터 원장.** 카테고리 정의(`mark`·`hue`·`art` 포함, `featured`는 지금 화면에서
   쓰지 않는다) + 글 메타데이터(최신 글이 배열 맨 위).
 - `assets/covers/` — 카테고리 표지 그림(분류 페이지가 없어진 뒤로는 자기 썸네일이 없는 글의 대체 썸네일로만 쓴다). 첫잔은 앱 아이콘(`cheotjan/assets/images/icon.png` 256px)
@@ -83,6 +81,9 @@
 1. `posts/_template.html`을 `posts/<slug>.html`로 복사해 본문 작성.
 2. `assets/posts.js`의 `posts` 배열에 항목 추가 — **날짜 순으로 최신이 맨 위**
    (slug/cat/date/title/blurb, 시리즈 글이면 series+order, 관련 글은 related).
+   **`figure`(그날의 숫자)도 넣는다**: 그 글 본문에 있는 값 하나, 단위 포함 12자 이내(예 `2.40 V`, `103 → 52MB`).
+   요약이 아니라 "그날 무엇이 나왔나"다. 애매하면 비운다.
+   `thumb`은 `assets/thumbs/<slug>.webp`로 적고, 그림은 위 썸네일 절차대로 스크립트로 두 벌(라이트·다크)을 만든다.
 3. 새 카테고리면 `cats` 배열에도 추가.
 4. `node scripts/build-meta.mjs` 로 feed.xml·sitemap.xml 갱신 + 모든 HTML의 CSS·JS 링크에 내용 해시(`?v=`) 찍기.
    **blog.css·site.js·posts.js를 고친 뒤에도 꼭 실행한다.** GitHub Pages가 10분 캐시하므로 해시가 안 바뀌면 재방문자에게 옛 CSS가 붙는다.
