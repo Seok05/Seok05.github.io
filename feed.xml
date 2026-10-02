@@ -5,8 +5,16 @@
     <link>https://seok05.github.io/</link>
     <description>연구하면서 개발하는 Seok의 블로그. 배터리 재료의 DFT 계산과 EValue·첫잔 개발 기록.</description>
     <language>ko</language>
-    <lastBuildDate>Wed, 30 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 02 Oct 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://seok05.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>DFT 실습 [12] — 다섯 번 뒤집힌 판정의 끝: Na₀.₇₅MnO₂는 존재한다</title>
+      <link>https://seok05.github.io/posts/dft-practice-12.html</link>
+      <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-12.html</guid>
+      <pubDate>Fri, 02 Oct 2026 00:00:00 GMT</pubDate>
+      <category>연구 · DFT</category>
+      <description>실습 [9]에서 불안정하다고 결론 낸 Na₀.₇₅MnO₂를 다시 따졌습니다. Na 배열을 셀 모양까지 빠짐없이 열거하고 스핀 배치를 전부 계산하자 안정 상으로 확정됐습니다. 손으로 고른 배열은 바닥보다 30 meV 위에 있었고, 반강자성이 Na를 뺄수록 사라져 전압을 끌어올린다는 것까지 나왔습니다.</description>
+    </item>
     <item>
       <title>DFT 실습 [11] — 계산기를 믿기 전에 시험부터: CHGNet과 G1 검증</title>
       <link>https://seok05.github.io/posts/dft-practice-11.html</link>

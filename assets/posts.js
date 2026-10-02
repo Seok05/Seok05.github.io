@@ -89,6 +89,19 @@ window.SEOK = {
 
   posts: [
     {
+      slug: "dft-practice-12",
+      figure: "−9.1 meV", // 그날의 숫자: Na0.75MnO2의 최종 볼록 껍질 이탈 에너지 (meV/화학식)
+      cat: "dft",
+      thumb: "assets/thumbs/dft-practice-12.webp",
+      date: "2026.10.02",
+      series: "dft",
+      order: 15,
+      related: ["dft-practice-9"],
+      title: "DFT 실습 [12] — 다섯 번 뒤집힌 판정의 끝: Na₀.₇₅MnO₂는 존재한다",
+      blurb:
+        "실습 [9]에서 불안정하다고 결론 낸 Na₀.₇₅MnO₂를 다시 따졌습니다. Na 배열을 셀 모양까지 빠짐없이 열거하고 스핀 배치를 전부 계산하자 안정 상으로 확정됐습니다. 손으로 고른 배열은 바닥보다 30 meV 위에 있었고, 반강자성이 Na를 뺄수록 사라져 전압을 끌어올린다는 것까지 나왔습니다.",
+    },
+    {
       slug: "dft-practice-11",
       figure: "오차 0.24 V", // 그날의 숫자: CHGNet 전압 2.156 V vs DFT 2.391 V (x = 1 → 0.75)
       cat: "dft",

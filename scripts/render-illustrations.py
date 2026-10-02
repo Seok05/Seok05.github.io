@@ -516,9 +516,43 @@ def dft_practice_11():
         ax.plot([x, x], [y0, y0 + top * k], color=mix(GRAPH, 0.55), lw=4, solid_capstyle="round", zorder=1)
     save(fig, "dft-practice-11")
 
+
+# ── 실습 [12] 판정의 끝: x = 0.75의 볼록 껍질 판정이 선 위아래를 오가다(왼쪽의 옅은 자취) 선 아래 −9.1에 멈춘다.
+#    아래 띠는 세 조성의 Na 층(x = 0.5 반, 0.75 넷 중 셋, 1 전부). 수치는 글의 그림 4 ──
+def dft_practice_12():
+    fig, ax = canvas()
+    xs = {0.5: 260, 0.75: 640, 1.0: 1020}
+    y0, k = 500, 13            # 이음선(양 끝을 잇는 선)의 높이, meV/화학식당 픽셀. 위(+) = 불안정, 아래(−) = 안정
+    ax.plot([xs[0.5], xs[1.0]], [y0, y0], color=mix(GRAPH, 0.35), lw=2.5, ls=(0, (7, 6)), zorder=1)
+    # 판정의 자취: 자기 배열을 넓힌 단계(경고색)와 Na 배열을 넓힌 단계(파랑 테두리), 오래된 것일수록 옅게
+    steps = [(8.5, "w"), (-2.0, "w"), (-0.6, "w"), (11.1, "w"), (5.1, "a"), (-14.5, "a"), (-13.9, "a")]
+    pts = [(xs[0.75] - (len(steps) - i) * 24, y0 + e * k, c) for i, (e, c) in enumerate(steps)]
+    trail = [(x, y) for x, y, _ in pts] + [(xs[0.75], y0 - 9.1 * k)]
+    ax.plot([q[0] for q in trail], [q[1] for q in trail], color=mix(GRAPH, 0.55), lw=1.8, zorder=2)
+    for i, (x, y, c) in enumerate(pts):
+        fade = 0.55 - 0.45 * i / (len(pts) - 1)
+        if c == "w":
+            ax.add_patch(Circle((x, y), 11, color=mix(WARM, fade), zorder=3, lw=0))
+        else:
+            ax.add_patch(Circle((x, y), 11, facecolor=BG, edgecolor=mix(INDIGO, fade), lw=3, zorder=3))
+    # 최종 볼록 껍질: x = 0.75가 이음선 아래 −9.1
+    fy = y0 - 9.1 * k
+    ax.plot([xs[0.5], xs[0.75], xs[1.0]], [y0, fy, y0], color=INDIGO, lw=5, solid_capstyle="round", solid_joinstyle="round", zorder=4)
+    for x, y, r in ((xs[0.5], y0, 15), (xs[1.0], y0, 15), (xs[0.75], fy, 22)):
+        ax.add_patch(Circle((x, y), r, color=INDIGO, zorder=5, lw=0))
+    # 아래 띠: 조성마다 Na 자리 넷
+    for xval, filled in ((0.5, (1, 0, 1, 0)), (0.75, (1, 1, 1, 0)), (1.0, (1, 1, 1, 1))):
+        for j, f in enumerate(filled):
+            cx = xs[xval] + (j - 1.5) * 50
+            if f:
+                sphere(ax, cx, 150, 19, NA, z=5, shadow=False)
+            else:
+                ax.add_patch(Circle((cx, 150), 19, fill=False, ec=mix(GRAPH, 0.35), lw=2, ls=(0, (4, 4)), zorder=5))
+    save(fig, "dft-practice-12")
+
 ALL = [dft_explained, first_dft_run, dft_theory_2, dft_practice_2, dft_theory_3, dft_practice_3, paper_1,
        dft_practice_4, dft_practice_5, dft_practice_6, laptop_to_server, dft_practice_7, dft_practice_8,
-       dft_practice_9, dft_practice_10, dft_practice_11]
+       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12]
 
 if __name__ == "__main__":
     # 함수 이름을 주면 그 그림만 다시 그린다 (예: ... dft_practice_10). --theme=light|dark 로 한 벌만
