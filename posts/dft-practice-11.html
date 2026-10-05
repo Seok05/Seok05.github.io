@@ -4,23 +4,23 @@
     <meta charset="utf-8" />
     <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DFT 실습 [11] — 계산기를 믿기 전에 시험부터: CHGNet과 G1 검증 · Seok Lab</title>
-    <meta name="description" content="다성분 조성의 배열 수가 폭발하는 문제를 풀려고 기계학습 원자간 퍼텐셜 CHGNet을 들였습니다. 폴더와 결과 장부를 정리하고, 이미 가진 DFT 답으로 채점하고, 네 원소가 섞인 조성의 배열 10개로 정식 검증(G1)을 치렀습니다. 순위 상관 0.92로 통과했지만, 믿어도 되는 곳과 믿으면 안 되는 곳이 분명하게 갈렸습니다." />
+    <title>DFT 실습 [11] — 기계학습 퍼텐셜 CHGNet 검증: 순위는 맞히고 차이는 절반으로 · Seok Lab</title>
+    <meta name="description" content="원소가 네 가지 섞이면 배열의 경우의 수가 DFT로 다 계산할 수 없을 만큼 늘어납니다. 후보를 먼저 거를 기계학습 퍼텐셜 CHGNet을 DFT 결과와 맞대어 시험했습니다. 같은 조성 안의 배열 순위는 맞혔고(스피어만 0.92), 조성 사이의 에너지와 퍼진 전하는 틀렸습니다." />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
     <link rel="stylesheet" href="../assets/blog.css?v=cb450a2b" />
     <link rel="icon" type="image/png" href="../assets/favicon.png" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="DFT 실습 [11] — 계산기를 믿기 전에 시험부터: CHGNet과 G1 검증" />
-    <meta property="og:description" content="배열의 경우의 수가 폭발하는 문제를 풀려고 기계학습 퍼텐셜 CHGNet을 들였습니다. 결과 장부로 계산을 정리하고, 이미 가진 DFT 답으로 채점하고, 네 원소가 섞인 조성의 배열 10개로 정식 검증을 치렀습니다. 순위 상관 0.92로 통과했지만 믿어도 되는 곳과 안 되는 곳이 분명히 갈렸습니다." />
+    <meta property="og:title" content="DFT 실습 [11] — 기계학습 퍼텐셜 CHGNet 검증: 순위는 맞히고 차이는 절반으로" />
+    <meta property="og:description" content="원소가 네 가지 섞이면 배열의 경우의 수가 DFT로 다 계산할 수 없을 만큼 늘어납니다. 후보를 먼저 거를 기계학습 퍼텐셜 CHGNet을 DFT 결과와 맞대어 시험했습니다. 같은 조성 안의 배열 순위는 맞혔고(스피어만 0.92), 조성 사이의 에너지와 여러 자리에 퍼진 전하는 틀렸습니다." />
     <meta property="og:url" content="https://seok05.github.io/posts/dft-practice-11.html" />
     <meta property="og:image" content="https://seok05.github.io/assets/social/dft-practice-11.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="article:published_time" content="2026-09-30T09:00:00+09:00" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DFT 실습 [11] — 계산기를 믿기 전에 시험부터: CHGNet과 G1 검증" />
-    <meta name="twitter:description" content="배열의 경우의 수가 폭발하는 문제를 풀려고 기계학습 퍼텐셜 CHGNet을 들였습니다. 결과 장부로 계산을 정리하고, 이미 가진 DFT 답으로 채점하고, 네 원소가 섞인 조성의 배열 10개로 정식 검증을 치렀습니다. 순위 상관 0.92로 통과했지만 믿어도 되는 곳과 안 되는 곳이 분명히 갈렸습니다." />
+    <meta name="twitter:title" content="DFT 실습 [11] — 기계학습 퍼텐셜 CHGNet 검증: 순위는 맞히고 차이는 절반으로" />
+    <meta name="twitter:description" content="원소가 네 가지 섞이면 배열의 경우의 수가 DFT로 다 계산할 수 없을 만큼 늘어납니다. 후보를 먼저 거를 기계학습 퍼텐셜 CHGNet을 DFT 결과와 맞대어 시험했습니다. 같은 조성 안의 배열 순위는 맞혔고(스피어만 0.92), 조성 사이의 에너지와 여러 자리에 퍼진 전하는 틀렸습니다." />
     <meta name="twitter:image" content="https://seok05.github.io/assets/social/dft-practice-11.jpg" />
   </head>
   <body>
@@ -42,21 +42,33 @@
             <div class="meta-row" style="margin-top: 0">
               <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">VASP 실습</span><span>2026.09.30</span>
             </div>
-            <h1>DFT 실습 [11] — 계산기를 믿기 전에 시험부터: CHGNet과 G1 검증</h1>
-            <p class="lede"><a href="dft-practice-10.html">실습 [10]</a>에서 Ni 하나로 원소가 섞이는 문을 열었습니다. 그런데 원소를 네 가지로 늘리고 셀을 키우면 배열의 경우의 수가 순식간에 천문학적으로 불어납니다. 전부 DFT로 계산할 수는 없으니, DFT보다 수만 배 빠른 계산기를 하나 들여야 해요. 이 글은 그 계산기를 연구에 쓰기 전에 <em>얼마나 믿을 수 있는지</em> 시험한 기록입니다.</p>
+            <h1>DFT 실습 [11] — 기계학습 퍼텐셜 CHGNet 검증: 순위는 맞히고 차이는 절반으로</h1>
+            <p class="lede">이 시리즈의 최종 대상은 Mn 자리에 Ni·Fe·Ti 같은 원소를 여럿 섞은 고엔트로피 Na 층상 산화물입니다. <a href="dft-practice-10.html">실습 [10]</a>에서는 Mn 자리 하나를 Ni로 바꿔 봤습니다. 원소를 네 가지로 늘리고 셀을 키우면 원소를 배치하는 경우의 수가 수만~수백억 가지가 되어 전부 DFT로 계산할 수 없습니다. 그래서 계산이 빠른 기계학습 퍼텐셜 CHGNet으로 후보를 먼저 거르려 합니다. 이 글은 그 전에 CHGNet의 예측을 <em>어디까지 믿을 수 있는지</em> DFT 결과와 맞대어 시험한 기록입니다.</p>
           </div>
 
           <figure class="shot wide illus">
-            <div class="shot-card"><img src="../assets/illus/dft-practice-11.webp" alt="G1 배열 10개의 에너지 준위를 DFT와 CHGNet에 나란히 놓고 같은 배열끼리 이은 그림" width="1280" height="800" loading="lazy" decoding="async"></div>
-            <figcaption>G1 배열 10개의 에너지 준위를 DFT(왼쪽)와 CHGNet(오른쪽)에 나란히 놓고 같은 배열끼리 이었습니다. 오른쪽 사다리는 절반 높이로 눌려 있고, DFT 최저 배열(강조색)은 CHGNet에서 한 칸 밀려 2위이며, 크게 엇갈린 선은 g01(경고색) 하나입니다.</figcaption>
+            <div class="shot-card"><img src="../assets/illus/dft-practice-11.webp" alt="검증 세트 배열 10개의 에너지 준위를 DFT와 CHGNet에 나란히 놓고 같은 배열끼리 이은 그림" width="1280" height="800" loading="lazy" decoding="async"></div>
+            <figcaption>검증 세트 배열 10개의 에너지 준위를 DFT(왼쪽)와 CHGNet(오른쪽)에 나란히 놓고 같은 배열끼리 이었습니다. 오른쪽 준위들의 전체 폭은 왼쪽의 약 절반이고, DFT 최저 배열(강조색)은 CHGNet에서 한 칸 밀려 2위이며, 크게 엇갈린 선은 g01(경고색) 하나입니다.</figcaption>
           </figure>
 
 <div class="box">
-<p class="box-label">한 줄 요약</p>
-<p>범용 기계학습 퍼텐셜 CHGNet은 <strong>같은 조성 안에서 배열의 에너지 순위</strong>를 잘 맞힌다(Na₆Mn₃FeNiTiO₁₂ 배열 10개, 스피어만 0.92, DFT 최저 배열을 2위로). 하지만 에너지 차이를 약 절반으로 압축해서 보고, <strong>조성을 가로지르는 에너지</strong>(볼록 껍질)와 <strong>비국재 전하</strong>는 틀린다. 그래서 CHGNet은 "같은 조성 안의 후보 거르기"에만 쓰고, 전압·볼록 껍질·전하 상태는 DFT로 판정한다.</p>
+<p class="box-label">이 글에 나오는 말</p>
+<ul>
+<li><strong>기계학습 원자간 퍼텐셜(MLIP)</strong>: DFT로 계산한 많은 구조의 에너지와 힘을 학습한 신경망 모델입니다. 새 구조의 에너지와 힘을 DFT 계산 없이 예측합니다. CHGNet은 Materials Project(MP)의 계산 데이터로 학습한 MLIP입니다.</li>
+<li><strong>배열</strong>: 전이금속 자리에 Mn·Fe·Ni·Ti를 놓는 경우 하나입니다. 이 글의 g01~g10은 Na₆Mn₃FeNiTiO₁₂의 서로 다른 배열 10개의 이름입니다.</li>
+<li><strong>스피어만 순위 상관</strong>: 두 순위가 얼마나 일치하는지를 −1에서 1 사이 값으로 나타낸 것입니다. 1이면 두 순위가 완전히 같습니다.</li>
+<li><strong>볼록 껍질</strong>: 조성에 따른 에너지 그래프에서 가장 낮은 점들을 이은 아래쪽 경계선입니다. 중간 조성의 에너지가 이 선보다 아래에 있으면 안정한 상입니다.</li>
+<li><strong>meV/셀</strong>: 계산 셀 하나 전체의 에너지입니다. 이 글의 24원자 셀에는 화학식 Na(Mn,Fe,Ni,Ti)O₂가 6개 들어 있습니다.</li>
+<li><strong>FM</strong>: 모든 자성 원자의 스핀이 같은 방향인 배치(강자성)입니다.</li>
+</ul>
 </div>
 
-<h2>0. 왜 계산기를 하나 더 들이나</h2>
+<div class="box">
+<p class="box-label">요약</p>
+<p>CHGNet은 <strong>같은 조성 안에서 배열의 에너지 순위</strong>를 잘 맞혔습니다. Na₆Mn₃FeNiTiO₁₂의 배열 10개에서 DFT 순위와의 스피어만 상관이 0.92였고, DFT에서 가장 낮은 배열을 2위로 골랐습니다. 다만 배열 사이의 에너지 차이는 DFT의 약 절반으로 예측했고, <strong>서로 다른 조성 사이의 에너지</strong>(볼록 껍질, 전압)와 <strong>여러 자리에 퍼진 전하</strong>는 틀렸습니다. 그래서 CHGNet은 같은 조성 안에서 후보를 거르는 데만 쓰고, 전압·볼록 껍질·전하 상태는 DFT로 판정합니다.</p>
+</div>
+
+<h2>0. 왜 기계학습 퍼텐셜이 필요한가</h2>
 <p>네 원소(Mn, Fe, Ni, Ti)를 Mn 절반에 나머지 셋을 같은 비율로 섞는다고 해봅시다. 전이금속 자리에 원소를 배치하는 경우의 수는 셀이 커질수록 이렇게 늘어납니다.</p>
 <figure>
 <div class="fig-scroll"><svg viewBox="0 0 760 248" role="img" aria-label="셀 크기에 따른 배치 경우의 수와 계산 도구의 감당 범위">
@@ -89,23 +101,23 @@
 </svg></div>
 <figcaption><strong>그림 1.</strong> 셀 크기에 따른 배치 경우의 수(Mn:Fe:Ni:Ti = 3:1:1:1 비율). 24원자 셀은 120가지라 전부 계산할 수 있지만, 48원자는 8만 가지, 96원자는 900억 가지가 넘습니다. 스핀 배열까지 곱하면 더 커집니다.</figcaption>
 </figure>
-<p>DFT로 감당할 수 있는 건 수백 개입니다. 게다가 <a href="dft-practice-9.html">실습 [9]</a>에서 24원자 이하의 작은 셀은 이웃이 자기 자신의 주기 복사본이 되어 무질서와 탄성 효과를 제대로 담지 못한다는 걸 봤으니, 논문의 결론은 48원자 이상에서 내야 합니다. 그래서 필요한 게 <strong>기계학습 원자간 퍼텐셜(MLIP)</strong>이에요. DFT가 계산한 수많은 구조의 에너지와 힘을 신경망이 학습해서, 새 구조의 에너지를 DFT보다 수만 배 빠르게 예측합니다. 수천 개의 후보를 MLIP으로 거르고, 유망한 수십 개만 DFT로 확정하는 게 본 연구의 설계입니다.</p>
-<p>문제는 MLIP이 틀릴 수 있다는 것. 그래서 연구 가이드에 첫 관문(G1)을 두었습니다. <strong>"MLIP이 DFT의 에너지 순위를 맞히는가"</strong>를 확인하기 전에는 MLIP의 판단에 계산 예산을 걸지 않는다는 규칙이에요.</p>
+<p>DFT로 계산할 수 있는 것은 수백 개입니다. 또 24원자 이하의 작은 셀에서는 한 원자의 이웃 가운데 주기 경계 너머에 있는 자기 자신의 복사본이 섞여서, 원소가 무질서하게 섞인 상태와 그에 따른 격자 변형을 제대로 담지 못합니다(<a href="dft-practice-9.html">실습 [9]</a>). 그래서 논문의 결론은 48원자 이상의 셀에서 내야 합니다. 이때 필요한 것이 <strong>기계학습 원자간 퍼텐셜(MLIP)</strong>입니다. DFT로 계산한 수많은 구조의 에너지와 힘을 신경망이 학습해서, 새 구조의 에너지를 DFT보다 수만 배 빠르게 예측합니다. 수천 개의 후보를 MLIP으로 거르고, 남은 수십 개만 DFT로 확정하는 것이 이 연구의 계획입니다.</p>
+<p>문제는 MLIP이 틀릴 수 있다는 점입니다. 그래서 규칙을 하나 정했습니다. <strong>MLIP이 DFT의 에너지 순위를 맞히는지</strong> 확인하기 전에는 MLIP의 판단으로 DFT 계산 대상을 고르지 않습니다. 이 글의 검증이 그 확인입니다.</p>
 
-<h2>1. 먼저 집 정리: 폴더와 결과 장부</h2>
-<p>계산이 60건을 넘어가면서 폴더가 시간 순서로 흩어져 있었습니다. 같은 x = 0.5 계산이 폴더 네 곳에 나뉘어 있고, 1차와 2차 이완이 따로 놓여 어느 쪽이 최종인지 이름만으로는 알 수 없었죠. 수천 개를 다루기 전에 규칙부터 세웠습니다.</p>
+<h2>1. 먼저 정리: 폴더 규칙과 결과 장부</h2>
+<p>계산이 60건을 넘어가면서 폴더가 시간 순서로 흩어져 있었습니다. 같은 x = 0.5 계산이 폴더 네 곳에 나뉘어 있고, 1차와 2차 이완이 따로 놓여 어느 쪽이 최종인지 이름만으로는 알 수 없었습니다. 수천 개를 다루기 전에 규칙부터 세웠습니다.</p>
 <pre><code>calc/&lt;물질&gt;/&lt;Na 함량&gt;/&lt;셀&gt;_&lt;배열&gt;_&lt;스핀&gt;/r&lt;이완 차수&gt;
 예) calc/NaMnO2/x0.50/sc14_c2_uddu/r1      (14원자 슈퍼셀, Na 배열 c2, 스핀 위아래아래위)
     calc/Na6Mn3FeNiTiO12/x1.00/sc24_g05_fm/r2</code></pre>
-<p>그리고 모든 계산 폴더를 훑어 한 줄씩 모으는 <strong>결과 장부</strong>(ledger.csv)를 만들었습니다. 경로, 조성, 최종 에너지, 자기모멘트, 최대 힘, 부피, 수렴 여부, 그리고 <strong>첫 스텝과 최종 에너지의 차이</strong>를 적고, 배열마다 최종값(수렴한 가장 큰 이완 차수)에 표시를 붙여요. 이 장부가 에너지의 원본이 되어서, 이후 모든 비교 스크립트는 숫자를 손으로 옮기지 않고 장부에서 읽습니다.</p>
-<p>장부를 처음 돌려보니 곧바로 쓸모가 있었습니다. 계산 47건 중 경고가 붙은 건 <a href="dft-practice-10.html">실습 [10]</a>에서 이미 알던 두 건(스핀이 뒤집히며 멈춘 계산)뿐이었고, <strong>나머지 모든 2차 이완의 첫 스텝 차이가 0~1 meV</strong>여서 준안정 상태 문제가 다른 곳에는 없었다는 게 한 번에 확인됐어요. 폴더를 하나씩 열어봤다면 반나절은 걸렸을 점검입니다.</p>
+<p>그리고 모든 계산 폴더를 훑어 한 줄씩 모으는 <strong>결과 장부</strong>(ledger.csv)를 만들었습니다. 경로, 조성, 최종 에너지, 자기모멘트, 최대 힘, 부피, 수렴 여부, 그리고 <strong>첫 스텝 차이</strong>(2차 이완의 첫 스텝 에너지와 1차 이완의 최종 에너지의 차이)를 적고, 배열마다 최종값(수렴한 가장 큰 이완 차수)에 표시를 붙입니다. 이 장부가 에너지의 원본이 되어서, 이후 모든 비교 스크립트는 숫자를 손으로 옮기지 않고 장부에서 읽습니다.</p>
+<p>장부를 처음 돌려보니 곧바로 쓸모가 있었습니다. 계산 47건 중 경고가 붙은 건 <a href="dft-practice-10.html">실습 [10]</a>에서 이미 알던 두 건(스핀이 뒤집히며 멈춘 계산)뿐이었고, <strong>나머지 모든 2차 이완의 첫 스텝 차이가 0~1 meV</strong>여서, 계산이 준안정 상태(바닥 상태보다 에너지가 높은데 계산이 머물 수 있는 전자 상태, 실습 [10])에서 출발한 경우가 다른 곳에는 없다는 것이 한 번에 확인됐습니다.</p>
 
 <h2>2. CHGNet이란</h2>
-<p>CHGNet은 Materials Project의 GGA와 GGA+U 계산 궤적(약 150만 구조)으로 학습한 범용 MLIP입니다. 에너지와 힘뿐 아니라 <strong>자기모멘트</strong>까지 학습해서, 모멘트를 전하 상태의 대리 지표로 쓰는 게 특징이에요. 우리 세팅(옛 PBE POTCAR, MP의 U 값)과 같은 계열의 데이터로 학습했다는 점이 이 모델을 고른 이유입니다.</p>
-<p>미리 알아둘 한계가 하나 있습니다. CHGNet은 <strong>스핀 방향을 입력으로 받지 않아서</strong> 자기 배열끼리는 구분하지 못합니다. 모멘트의 크기는 예측하지만 위아래는 모르죠. 그래서 비교는 전부 FM 계산끼리 했고, 자기 배열 샘플링은 원래 설계대로 DFT가 맡습니다.</p>
+<p>CHGNet은 Materials Project의 GGA와 GGA+U 계산 궤적(약 150만 구조)으로 학습한 범용 MLIP입니다. 에너지와 힘뿐 아니라 <strong>자기모멘트</strong>까지 학습해서, 원자마다 예측한 자기모멘트로 전하 상태(가수)를 구분하는 것이 특징입니다. 우리 세팅(옛 PBE POTCAR, MP의 U 값)과 같은 계열의 데이터로 학습했다는 점이 이 모델을 고른 이유입니다.</p>
+<p>미리 알아둘 한계가 하나 있습니다. CHGNet은 <strong>스핀 방향을 입력으로 받지 않아서</strong> 스핀 배치가 다른 구조끼리는 구분하지 못합니다. 모멘트의 크기는 예측하지만 방향은 모릅니다. 그래서 비교는 전부 FM 계산끼리 했고, 스핀 배치는 DFT로 계산합니다.</p>
 
-<h2>3. 첫 검증: 이미 가진 답으로 채점하기</h2>
-<p>우선 지금까지의 DFT 결과 여섯 개(α-NaMnO₂, x = 0.5의 두 배열, x = 0.75, Na 금속, Ni 치환체)를 CHGNet에 넣어봤습니다. 먼저 눈에 띈 건 원자당 에너지가 0.7~0.9 eV씩 낮다는 점이었어요. 오류처럼 보이지만 정체는 <strong>MP의 에너지 보정값</strong>입니다.</p>
+<h2>3. 첫 검증: 이미 계산한 DFT 결과와 비교</h2>
+<p>우선 지금까지의 DFT 결과 여섯 개(α-NaMnO₂, x = 0.5의 두 배열, x = 0.75, Na 금속, Ni 치환체)를 CHGNet에 넣어봤습니다. 먼저 눈에 띈 것은 원자당 에너지가 0.7~0.9 eV씩 낮다는 점이었습니다. 원인은 <strong>MP의 에너지 보정값</strong>입니다. MP는 GGA+U 계산 에너지에 원소마다 정해진 보정값을 더해 실험 생성 에너지에 맞추는데, CHGNet은 이 보정이 들어간 에너지를 학습했습니다.</p>
 <figure>
 <div class="table-scroll"><table><thead><tr><th>구조</th><th>CHGNet − DFT (eV/원자)</th><th>MP 보정으로 예상한 값</th><th>비고</th></tr></thead><tbody>
 <tr><td>NaMnO₂</td><td>−0.740</td><td>−0.76</td><td>Mn 하나, O 둘</td></tr>
@@ -116,7 +128,7 @@
 </tbody></table></div>
 <figcaption><strong>표 1.</strong> CHGNet과 DFT의 원자당 에너지 차이. MP는 GGA+U 에너지에 원소별 보정(Mn 약 −1.67, Ni 약 −2.54, 산화물의 O 약 −0.69 eV)을 더하는데, 이걸 조성에 대입한 값과 거의 정확히 맞습니다. CHGNet이 보정이 들어간 MP 에너지를 학습했다는 뜻으로 보입니다.</figcaption>
 </figure>
-<p>다행히 이 보정은 전압과 볼록 껍질에서 상쇄됩니다. 반응 양쪽에 같은 수의 Mn과 O가 있으니까요. 보정을 걷어내고 본 성적표는 이렇습니다.</p>
+<p>이 보정은 전압과 볼록 껍질 계산에서는 상쇄됩니다. 반응 양쪽에 같은 수의 Mn과 O가 있기 때문입니다. 보정의 영향을 뺀 비교는 표 2와 같습니다.</p>
 <figure>
 <div class="table-scroll"><table><thead><tr><th>항목</th><th>DFT</th><th>CHGNet</th><th>판정</th></tr></thead><tbody>
 <tr><td>x&nbsp;=&nbsp;0.5 두 배열의 차이 (c2 − c1)</td><td>−23.6 meV/셀</td><td>−29.9 meV/셀</td><td>✓ 순위와 크기 모두 비슷</td></tr>
@@ -127,17 +139,17 @@
 <tr><td>x&nbsp;=&nbsp;0.75 볼록 껍질</td><td>+7 meV/셀</td><td>−123 meV/셀</td><td>✗ x&nbsp;=&nbsp;0.75를 크게 안정하다고 봄</td></tr>
 <tr><td>Ni 치환의 Mn³·⁵⁺ 두 자리</td><td>3.64 μB, 비 1.07</td><td>3.87 μB, 비 1.13</td><td>✗ 구멍이 퍼진 상태를 재현 못 함</td></tr>
 </tbody></table></div>
-<figcaption><strong>표 2.</strong> 첫 검증 성적표(FM끼리 비교). 같은 조성 안의 비교와 구조는 맞히지만, 조성을 가로지르는 에너지와 비국재 전하에서 틀립니다.</figcaption>
+<figcaption><strong>표 2.</strong> 첫 검증 결과(FM끼리 비교). 같은 조성 안의 비교와 구조는 맞히지만, 서로 다른 조성 사이의 에너지와 여러 자리에 퍼진 전하에서 틀립니다.</figcaption>
 </figure>
-<p>두 실패에는 공통점이 있습니다. x = 0.75는 Mn⁴⁺ 하나가 Mn³⁺ 셋 사이에 정렬된 상태이고, Ni 치환체는 구멍이 두 자리에 퍼진 상태예요. 둘 다 <strong>전하가 특이하게 배치된 경우</strong>입니다. 학습 데이터에 이런 경우가 드물어서 전하 배치가 에너지와 구조를 좌우하는 곳에서 흔들린다고 해석할 수 있어요. 같은 조성 안에서 배열끼리 비교할 때는 이런 오차가 양쪽에 비슷하게 들어가 상쇄되지만, 조성을 가로지르면 그대로 드러납니다.</p>
-<p>여기까지로 CHGNet의 쓰임새는 좁혀졌습니다. <strong>같은 조성 안의 배열 순위</strong>. 그런데 이걸 확인한 건 c1 대 c2 <em>한 쌍</em>뿐이라, 정식 검증이 필요했습니다.</p>
+<p>두 실패에는 공통점이 있습니다. x = 0.75는 Mn⁴⁺ 하나가 Mn³⁺ 셋 사이에 규칙적으로 놓인 상태이고, Ni 치환체는 Mn에서 빠진 전자 하나만큼의 빈자리(구멍)가 두 Mn에 반씩 나뉜 상태(Mn³·⁵⁺, <a href="dft-practice-10.html">실습 [10]</a>)입니다. 둘 다 <strong>전하가 특이하게 배치된 경우</strong>입니다. 학습 데이터에 이런 경우가 드물어서, 전하 배치가 에너지와 구조를 정하는 곳에서 예측이 틀린다고 해석할 수 있습니다. 같은 조성 안에서 배열끼리 비교할 때는 이런 오차가 양쪽에 비슷하게 들어가 상쇄되지만, 조성을 가로지르면 그대로 드러납니다.</p>
+<p>여기까지 보면 CHGNet을 쓸 수 있는 곳은 <strong>같은 조성 안의 배열 순위</strong>입니다. 그런데 이것을 확인한 것은 x = 0.5의 두 배열 c1과 c2 <em>한 쌍</em>뿐이라, 배열이 많은 세트로 다시 검증해야 했습니다.</p>
 
-<h2>4. G1 검증 세트: 네 원소, 배열 열 개</h2>
-<p>연구 가이드의 대상 계열(Mn–Fe–Ni–Ti)에서 첫 조성을 골랐습니다. α-NaMnO₂ 셀을 b축으로 세 배 키우면(24원자) 전이금속 자리가 6개 생기고, 여기에 Mn 셋과 Fe, Ni, Ti 하나씩을 넣습니다(Na₆Mn₃FeNiTiO₁₂). 조성은 가이드의 규칙에 맞췄어요.</p>
+<h2>4. 검증 세트: 네 원소, 배열 열 개</h2>
+<p>이 연구의 대상 원소(Mn, Fe, Ni, Ti)로 첫 조성을 골랐습니다. α-NaMnO₂ 셀을 b축으로 세 배 키우면(24원자) 전이금속 자리가 6개 생기고, 여기에 Mn 셋과 Fe, Ni, Ti 하나씩을 넣습니다(Na₆Mn₃FeNiTiO₁₂). 원소의 양은 아래 식으로 Mn의 평균 가수가 3이 되도록 정했습니다.</p>
 <pre><code>Mn의 평균 가수 = 3 + (Ni 양 − Ti 양) / Mn 양
                 = 3 + (1 − 1) / 3 = 3      → Mn은 전부 3+로 남아 얀-텔러가 살아 있다</code></pre>
-<p>Ni²⁺(저가)와 Ti⁴⁺(고가)를 같은 양 넣으면 서로 상쇄돼서 Mn이 3+로 남습니다. 이러면 <strong>Mn은 전부 3+인데 이웃만 다른</strong> 조건이 만들어져서, 나중에 얀-텔러와 이웃 구성의 관계(가설 H1)를 볼 때도 쓸 수 있는 세트가 돼요.</p>
-<p>배치 120가지를 대칭으로 묶으면 서로 다른 배열은 <strong>10개</strong>입니다. 표본을 뽑는 게 아니라 이 셀에서 가능한 배열을 <strong>전부</strong> 계산하는 셈이라 검증으로는 오히려 깔끔해요. DFT로 열 개를 모두 이완하고, 먼저 전하 상태부터 확인했습니다.</p>
+<p>가수가 3보다 낮은 Ni²⁺와 높은 Ti⁴⁺를 같은 양 넣으면 서로 상쇄되어 Mn이 3+로 남습니다. 그러면 <strong>Mn은 전부 3+이고 이웃만 다른</strong> 구조들이 만들어져서, 나중에 얀-텔러 왜곡(Mn³⁺ 둘레의 MnO₆ 팔면체가 한 방향으로 늘어나는 현상)과 이웃 구성의 관계를 볼 때도 이 세트를 쓸 수 있습니다.</p>
+<p>배치 120가지를 대칭으로 묶으면 서로 다른 배열은 <strong>10개</strong>입니다. 표본을 뽑지 않고 이 셀에서 가능한 배열을 <strong>전부</strong> 계산했습니다. DFT로 열 개를 모두 이완하고, 먼저 전하 상태부터 확인했습니다.</p>
 <figure>
 <div class="table-scroll"><table><thead><tr><th>이온</th><th>모멘트 (10배열 범위, μB)</th><th>판정</th></tr></thead><tbody>
 <tr><td>Ti</td><td>0.03 ~ 0.07</td><td>Ti⁴⁺ (d⁰)</td></tr>
@@ -145,14 +157,14 @@
 <tr><td>Fe</td><td>4.30 ~ 4.34</td><td>Fe³⁺ 고스핀 (d⁵)</td></tr>
 <tr><td>Ni</td><td>1.76 ~ 1.77</td><td>Ni²⁺ (d⁸)</td></tr>
 </tbody></table></div>
-<figcaption><strong>표 3.</strong> G1 10배열의 전하 상태. 셀 합계 mag도 모두 19(= 4×3 + 5 + 2)입니다. 전하가 옮겨가거나 퍼진 배열은 하나도 없어서, Ni²⁺와 Ti⁴⁺를 같은 양 넣으면 Mn이 3+로 남는다는 설계 규칙이 그대로 성립했습니다.</figcaption>
+<figcaption><strong>표 3.</strong> 검증 세트 10배열의 전하 상태. 셀 전체 자기모멘트도 모두 19 μB(= 4×3 + 5 + 2)입니다. 전하가 옮겨가거나 퍼진 배열은 하나도 없어서, Ni²⁺와 Ti⁴⁺를 같은 양 넣으면 Mn이 3+로 남는다는 설계 규칙이 그대로 성립했습니다.</figcaption>
 </figure>
-<p>배열 간 에너지 차이는 최대 <strong>383 meV/셀</strong>(화학식당 64 meV)로, <a href="dft-practice-9.html">실습 [9]</a>에서 본 자기 배열에 따른 폭(화학식당 29~37 meV)보다 큽니다. 다성분 계에서는 어느 원소가 어디에 앉느냐가 에너지를 크게 가른다는 뜻이고, 사전 선별이 왜 필요한지를 보여주는 숫자예요.</p>
+<p>가장 낮은 배열과 가장 높은 배열의 에너지 차이는 <strong>383 meV/셀</strong>(화학식당 64 meV)입니다.</p>
 
-<h2>5. G1 결과: 순위는 맞히고, 크기는 절반</h2>
-<p>CHGNet은 실제 선별과 똑같은 조건으로, <strong>DFT로 이완하기 전의 구조</strong>에서 출발시켰습니다. 본 계산에서 CHGNet이 받게 될 건 이완 전 후보들이니까요.</p>
+<h2>5. 결과: 순위는 맞히고, 크기는 절반</h2>
+<p>CHGNet은 실제 선별과 똑같은 조건으로, <strong>DFT로 이완하기 전의 구조</strong>에서 출발시켰습니다. 본 계산에서 CHGNet이 받게 될 것도 이완 전 후보들이기 때문입니다.</p>
 <figure>
-<div class="fig-scroll"><svg viewBox="0 0 640 300" role="img" aria-label="G1 세트 10배열의 DFT 대 CHGNet 상대 에너지">
+<div class="fig-scroll"><svg viewBox="0 0 640 300" role="img" aria-label="검증 세트 10배열의 DFT 대 CHGNet 상대 에너지">
 <line x1="90" y1="250" x2="600" y2="250" class="svg-stroke-rule" stroke-width="1.2" />
 <line x1="90" y1="30" x2="90" y2="250" class="svg-stroke-rule" stroke-width="1" />
 <text class="svg-label-sm svg-muted" x="90.0" y="268.0" text-anchor="middle">0</text>
@@ -197,7 +209,7 @@
 <circle cx="568.4" cy="60.6" r="5.5" class="svg-fill-graphite" />
 <text class="svg-label-sm svg-muted" x="577.4" y="64.6" text-anchor="start">g04</text>
 </svg></div>
-<figcaption><strong>그림 2.</strong> G1 10배열의 상대 에너지. 점들이 한 직선 위에 잘 늘어서서 순위는 맞지만(스피어만 0.92), 기울기가 0.49라 CHGNet은 에너지 차이를 절반쯤으로 봅니다. DFT 최저인 g05(강조색)는 CHGNet에서 g07 다음 2위입니다.</figcaption>
+<figcaption><strong>그림 2.</strong> 검증 세트 10배열의 상대 에너지. 점들이 한 직선 위에 잘 늘어서서 순위는 맞지만(스피어만 0.92), 기울기가 0.49라 CHGNet은 에너지 차이를 절반쯤으로 봅니다. DFT 최저인 g05(강조색)는 CHGNet에서 g07 다음 2위입니다.</figcaption>
 </figure>
 <figure>
 <div class="table-scroll"><table><thead><tr><th>배열</th><th>DFT (meV/셀)</th><th>CHGNet (meV/셀)</th><th>순위 DFT / CHGNet</th></tr></thead><tbody>
@@ -214,40 +226,40 @@
 </tbody></table></div>
 <figcaption><strong>표 4.</strong> 각자 최저 배열 대비 에너지(DFT는 2차 이완). 열 개 중 일곱 개가 순위 한 칸 이내로 맞고, 크게 어긋난 건 g01 하나(DFT 9위, CHGNet 6위)입니다.</figcaption>
 </figure>
-<p>판정 기준은 가이드의 G1 그대로였습니다. <strong>스피어만 순위 상관 0.7 이상, DFT 최저 배열이 CHGNet 상위 3위 안.</strong> 결과는 0.92와 2위로 둘 다 통과입니다.</p>
-<p>하지만 통과만큼 중요한 게 두 가지 단서예요.</p>
+<p>통과 기준은 계산 전에 정해 두었습니다. <strong>스피어만 순위 상관 0.7 이상, DFT 최저 배열이 CHGNet 상위 3위 안.</strong> 결과는 0.92와 2위로 둘 다 통과입니다.</p>
+<p>다만 단서가 두 가지 있습니다.</p>
 <ul>
-<li><strong>1위와 2위가 뒤바뀌었습니다.</strong> DFT에서 g05는 g07보다 51 meV 낮은데, CHGNet은 g07을 9 meV 차이로 더 낮게 봤어요. CHGNet으로 1등 하나만 골랐다면 진짜 바닥을 놓쳤을 겁니다. 그래서 <strong>상위 여러 개를 함께 DFT로 넘기는</strong> 게 규칙이 됩니다.</li>
-<li><strong>에너지 차이가 절반으로 눌려 있습니다.</strong> 원점을 지나는 직선의 기울기가 0.49, 최대 폭 비율로는 0.54예요. 범용 MLIP이 에너지 지형을 실제보다 완만하게 보는 경향으로 알려진 모습과 같습니다. 순위에는 큰 문제가 없지만, "CHGNet에서 최저보다 몇 meV 안쪽을 DFT로 넘긴다"는 창을 정할 때 이 압축을 감안해야 해요. DFT 기준 200 meV 창을 원하면 CHGNet에서는 약 100 meV 창을 잡는 식입니다. 우리 DFT 데이터로 미세조정하면 이 기울기가 1에 가까워질 테니, 미세조정의 목표가 하나 분명해졌습니다.</li>
+<li><strong>1위와 2위가 뒤바뀌었습니다.</strong> DFT에서 g05는 g07보다 51 meV/셀 낮은데, CHGNet은 g07을 9 meV/셀 더 낮게 예측했습니다. CHGNet으로 1위 하나만 골랐다면 DFT의 가장 낮은 배열을 놓쳤을 것입니다. 그래서 <strong>상위 여러 개를 함께 DFT로 넘기는</strong> 게 규칙이 됩니다.</li>
+<li><strong>에너지 차이가 절반으로 눌려 있습니다.</strong> 원점을 지나는 직선의 기울기가 0.49, 최대 폭의 비율로는 0.54입니다. 범용 MLIP이 에너지 차이를 실제보다 작게 예측하는 경향은 이미 보고돼 있고, 이 결과도 같습니다. 순위에는 큰 문제가 없지만, "CHGNet에서 최저보다 몇 meV 안쪽을 DFT로 넘긴다"는 범위를 정할 때는 이 비율을 고려해야 합니다. DFT 기준 200 meV 범위를 원하면 CHGNet에서는 약 100 meV 범위를 잡는 식입니다. 우리 DFT 데이터로 CHGNet을 추가 학습(미세조정)하면 이 기울기가 1에 가까워질 것으로 보고, 미세조정의 목표로 삼았습니다.</li>
 </ul>
 
 <h2>6. 2차 이완이 알려준 비용 절감</h2>
-<p>G1 열 개는 <a href="dft-practice-10.html">실습 [10]</a>의 규칙대로 1차 WAVECAR를 읽어 2차 이완까지 마쳤습니다. 첫 스텝 차이는 전부 0 meV였고, 여기서 비용과 관련된 발견이 나왔어요. <strong>열 배열 모두 에너지가 약 +11 meV/셀씩 고르게 올라갔습니다.</strong> 그래서 배열끼리의 상대 에너지는 최대 1.1 meV/셀밖에 안 바뀌었고, CHGNet과의 비교 결과(0.92, 2위)도 1차 기준과 똑같았어요.</p>
-<p>같은 조성 안에서는 배열마다 부피가 비슷하게 변하니 Pulay 보정도 비슷하게 들어가는 겁니다. <a href="dft-practice-8.html">실습 [8]</a>의 Na 배열 c1과 c2에서는 보정이 6.6과 1.7 meV로 달랐는데, 그건 Na 배열에 따라 부피 변화가 달랐기 때문이에요. 이걸 규칙으로 옮기면 <strong>같은 조성 안에서 전이금속 배열의 순위를 가를 때는 1차 이완으로 충분하고, 2차 이완은 조성끼리 비교할 때(볼록 껍질, 전압)와 최종값에만 필요</strong>합니다. 본 계산의 DFT 이완 수를 거의 절반으로 줄일 수 있는 규칙이라, 6개월 안에 끝내야 하는 계산 예산에 여유가 생겼습니다.</p>
+<p>검증 세트 열 개는 2차 이완까지 마쳤습니다. 2차 이완은 1차 이완의 파동함수 파일(WAVECAR)을 읽어 시작했습니다(<a href="dft-practice-10.html">실습 [10]</a>에서 정한 규칙). 첫 스텝 차이는 전부 0 meV였고, 여기서 계산 비용과 관련된 결과가 나왔습니다. <strong>열 배열 모두 에너지가 약 +11 meV/셀씩 고르게 올라갔습니다.</strong> 그래서 배열끼리의 상대 에너지는 최대 1.1 meV/셀 바뀌었고, CHGNet과의 비교 결과(0.92, 2위)도 1차 기준과 같았습니다.</p>
+<p>2차 이완이 바로잡는 양(Pulay 보정)은 1차 이완 동안 셀 부피가 바뀐 정도에 따라 정해집니다. 같은 조성 안에서는 배열마다 부피가 비슷하게 변하므로 보정도 비슷하게 들어갑니다. <a href="dft-practice-8.html">실습 [8]</a>의 Na 배열 c1과 c2에서는 보정이 6.6과 1.7 meV/셀로 달랐는데, Na 배열에 따라 부피 변화가 달랐기 때문입니다. 이걸 규칙으로 옮기면 <strong>같은 조성 안에서 전이금속 배열의 순위를 가를 때는 1차 이완으로 충분하고, 2차 이완은 조성끼리 비교할 때(볼록 껍질, 전압)와 최종값에만 필요</strong>합니다. 본 계산의 DFT 이완 수를 거의 절반으로 줄일 수 있는 규칙이라, 6개월 안에 끝내야 하는 계산 예산에 여유가 생겼습니다.</p>
 
-<h2>7. 이 결과가 의미하는 것: CHGNet 사용 설명서</h2>
+<h2>7. 정리: CHGNet을 쓸 곳과 쓰지 않을 곳</h2>
 <p>두 번의 검증을 모으면, 이 연구에서 CHGNet을 어디에 쓰고 어디에 쓰지 않을지가 분명하게 정해집니다.</p>
 <figure>
 <div class="table-scroll"><table><thead><tr><th>용도</th><th>믿어도 되나</th><th>근거</th><th>대신 쓸 것</th></tr></thead><tbody>
-<tr><td>같은 조성 안 배열 순위 (후보 거르기)</td><td><strong>예</strong>, 상위 여러 개를 넘길 것</td><td>G1 스피어만 0.92, c2−c1 부호·크기 일치</td><td>·</td></tr>
+<tr><td>같은 조성 안 배열 순위 (후보 거르기)</td><td><strong>예</strong>, 상위 여러 개를 넘길 것</td><td>검증 세트 스피어만 0.92, c2−c1 부호·크기 일치</td><td>·</td></tr>
 <tr><td>배열 간 에너지 차이의 크기</td><td>절반으로 봄</td><td>기울기 0.49</td><td>창을 절반으로 잡거나 미세조정</td></tr>
 <tr><td>조성 간 에너지 (볼록 껍질, 전압)</td><td><strong>아니오</strong></td><td>x&nbsp;=&nbsp;0.75 볼록 껍질 130 meV/셀 오차, 전압 0.24 V 오차</td><td>DFT (2차 이완)</td></tr>
 <tr><td>전하가 퍼지거나 특이하게 정렬된 상태</td><td><strong>아니오</strong></td><td>Ni 치환의 Mn³·⁵⁺를 Mn³⁺로 예측</td><td>DFT</td></tr>
 <tr><td>자기 배열</td><td>구분 불가</td><td>스핀 방향을 입력으로 받지 않음</td><td>DFT 스핀 샘플링</td></tr>
 <tr><td>구조 (얀-텔러 결합 길이)</td><td>대체로 예</td><td>α-NaMnO₂ 결합 재현</td><td>전하가 특이한 경우는 DFT로 확인</td></tr>
 </tbody></table></div>
-<figcaption><strong>표 5.</strong> 이 연구에서의 CHGNet 사용 설명서.</figcaption>
+<figcaption><strong>표 5.</strong> 이 연구에서 CHGNet을 쓰는 범위.</figcaption>
 </figure>
 <p>이 표가 연구 설계에 주는 의미는 세 가지입니다.</p>
 <ul>
-<li><strong>파이프라인이 확정됐습니다.</strong> 수천 개 배열 생성 → CHGNet으로 같은 조성 안에서 순위 매기기 → 상위 여러 개와 다양한 국소 환경을 DFT로 → 조성 간 비교와 스핀은 DFT. 연구 가이드의 설계를 바꿀 필요 없이, 그 설계가 옳았다는 근거가 생겼어요.</li>
-<li><strong>가설 H2는 DFT의 몫입니다.</strong> 전하 보상의 국소 규칙(H2)은 정확히 CHGNet이 못 하는 영역이라, 이 부분은 DFT가 필수라는 게 분명해졌습니다. 논문의 방법론 절에서 "왜 MLIP만으로 하지 않았나"에 대한 답이기도 하고요.</li>
+<li><strong>파이프라인이 확정됐습니다.</strong> 수천 개 배열 생성 → CHGNet으로 같은 조성 안에서 순위 매기기 → 상위 여러 개와 다양한 국소 환경을 DFT로 → 조성 간 비교와 스핀은 DFT. 처음 세운 계획을 바꾸지 않아도 된다는 근거가 생겼습니다.</li>
+<li><strong>전하 배치의 규칙은 DFT로 봅니다.</strong> Ni²⁺처럼 가수가 낮은 이온이 들어왔을 때 이웃 Mn 가운데 어느 자리가 산화되는지는 CHGNet이 틀리는 영역이라, 이 부분은 DFT가 필수입니다. 논문의 방법 절에서 "왜 MLIP만으로 하지 않았나"에 대한 답이기도 합니다.</li>
 <li><strong>미세조정의 목표가 생겼습니다.</strong> 에너지 압축(0.49 → 1), 그리고 전하가 특이한 배치에서의 오차. 앞으로 쌓일 우리 DFT 데이터가 그대로 미세조정의 학습 데이터가 됩니다.</li>
 </ul>
 
 <h2>이날 배운 것들</h2>
 <ul>
-<li><strong>도구는 쓰기 전에 채점한다.</strong> 이미 답을 아는 계산으로 먼저 시험하고, 기준을 정해두고 정식 검증을 치른다(G1).</li>
+<li><strong>도구는 쓰기 전에 시험한다.</strong> 이미 답을 아는 계산으로 먼저 비교하고, 통과 기준을 정해 두고 검증 세트로 확인한다.</li>
 <li><strong>숫자가 이상하면 정체부터 찾는다.</strong> 원자당 0.8 eV 차이는 오류가 아니라 MP 보정값이었고, 비교하는 양에서 상쇄된다.</li>
 <li><strong>MLIP은 "같은 것끼리의 비교"에 강하고, "다른 것끼리의 비교"에 약하다.</strong> 같은 조성 안의 순위는 맞히지만 조성을 가로지르면 틀린다.</li>
 <li><strong>1등만 고르지 않는다.</strong> 순위가 0.92로 맞아도 1위와 2위는 뒤바뀔 수 있다.</li>
@@ -256,7 +268,7 @@
 </ul>
 
 <div class="box">
-<p style="margin: 0"><strong>다음.</strong> 두 갈래가 남았습니다. 하나는 <a href="dft-practice-9.html">실습 [9]</a>의 결론을 바로잡는 일이에요. Li 외(2014)의 계산은 x = 0.75를 안정 상으로 보고했는데, 우리는 셀 모양 하나에서 Na 배열 하나만 봤습니다. 셀 모양까지 열거하면 x = 0.75의 배열은 9개, x = 0.5는 11개로 늘어나고, 이걸 전부 계산해서 문헌의 상평형도를 재현하는지 확인합니다. 다른 하나는 G1 세트의 Mn 서른 자리로 얀-텔러와 이웃 구성의 관계를 다성분 계에서 처음 보는 것입니다.</p>
+<p style="margin: 0"><strong>다음.</strong> 두 갈래가 남았습니다. 하나는 <a href="dft-practice-9.html">실습 [9]</a>의 결론을 다시 확인하는 일입니다. Li 외(2014)의 계산은 x = 0.75를 안정 상으로 보고했는데, 우리는 셀 모양 하나에서 Na 배열 하나만 봤습니다. 셀 모양까지 열거하면 x = 0.75의 배열은 9개, x = 0.5는 11개로 늘어나고, 이걸 전부 계산해서 문헌의 상평형도를 재현하는지 확인합니다. 다른 하나는 검증 세트의 Mn 서른 자리(배열 10개 × Mn 3개)로 얀-텔러 왜곡과 이웃 구성의 관계를 여러 원소가 섞인 계에서 처음 보는 것입니다.</p>
 </div>
 
           <div class="author-card">
@@ -302,7 +314,7 @@
       </div>
     </footer>
 
-    <script src="../assets/posts.js?v=6953c381"></script>
+    <script src="../assets/posts.js?v=7a5e1927"></script>
     <script src="../assets/site.js?v=4826fb50"></script>
   </body>
 </html>

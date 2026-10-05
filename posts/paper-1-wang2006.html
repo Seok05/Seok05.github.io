@@ -4,23 +4,23 @@
     <meta charset="utf-8" />
     <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Paper [1] — DFT는 왜 녹스는 에너지를 못 맞혔나: GGA+U로 산화 에너지 잡기 · Seok Lab</title>
-    <meta name="description" content="처음으로 논문 한 편을 끝까지 해부한 리뷰. GGA의 산화 에너지 오차가 왜 둘이고 서로를 가리는지, O₂당 1.36 eV와 금속별 U가 어떻게 분리·결정·검증되는지, 수치와 논증 구조, 저자들이 스스로 그은 한계까지. (Wang, Maxisch & Ceder, PRB 73, 195107 (2006))" />
+    <title>Paper [1] — GGA는 왜 산화 에너지를 틀리나: O₂ 보정과 금속별 U · Seok Lab</title>
+    <meta name="description" content="처음으로 논문 한 편을 끝까지 따라가며 정리한 리뷰. GGA의 산화 에너지 오차가 왜 둘이고 서로를 가리는지, O₂당 1.36 eV와 금속별 U가 어떻게 분리·결정·검증되는지, 수치와 논증 구조, 저자들이 스스로 그은 한계까지. (Wang, Maxisch & Ceder, PRB 73, 195107 (2006))" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
     <link rel="stylesheet" href="../assets/blog.css?v=cb450a2b" />
     <link rel="icon" type="image/png" href="../assets/favicon.png" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Paper [1] — DFT는 왜 녹스는 에너지를 못 맞혔나: GGA+U로 산화 에너지 잡기" />
-    <meta property="og:description" content="첫 논문 리뷰. GGA의 산화 에너지 오차가 왜 둘이고 서로를 가리는지, O₂당 1.36 eV와 금속별 U가 어떻게 분리·결정·검증되는지, 수치와 논증 구조, 저자들이 스스로 그은 한계까지 해부했습니다. (Wang, Maxisch &amp; Ceder, PRB 2006)" />
+    <meta property="og:title" content="Paper [1] — GGA는 왜 산화 에너지를 틀리나: O₂ 보정과 금속별 U" />
+    <meta property="og:description" content="첫 논문 리뷰. GGA의 산화 에너지 오차가 왜 두 가지이고 서로를 가리는지, O₂당 1.36 eV 보정과 금속별 U를 어떻게 분리하고 정하고 검증하는지, 수치와 논증 구조, 저자들이 밝힌 한계까지 정리했습니다. (Wang, Maxisch &amp; Ceder, PRB 2006)" />
     <meta property="og:url" content="https://seok05.github.io/posts/paper-1-wang2006.html" />
     <meta property="og:image" content="https://seok05.github.io/assets/social/paper-1-wang2006.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="article:published_time" content="2026-08-25T09:00:00+09:00" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Paper [1] — DFT는 왜 녹스는 에너지를 못 맞혔나: GGA+U로 산화 에너지 잡기" />
-    <meta name="twitter:description" content="첫 논문 리뷰. GGA의 산화 에너지 오차가 왜 둘이고 서로를 가리는지, O₂당 1.36 eV와 금속별 U가 어떻게 분리·결정·검증되는지, 수치와 논증 구조, 저자들이 스스로 그은 한계까지 해부했습니다. (Wang, Maxisch &amp; Ceder, PRB 2006)" />
+    <meta name="twitter:title" content="Paper [1] — GGA는 왜 산화 에너지를 틀리나: O₂ 보정과 금속별 U" />
+    <meta name="twitter:description" content="첫 논문 리뷰. GGA의 산화 에너지 오차가 왜 두 가지이고 서로를 가리는지, O₂당 1.36 eV 보정과 금속별 U를 어떻게 분리하고 정하고 검증하는지, 수치와 논증 구조, 저자들이 밝힌 한계까지 정리했습니다. (Wang, Maxisch &amp; Ceder, PRB 2006)" />
     <meta name="twitter:image" content="https://seok05.github.io/assets/social/paper-1-wang2006.jpg" />
   </head>
   <body>
@@ -42,19 +42,13 @@
             <div class="meta-row" style="margin-top: 0">
               <a class="chip-cat" href="../?cat=paper">연구 · Paper</a><span class="tag">논문 리뷰</span><span>2026.08.25</span>
             </div>
-            <h1>Paper [1] — DFT는 왜 녹스는 에너지를 못 맞혔나: GGA+U로 산화 에너지 잡기</h1>
-            <p class="lede">
-              계획표의 첫 필독 논문 [R1]을 3패스로 정독하고 남기는 첫 논문 리뷰입니다.
-              <a href="dft-theory-3.html">DFT 이론 [3]</a>이 이 논문에서 배운 이론의 뼈대를
-              정리한 글이라면, 이 글은 논문 그 자체를 해부한 기록입니다. 수치와 그림의 역할
-              분담, 논증이 쌓이는 순서, 그리고 저자들이 스스로 그은 한계선까지. 길지만, 이
-              논문은 그럴 가치가 있습니다.
-            </p>
+            <h1>Paper [1] — GGA는 왜 산화 에너지를 틀리나: O₂ 보정과 금속별 U</h1>
+            <p class="lede">배터리 계산에서 쓰는 U 값(Mn 3.9 eV 등)의 출처인 Wang, Maxisch, Ceder(2006) 논문을 세 번에 걸쳐 읽고 남기는 첫 논문 리뷰입니다. <a href="dft-theory-3.html">DFT 이론 [3]</a>이 이 논문에서 배운 이론의 뼈대를 정리한 글이라면, 이 글은 논문 자체를 처음부터 따라가며 수치와 그림의 역할, 논증이 쌓이는 순서, 저자들이 스스로 밝힌 한계까지 정리한 기록입니다. 길지만, 이 논문은 그럴 가치가 있습니다.</p>
           </div>
 
           <figure class="shot wide illus">
-            <div class="shot-card"><img src="../assets/illus/paper-1-wang2006.webp" alt="녹스는 금속 구와 다가오는 산소 분자" width="1280" height="800" loading="lazy" decoding="async"></div>
-            <figcaption>금속이 녹스는 에너지. GGA는 O₂ 쪽과 산화물 쪽에서 각각 틀리고, 두 오차는 서로를 가립니다.</figcaption>
+            <div class="shot-card"><img src="../assets/illus/paper-1-wang2006.webp" alt="산화되는 금속 구와 다가오는 산소 분자" width="1280" height="800" loading="lazy" decoding="async"></div>
+            <figcaption>금속이 산화될 때의 에너지. GGA는 O₂ 쪽과 산화물 쪽에서 각각 틀리고, 두 오차는 서로를 가립니다.</figcaption>
           </figure>
 
           <div class="box obs">
@@ -76,7 +70,7 @@
 </ol>
 
 <h2>1. 왜 이 논문을 읽어야 하나</h2>
-<p>쇠가 녹스는 건 아주 느린 연소다. 철이 산소에게 전자를 내주면서 에너지를 방출한다. 핫팩이 실제로 철가루의 산화열로 따뜻해지는 것이 그 증거다. 이때 나오는 에너지의 양, <strong>산화 에너지</strong>가 이 논문의 주제다.</p>
+<p>금속이나 산화물이 산소와 반응해 더 높은 산화 상태가 될 때 나오는 에너지를 <strong>산화 에너지</strong>라고 한다. 예를 들어 철은 산소에 전자를 내주며 산화되고, 이때 에너지가 나온다. 이 에너지가 이 논문의 주제다.</p>
 <p>이 값이 왜 중요한가. 배터리, 촉매, 부식, 야금 정련, 심지어 광합성과 대사까지 전부 산화·환원 반응이 결정한다. 그리고 소재 개발의 관점에서 결정적인 것은 이것이다:</p>
 <div class="box kept">
 <p>후보 물질 수백~수천 개를 일일이 합성해서 측정할 수는 없다. <strong>계산으로 미리 걸러내야 한다.</strong></p>
@@ -88,7 +82,7 @@ V_avg = [ E(Li_(x−1)MO₂) + E(Li금속) − E(Li_x MO₂) ] / e
 </code></pre>
 <p>그래서 이 반응 에너지를 1.5 eV 틀리면 <strong>4 V 양극재를 2.5 V로 예측</strong>한다는 뜻이다. 순위가 뒤죽박죽이 되니, 계산으로 스크리닝한다는 목적 자체가 무너진다. 그리고 실제로 GGA는 그 정도로 틀렸다. 이 논문 도입부가 인용하는 숫자가 정확히 <strong>4 eV 중 1.5 eV</strong>다.</p>
 
-<h2>2. 배경: DFT는 원래 "오차 상쇄" 덕에 먹고산다</h2>
+<h2>2. 배경: DFT의 정확도는 "오차 상쇄"에 기댄다</h2>
 <p>여기서 많은 사람이 놓치는 전제를 짚어야 한다.</p>
 <div class="box obs">
 <p><strong>📖 용어 | 오차 상쇄 (error cancellation)</strong>
@@ -1194,7 +1188,7 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
         <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
       </div>
     </footer>
-    <script src="../assets/posts.js?v=6953c381"></script>
+    <script src="../assets/posts.js?v=7a5e1927"></script>
     <script src="../assets/site.js?v=4826fb50"></script>
   </body>
 </html>

@@ -4,26 +4,26 @@
     <meta charset="utf-8" />
     <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DFT 실습 [3] — k점 네 개가 물리를 부순 날 · Seok Lab</title>
+    <title>DFT 실습 [3] — k점 수렴 테스트: 2×2×1에서는 다른 자기 상태로 수렴했다 · Seok Lab</title>
     <meta
       name="description"
-      content="빈칸 뚫린 설계도를 그대로 실행해 무의미한 잡을 제출한 사고부터, bash의 공백 문제, 제출 전 검문소 습관, 그리고 2×2×1 mesh에서 자기모멘트가 깨지는 것을 목격하기까지, k-mesh 수렴 테스트의 기록."
+      content="k점 격자(k-mesh) 수렴 테스트의 기록입니다. 빈칸이 남은 스크립트를 그대로 실행해 쓸모없는 계산을 제출한 실수, bash의 공백 문제, 제출 전 확인 습관, 그리고 2×2×1에서 자기모멘트가 12가 아니라 10.5로 나와 다른 전자 상태로 수렴한 결과까지 적었습니다."
     />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
     <link rel="stylesheet" href="../assets/blog.css?v=cb450a2b" />
     <link rel="icon" type="image/png" href="../assets/favicon.png" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="DFT 실습 [3] — k점 네 개가 물리를 부순 날" />
-    <meta property="og:description" content="빈칸 뚫린 설계도를 그대로 실행한 사고, bash의 공백 문제, 제출 전 검문소 습관, 그리고 2×2×1 mesh에서 자기모멘트가 깨지는 순간까지. 샘플링 부족은 잡음이 아니라 다른 물리를 만든다는 것을 목격한 날." />
+    <meta property="og:title" content="DFT 실습 [3] — k점 수렴 테스트: 2×2×1에서는 다른 자기 상태로 수렴했다" />
+    <meta property="og:description" content="k점 격자 수렴 테스트의 기록입니다. 빈칸이 남은 스크립트를 그대로 실행한 실수, bash의 공백 문제, 제출 전 확인 습관, 그리고 2×2×1에서 자기모멘트가 12가 아니라 10.5로 나와 다른 전자 상태로 수렴한 결과까지 적었습니다." />
     <meta property="og:url" content="https://seok05.github.io/posts/dft-practice-3.html" />
     <meta property="og:image" content="https://seok05.github.io/assets/social/dft-practice-3.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="article:published_time" content="2026-08-25T09:00:00+09:00" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DFT 실습 [3] — k점 네 개가 물리를 부순 날" />
-    <meta name="twitter:description" content="빈칸 뚫린 설계도를 그대로 실행한 사고, bash의 공백 문제, 제출 전 검문소 습관, 그리고 2×2×1 mesh에서 자기모멘트가 깨지는 순간까지. 샘플링 부족은 잡음이 아니라 다른 물리를 만든다는 것을 목격한 날." />
+    <meta name="twitter:title" content="DFT 실습 [3] — k점 수렴 테스트: 2×2×1에서는 다른 자기 상태로 수렴했다" />
+    <meta name="twitter:description" content="k점 격자 수렴 테스트의 기록입니다. 빈칸이 남은 스크립트를 그대로 실행한 실수, bash의 공백 문제, 제출 전 확인 습관, 그리고 2×2×1에서 자기모멘트가 12가 아니라 10.5로 나와 다른 전자 상태로 수렴한 결과까지 적었습니다." />
     <meta name="twitter:image" content="https://seok05.github.io/assets/social/dft-practice-3.jpg" />
   </head>
   <body>
@@ -45,25 +45,19 @@
             <div class="meta-row" style="margin-top: 0">
               <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">VASP 실습</span><span>2026.08.25</span>
             </div>
-            <h1>DFT 실습 [3] — k점 네 개가 물리를 부순 날</h1>
-            <p class="lede">
-              <a href="dft-practice-2.html">실습 [2]</a>에서 정확도 다이얼 하나(ENCUT)를
-              잠갔으니, 남은 다이얼은 k-mesh입니다. 같은 요령이라 금방 끝날 줄 알았는데,
-              시작하자마자 사고를 하나 냈고, 마지막엔 "샘플링이 부족하면 계산이 부정확해지는
-              게 아니라 <em>다른 물질이 되어버린다</em>"는 것을 목격했습니다. 실패와 발견이
-              반반인 기록입니다.
-            </p>
+            <h1>DFT 실습 [3] — k점 수렴 테스트: 2×2×1에서는 다른 자기 상태로 수렴했다</h1>
+            <p class="lede">DFT 계산의 정확도는 두 설정이 정합니다. 파동함수를 나타낼 평면파를 어디까지 쓸지(ENCUT)와, 결정 속 전자 상태를 몇 개의 점(k점)에서 계산할지입니다. <a href="dft-practice-2.html">실습 [2]</a>에서 ENCUT을 520 eV로 정했고, 이번에는 같은 방법으로 k점 격자(k-mesh)를 정합니다. 시작하자마자 실수를 하나 했고, 마지막에는 k점이 너무 적으면 계산이 부정확해지는 정도가 아니라 <em>다른 자기 상태로 수렴한다</em>는 것을 봤습니다.</p>
           </div>
 
           <figure class="shot wide illus">
             <div class="shot-card"><img src="../assets/illus/dft-practice-3.webp" alt="브릴루앙 영역의 k점 격자" width="1280" height="800" loading="lazy" decoding="async"></div>
-            <figcaption>브릴루앙 영역 안의 k점. 촘촘한 격자 대신 네 점(빨강)만 쓰면 잡음이 아니라 다른 물리가 나옵니다.</figcaption>
+            <figcaption>브릴루앙 영역 안의 k점. 촘촘한 격자 대신 네 점(빨강)만 쓰면 오차가 커지는 것이 아니라 다른 전자 상태가 나옵니다.</figcaption>
           </figure>
 
-          <h2>0. 사고 보고서, 빈칸을 그대로 실행하다</h2>
+          <h2>0. 실수: 빈칸이 남은 스크립트를 그대로 실행하다</h2>
           <p>
-            이번 테스트는 훈련 삼아 완성 스크립트 대신 빈칸 뚫린 설계도를 받았습니다.
-            <code>for K in ______</code> 같은 식으로요. 그리고 저는... 그 빈칸을 채우지 않고
+            이번 테스트는 연습 삼아 완성된 스크립트 대신 빈칸이 있는 스크립트를 받았습니다.
+            <code>for K in ______</code> 같은 식입니다. 그런데 저는 그 빈칸을 채우지 않고
             통째로 붙여넣어 실행했습니다. bash는 관대해서 <code>______</code>를 그냥
             문자열로
             받아들였고, <code>kp______</code>라는 폴더가 생기고, sed는 실패하고,
@@ -74,11 +68,11 @@ rm -rf kp______    # 사고 현장 정리</code></pre>
           <p>
             수습은 두 줄이었지만 교훈은 오래 갈 것 같습니다:
             <strong>이해하지 못한 명령은 실행하지 않는다.</strong> 특히 qsub이 들어간
-            스크립트는 공용 자원을 쓰는 실탄입니다. "자동화는 쓰레기 입력을 대량 생산하는
-            장치이기도 하다"라는 경구를 소량 생산으로 체험했습니다.
+            스크립트는 공용 계산 자원을 실제로 씁니다. 자동화 스크립트는 잘못된 입력도
+            그대로 실행한다는 것을 직접 겪었습니다.
           </p>
 
-          <h2>1. 진짜 문제, bash에서 "2 2 1"은 하나가 아니다</h2>
+          <h2>1. 본 문제: bash에서 "2 2 1"은 하나가 아니다</h2>
           <p>
             ENCUT 테스트와 이번의 결정적 차이: ENCUT은 <code>450</code> 같은 단일 숫자였지만
             k-mesh는 <code>2 2 1</code>처럼 <strong>공백 포함 세 숫자 세트</strong>입니다.
@@ -100,22 +94,22 @@ done</code></pre>
             문법입니다. 기준점 6×6×2는 이전 계산을 재활용하니 네 폴더만 새로 만들면 됩니다.)
           </p>
 
-          <h2>2. 제출 전 검문소, 사고 이후 생긴 습관</h2>
+          <h2>2. 제출 전 확인: 실수 이후 생긴 습관</h2>
           <p>
             아침의 사고 덕분에 새 습관이 생겼습니다. <strong>qsub 전에 반드시 grep으로
-            검문</strong>하기:
+            입력을 확인</strong>하기:
           </p>
           <pre><code>grep -B1 "0 0 0" kp*/KPOINTS   # 각 폴더의 mesh 줄이 의도대로인가
 grep ENCUT kp*/INCAR            # ENCUT은 전부 520 그대로인가 (변인 통제)
 grep "PBS -N" kp*/jobscript     # 잡 이름이 서로 구분되는가</code></pre>
           <p>
-            세 출력이 전부 의도대로일 때만 발사. 30초짜리 검문이 헛계산 몇 시간을
-            막아줍니다. 이번엔 통과였고, 네 잡이 나란히 큐에 올라갔고, 노드가 한가해 십여 분
+            세 출력이 전부 의도대로일 때만 제출합니다. 30초 확인으로 쓸모없는 계산 몇 시간을
+            막을 수 있습니다. 이번엔 통과였고, 네 잡이 나란히 큐에 올라갔고, 노드가 한가해 십여 분
             만에 전부 끝났습니다.
           </p>
 
-          <h2>3. 결과, 그리고 빨간 점 하나</h2>
-          <p>수확 (에너지와 자기모멘트를 같이 뽑았습니다, 이유는 곧):</p>
+          <h2>3. 결과: 2×2×1만 다른 값</h2>
+          <p>결과입니다. 에너지와 자기모멘트를 같이 뽑았습니다(이유는 §4).</p>
           <pre><code>kp221    E0= -.64848244E+02   mag= 10.5143   ← ??
 kp442    E0= -.66651163E+02   mag= 11.9954
 kp662    E0= -.66666258E+02   mag= 11.9991   (기준, 재활용)
@@ -128,53 +122,26 @@ kp10104  E0= -.66658081E+02   mag= 11.9992</code></pre>
             </div>
             <figcaption>
               왼쪽: 2×2×1(빨강)만 완전히 동떨어져 있습니다. 오른쪽: 최밀 mesh 대비 편차(로그 축)입니다.
-              4×4×2부터는 전부 1 meV/atom 아래에서 진동하고, 자기모멘트도 12.00으로
-              건강합니다. 빨간 막대 위의 mag 10.51이 이 글의 주인공입니다.
+              4×4×2부터는 전부 1 meV/atom 아래에서 오르내리고, 자기모멘트도 12.00으로
+              정상입니다. 빨간 막대 위의 mag 10.51이 이 글의 핵심 결과입니다.
             </figcaption>
           </figure>
 
-          <h2>4. 주인공, mag = 10.51이 말하는 것</h2>
-          <p>
-            2×2×1의 에너지는 다른 점들과 원자당 150 meV나 벌어져 있습니다. 그런데 진짜 뉴스는
-            에너지가 아니라 자기모멘트입니다. <strong>12가 아니라 10.5.</strong>
-            <a href="dft-theory-2.html">이론 [2]</a>의 반례표를 기억한다면 이 숫자의 의미가
-            보입니다. 12(Mn³⁺ 고스핀)도, 9도, 6도 아닌 어중간한 값. 즉 이 계산은 "부정확한
-            NaMnO₂"가 아니라 <strong>NaMnO₂가 아닌 무언가</strong>로 수렴한 겁니다.
-          </p>
-          <p>
-            원리는 이렇습니다. k점은 결정 전체의 전자 상태를 대표하는 표본 지점들인데, 겨우
-            몇 개만 뽑으면 밴드를 채우는 일(어떤 상태까지 전자가 들어가는가) 자체가 왜곡되어
-            <em>전자 점유 구조가 다른 상태</em>로 자기일관 수렴해 버립니다. 샘플링 부족의
-            결과가 "잡음"이 아니라 "다른 물리"인 겁니다. 그래서 이 점은 수렴 곡선 위의 나쁜
-            점이 아니라, <strong>애초에 같은 곡선 위에 있지 않은 점</strong>입니다.
-          </p>
-          <p>
-            실습 [2]에서 만든 건강검진 체크리스트의 ②번(에너지보다 mag 먼저)이 왜 그 순서인지,
-            오늘 실전으로 증명됐습니다. 에너지만 봤다면 "많이 틀리네" 하고 넘어갔을 것을,
-            mag가 "이건 틀린 게 아니라 딴 물질이야"라고 알려준 겁니다.
-          </p>
+          <h2>4. 자기모멘트 10.51의 의미</h2>
+          <p>2×2×1의 에너지는 다른 점들과 원자당 150 meV 차이가 납니다. 그런데 더 중요한 것은 에너지가 아니라 자기모멘트입니다. <strong>12가 아니라 10.5.</strong> <a href="dft-theory-2.html">이론 [2]</a>에서 Mn의 상태별로 셀 전체 모멘트를 정리한 표(Mn²⁺ 15, Mn³⁺ 고스핀 12, Mn⁴⁺ 9, Mn³⁺ 저스핀 6 μB)와 비교하면, 10.5는 어느 것에도 해당하지 않는 값입니다. 즉 이 계산은 "부정확한 NaMnO₂"가 아니라 <strong>전자 상태가 다른 무언가</strong>로 수렴한 것입니다.</p>
+          <p>원리는 이렇습니다. k점은 결정 전체의 전자 상태를 대표하는 표본 지점들인데, 너무 적게 뽑으면 어떤 상태까지 전자가 채워지는지가 달라져서 <em>전자 점유가 다른 상태</em>로 수렴합니다. k점이 부족한 결과는 오차가 커진 같은 상태가 아니라 다른 상태입니다. 그래서 이 점은 수렴 곡선 위의 나쁜 점이 아니라, <strong>처음부터 같은 곡선 위에 있지 않은 점</strong>입니다.</p>
+          <p>실습 [2]에서 계산 결과를 보는 순서를 정하면서 자기모멘트 확인을 에너지 비교보다 앞에 뒀는데, 그 이유가 여기서 확인됐습니다. 에너지만 봤다면 "많이 틀리네" 하고 넘어갔을 것을, 자기모멘트가 다른 전자 상태라는 것을 알려 줬습니다.</p>
 
-          <h2>5. 나머지 판독과 판결</h2>
-          <p>
-            4×4×2부터는 전부 건강합니다(mag 12.00). 최밀 mesh 대비 편차는 0.35~0.68
-            meV/atom 사이에서 <strong>오르락내리락</strong>하는데, ENCUT 때처럼 단조롭지
-            않은 이 ±0.5 meV/atom 진동이 k-샘플링 수렴의 전형이고, 우리 세팅의 "k 오차
-            막대"로 받아들이면 됩니다.
-          </p>
-          <p>
-            <strong>판결: 6×6×2 유지, 동결.</strong> 근거는 ① mag 건강, ② 최밀 대비 0.7
-            meV/atom 이내(진동 폭 안), ③ 실습 [1]에서 곱셈으로 검산한 관례(실공간 축 길이 ×
-            k점 수 ≈ 20~30 Å)와 일치, ④ 8×8×3은 진동 폭 안에서의 이동일 뿐인데 k점 수만
-            2.7배. 미래를 위한 메모 하나: 나중에 슈퍼셀로 가면 실공간이 커지는 만큼 k는
-            <em>줄입니다</em>(역공간 쌍대성). 2×2 슈퍼셀이면 3×3×2 정도.
-          </p>
+          <h2>5. 나머지 결과와 결정</h2>
+          <p>4×4×2부터는 전부 정상입니다(mag 12.00). 가장 촘촘한 격자 대비 편차는 0.35~0.68 meV/atom 사이에서 <strong>오르내리는데</strong>, ENCUT 때처럼 한 방향으로 줄지 않는 이 ±0.5 meV/atom의 오르내림은 k점 수렴에서 흔한 모양이고, 이 설정의 k점 오차로 보면 됩니다.</p>
+          <p><strong>결정: 6×6×2로 고정.</strong> 근거는 ① 자기모멘트 정상, ② 가장 촘촘한 격자 대비 0.7 meV/atom 이내(오르내림 폭 안), ③ 실습 [1]에서 곱셈으로 확인한 관례(실공간 축 길이 × k점 수 ≈ 20~30 Å)와 일치, ④ 8×8×3은 오르내림 폭 안의 차이뿐인데 k점 수는 2.7배. 나중을 위한 메모 하나: 슈퍼셀로 가면 실공간이 커지는 만큼 k점은 <em>줄입니다</em>(실공간 길이와 k점 간격은 반비례). 2×2 슈퍼셀이면 3×3×2 정도입니다.</p>
 
           <h2>이날 배운 것들</h2>
           <ul>
-            <li><strong>이해 못 한 명령은 실행하지 않는다.</strong> qsub이 든 스크립트는 실탄이다. 그리고 제출 전 grep 검문소 30초.</li>
-            <li><strong>샘플링 부족은 잡음이 아니라 다른 물리를 만든다.</strong> 성긴 k-mesh는 전자 점유 자체를 바꿔 아예 다른 상태로 수렴시킬 수 있다. mag를 에너지보다 먼저 보는 이유다.</li>
+            <li><strong>이해 못 한 명령은 실행하지 않는다.</strong> qsub이 든 스크립트는 공용 자원을 쓴다. 제출 전 grep으로 30초 확인한다.</li>
+            <li><strong>k점이 부족하면 오차가 아니라 다른 전자 상태가 나온다.</strong> 성긴 k-mesh는 전자 점유 자체를 바꿔 아예 다른 상태로 수렴시킬 수 있다. mag를 에너지보다 먼저 보는 이유다.</li>
             <li><strong>bash에서 공백은 구분자다.</strong> "2 2 1" 같은 세트는 인코딩(2_2_1)해서 다루고, ${K//_/ }로 되돌린다.</li>
-            <li><strong>정확도 다이얼 두 개가 모두 데이터로 잠겼다:</strong> ENCUT = 520, k-mesh = 6×6×2. 이제 이 두 줄은 프로젝트가 끝날 때까지 건드리지 않는다.</li>
+            <li><strong>정확도를 정하는 두 설정을 모두 데이터로 정했다:</strong> ENCUT = 520, k-mesh = 6×6×2. 이제 이 두 줄은 프로젝트가 끝날 때까지 건드리지 않는다.</li>
           </ul>
 
           <div class="box">
@@ -239,7 +206,7 @@ kp10104  E0= -.66658081E+02   mag= 11.9992</code></pre>
         <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
       </div>
     </footer>
-    <script src="../assets/posts.js?v=6953c381"></script>
+    <script src="../assets/posts.js?v=7a5e1927"></script>
     <script src="../assets/site.js?v=4826fb50"></script>
   </body>
 </html>

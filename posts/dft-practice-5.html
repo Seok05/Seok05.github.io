@@ -4,26 +4,26 @@
     <meta charset="utf-8" />
     <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DFT 실습 [5] — 장난감을 졸업했더니 팔면체가 늘어나 있었다 · Seok Lab</title>
+    <title>DFT 실습 [5] — 실제 구조로 첫 이완 계산: MnO₆ 팔면체의 얀-텔러 왜곡 · Seok Lab</title>
     <meta
       name="description"
-      content="이상화 구조를 버리고 Materials Project에서 진짜 NaMnO₂를 꺼내 왔습니다. 파이썬 버전 충돌을 넘어 DB에서 다형체 11개를 조회하고, 처음으로 원자와 격자를 움직이는 이완 계산을 두 번 돌렸고, Mn–O 결합 길이 여섯 개에서 얀-텔러 왜곡의 지문(4개 짧고 2개 긴)을 직접 확인했습니다."
+      content="손으로 만든 이상화 구조 대신 Materials Project에서 실제 NaMnO₂ 구조를 받아 왔습니다. 파이썬 버전 문제를 풀고 다형체 11개를 조회한 뒤, 처음으로 원자와 격자를 움직이는 이완 계산을 두 번 돌렸습니다. Mn–O 결합 여섯 개 가운데 둘만 긴 얀-텔러 왜곡(1.970 Å 넷, 2.436 Å 둘)을 직접 확인했습니다."
     />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
     <link rel="stylesheet" href="../assets/blog.css?v=cb450a2b" />
     <link rel="icon" type="image/png" href="../assets/favicon.png" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="DFT 실습 [5] — 장난감을 졸업했더니 팔면체가 늘어나 있었다" />
-    <meta property="og:description" content="이상화 구조를 버리고 Materials Project에서 진짜 NaMnO₂를 꺼내 왔습니다. 파이썬 버전 충돌을 넘어 다형체 11개를 조회하고, 처음으로 이완 계산을 두 번 돌렸고, Mn–O 결합 여섯 개에서 얀-텔러의 지문(4개 짧고 2개 긴)을 직접 확인했습니다." />
+    <meta property="og:title" content="DFT 실습 [5] — 실제 구조로 첫 이완 계산: MnO₆ 팔면체의 얀-텔러 왜곡" />
+    <meta property="og:description" content="손으로 만든 이상화 구조 대신 Materials Project에서 실제 NaMnO₂ 구조를 받아 왔습니다. 파이썬 버전 문제를 풀고 다형체 11개를 조회한 뒤 처음으로 이완 계산을 두 번 돌렸고, Mn–O 결합 여섯 개 중 둘만 긴 얀-텔러 왜곡(1.970 Å 넷, 2.436 Å 둘)을 확인했습니다." />
     <meta property="og:url" content="https://seok05.github.io/posts/dft-practice-5.html" />
     <meta property="og:image" content="https://seok05.github.io/assets/social/dft-practice-5.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="article:published_time" content="2026-09-27T09:00:00+09:00" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DFT 실습 [5] — 장난감을 졸업했더니 팔면체가 늘어나 있었다" />
-    <meta name="twitter:description" content="이상화 구조를 버리고 Materials Project에서 진짜 NaMnO₂를 꺼내 왔습니다. 파이썬 버전 충돌을 넘어 다형체 11개를 조회하고, 처음으로 이완 계산을 두 번 돌렸고, Mn–O 결합 여섯 개에서 얀-텔러의 지문(4개 짧고 2개 긴)을 직접 확인했습니다." />
+    <meta name="twitter:title" content="DFT 실습 [5] — 실제 구조로 첫 이완 계산: MnO₆ 팔면체의 얀-텔러 왜곡" />
+    <meta name="twitter:description" content="손으로 만든 이상화 구조 대신 Materials Project에서 실제 NaMnO₂ 구조를 받아 왔습니다. 파이썬 버전 문제를 풀고 다형체 11개를 조회한 뒤 처음으로 이완 계산을 두 번 돌렸고, Mn–O 결합 여섯 개 중 둘만 긴 얀-텔러 왜곡(1.970 Å 넷, 2.436 Å 둘)을 확인했습니다." />
     <meta name="twitter:image" content="https://seok05.github.io/assets/social/dft-practice-5.jpg" />
   </head>
   <body>
@@ -45,15 +45,8 @@
             <div class="meta-row" style="margin-top: 0">
               <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">VASP 실습</span><span>2026.09.27</span>
             </div>
-            <h1>DFT 실습 [5] — 장난감을 졸업했더니 팔면체가 늘어나 있었다</h1>
-            <p class="lede">
-              <a href="first-dft-run.html">실습 [1]</a>부터 <a href="dft-practice-4.html">실습 [4]</a>까지
-              제가 계산한 NaMnO₂는 손으로 만든 이상화 구조였습니다. 세팅을 익히기엔 완벽했지만,
-              연구를 하려면 진짜 구조가 필요합니다. 오늘은 재료 데이터베이스에서 실제 NaMnO₂를
-              꺼내 오고, 처음으로 원자와 격자가 스스로 움직이는 이완 계산을 돌렸습니다. 그리고
-              결과 파일 안에서, 이 시리즈 내내 이론으로만 이야기하던 현상 하나를 숫자로
-              만났습니다.
-            </p>
+            <h1>DFT 실습 [5] — 실제 구조로 첫 이완 계산: MnO₆ 팔면체의 얀-텔러 왜곡</h1>
+            <p class="lede">α-NaMnO₂는 MnO₂ 층 사이에 Na가 들어 있는 배터리 양극 물질입니다. <a href="first-dft-run.html">실습 [1]</a>부터 <a href="dft-practice-4.html">실습 [4]</a>까지는 격자 상수를 넣어 손으로 만든 이상화 구조(R-3m)로 계산 설정을 익혔습니다. 연구에 쓰려면 실제 구조가 필요해서, 이번에는 재료 데이터베이스 Materials Project에서 실제 구조를 받아 오고 처음으로 원자와 격자를 움직이는 이완 계산을 돌렸습니다. 그 결과에서 Mn³⁺ 둘레의 MnO₆ 팔면체가 한 방향으로 늘어나는 얀-텔러 왜곡을 결합 길이로 확인했습니다.</p>
           </div>
 
           <figure class="shot wide illus">
@@ -61,21 +54,24 @@
             <figcaption>얀-텔러 왜곡. 위아래 두 결합만 길어지고 원래 자리(점선)에서 밀려납니다.</figcaption>
           </figure>
 
-          <h2>0. 왜 장난감을 졸업해야 했나</h2>
-          <p>
-            지금까지 쓴 구조는 "O3형 층상 NaMnO₂라면 대략 이렇겠지" 하고 격자 상수를 넣어
-            만든 R-3m 구조였습니다. 수렴 테스트와 범함수 비교에는 충분했습니다. 비교하는 양쪽이
-            같은 구조라 오차가 상쇄되니까요. 하지만 전압, 상 안정성, 산소 산화처럼 연구에서
-            진짜로 묻는 질문은 <strong>실제 원자 배열</strong>에서만 의미가 있습니다. 그래서
-            세계 최대의 계산 재료 DB인 Materials Project(MP)에서 구조를 받아 오기로 했습니다.
-            결론부터 말하면, 제 장난감 구조는 진짜 바닥 구조보다 원자당 약 0.1 eV 위에 떠 있는
-            가상 물질이었습니다.
-          </p>
+          <div class="box">
+            <p class="box-label">이 글에 나오는 말</p>
+            <ul>
+              <li><strong>R-3m과 C2/m</strong>: 결정의 대칭을 나타내는 공간군 이름입니다. R-3m은 층이 기울어짐 없이 쌓인 구조이고, C2/m은 축 하나가 기울어진 단사정 구조입니다.</li>
+              <li><strong>다형체와 E_hull</strong>: 원소와 비율이 같고 원자 배열이 다른 구조를 다형체라고 합니다. E_hull은 같은 원소로 만들 수 있는 가장 안정한 상태보다 원자당 에너지가 얼마나 높은지이고, 0이면 가장 안정합니다.</li>
+              <li><strong>이완</strong>: 원자에 걸리는 힘이 거의 0이 될 때까지 원자 위치와 셀 모양을 옮기는 계산입니다. 지금까지는 원자를 고정하고 전자 상태만 계산했습니다.</li>
+              <li><strong>F와 E0</strong>: 로그의 F는 스미어링(페르미 준위 근처의 전자 점유를 매끄럽게 하는 처리)이 들어간 에너지, E0는 그 효과를 걷어낸 에너지입니다.</li>
+              <li><strong>얀-텔러 왜곡</strong>: §3에서 설명합니다. Mn³⁺ 둘레의 팔면체가 한 방향으로 늘어나 짧은 결합 넷과 긴 결합 둘이 생기는 현상입니다.</li>
+            </ul>
+          </div>
 
-          <h2>1. 연장 준비: pymatgen과 MP API</h2>
+          <h2>0. 왜 실제 구조가 필요한가</h2>
+          <p>지금까지 쓴 구조는 "O3형 층상 NaMnO₂라면 대략 이렇겠지" 하고 격자 상수를 넣어 만든 R-3m 구조였습니다. 수렴 테스트와 범함수 비교에는 충분했습니다. 비교하는 양쪽이 같은 구조라 오차가 상쇄되기 때문입니다. 하지만 전압, 상 안정성, 산소 산화처럼 연구에서 묻는 질문은 <strong>실제 원자 배열</strong>에서만 의미가 있습니다. 그래서 계산 재료 데이터베이스인 Materials Project(MP)에서 구조를 받아 오기로 했습니다. 결론부터 말하면, 제가 쓰던 이상화 구조는 가장 안정한 실제 구조보다 원자당 약 0.1 eV 높은, 실제로는 존재하지 않는 구조였습니다.</p>
+
+          <h2>1. 준비: pymatgen과 MP API 설치</h2>
           <p>
             재료과학용 파이썬 라이브러리 pymatgen과 MP 접속 클라이언트 mp-api를 클러스터에
-            설치했습니다. 여기서 세 번 넘어졌고, 세 번 다 배울 게 있었습니다.
+            설치했습니다. 여기서 세 번 막혔고, 세 번 다 배울 것이 있었습니다.
           </p>
           <ul>
             <li>
@@ -89,16 +85,16 @@
               <strong>에러는 "실패했다"가 아니라 "무엇이 실패했다"까지 읽는다.</strong> 설치
               후 검증에서 <code>AttributeError</code>가 났는데, 이건 설치가 안 된 게 아니라
               버전 번호를 묻는 방법이 틀렸다는 뜻이었습니다. 설치가 안 됐다면
-              <code>ModuleNotFoundError</code>가 났을 겁니다. 두 에러는 진단이 완전히
+              <code>ModuleNotFoundError</code>가 났을 것입니다. 두 에러는 진단이 완전히
               다릅니다.
             </li>
             <li>
               <strong>진짜 문제는 파이썬 버전이었다.</strong> MP 연결 테스트에서
               <code>ImportError</code>가 났습니다. 시스템 기본 파이썬이 3.9라서 pip이
-              pymatgen을 구버전으로 깔 수밖에 없었고, mp-api는 최신 pymatgen에만 있는 부품을
-              찾고 있었던 겁니다. 클러스터에 3.11이 숨어 있는 걸 찾아 가상환경(venv)을
-              부수고 다시 지었더니 해결됐습니다. 격리된 venv를 쓰는 이유를 첫날에 체험한
-              셈입니다. 부수고 다시 짓는 데 5분이면 됩니다.
+              pymatgen을 구버전으로 깔 수밖에 없었고, mp-api는 최신 pymatgen에만 있는 기능을
+              찾고 있었던 것입니다. 클러스터에 설치돼 있던 3.11로 가상환경(venv)을
+              지우고 다시 만들었더니 해결됐습니다. 프로젝트마다 따로 venv를 쓰는 이유를 첫날에 알게 됐습니다.
+              지우고 다시 만드는 데 5분이면 됩니다.
             </li>
           </ul>
           <pre><code>export TMPDIR=&lt;데이터디스크&gt;/tmp          # 임시 파일도 데이터 디스크로
@@ -106,26 +102,22 @@ python3.11 -m venv &lt;데이터디스크&gt;/venv
 source &lt;데이터디스크&gt;/venv/bin/activate
 pip install pymatgen mp-api --no-cache-dir  # 캐시를 남기지 않음</code></pre>
           <p>
-            덤으로 하나 더. 도중에 화면에 찍힌 <em>출력</em>을 통째로 복사해 터미널에 다시
+            실수도 하나 했습니다. 도중에 화면에 찍힌 <em>출력</em>을 통째로 복사해 터미널에 다시
             붙여넣는 실수를 했습니다. 터미널은 붙여넣은 모든 줄을 명령으로 실행하려 들어서
             에러가 우르르 쏟아졌고, 닫히지 않은 따옴표 때문에 프롬프트가 <code>&gt;</code>로
-            바뀌어 멈췄습니다. <code>Ctrl+C</code>로 탈출했습니다. 규칙: 터미널에서
+            바뀌어 멈췄습니다. <code>Ctrl+C</code>로 빠져나왔습니다. 규칙: 터미널에서
             채팅으로 복사는 자유, 출력을 터미널로 붙여넣기는 금지. API 키는 홈의 설정
             파일에만 넣고 권한을 잠갔습니다(<code>chmod 600</code>). 채팅에도, 스크립트에도,
             저장소에도 올리지 않습니다.
           </p>
 
-          <h2>2. DB에 묻기: NaMnO₂는 몇 가지 모양으로 존재하나</h2>
+          <h2>2. 데이터베이스 조회: NaMnO₂는 몇 가지 구조로 존재하나</h2>
           <p>연결되자마자 첫 질문을 던졌습니다. "NaMnO₂ 조성으로 등록된 구조를 전부 보여줘."</p>
           <pre><code>with MPRester() as m:
     docs = m.materials.summary.search(
         formula="NaMnO2",
         fields=["material_id", "symmetry", "energy_above_hull", "nsites"])</code></pre>
-          <p>
-            답은 <strong>11개</strong>였습니다. 같은 원소, 같은 비율인데 원자 배열이 다른
-            다형체들이 에너지 순으로 줄을 섭니다. 세로축의 E_hull은 "열역학적 바닥에서 원자당
-            몇 meV 떠 있나"이고, 0이 승자입니다.
-          </p>
+          <p>답은 <strong>11개</strong>였습니다. 같은 원소, 같은 비율인데 원자 배열이 다른 다형체들을 에너지 순으로 놓으면 아래 그림과 같습니다. 세로축의 E_hull은 가장 안정한 상태보다 원자당 몇 meV 높은지이고, 0이면 가장 안정합니다.</p>
 
           <figure>
             <div class="fig-scroll"><svg viewBox="0 0 640 330" role="img" aria-label="NaMnO2 다형체 11개의 E_hull 막대그래프">
@@ -139,7 +131,7 @@ pip install pymatgen mp-api --no-cache-dir  # 캐시를 남기지 않음</code><
                 <text x="130" y="144" text-anchor="end" class="svg-muted">I4₁/amd</text>
                 <text x="130" y="168" text-anchor="end" class="svg-muted">C2/m</text>
                 <text x="130" y="192" text-anchor="end" class="svg-muted">Pnma</text>
-                <text x="130" y="216" text-anchor="end" style="fill: var(--warm); font-weight:700">R-3m (내 장난감)</text>
+                <text x="130" y="216" text-anchor="end" style="fill: var(--warm); font-weight:700">R-3m (이상화 구조)</text>
                 <text x="130" y="240" text-anchor="end" class="svg-muted">Pm</text>
                 <text x="130" y="264" text-anchor="end" class="svg-muted">P6₃/mmc</text>
                 <text x="130" y="288" text-anchor="end" class="svg-muted">I4₁/amd</text>
@@ -171,31 +163,16 @@ pip install pymatgen mp-api --no-cache-dir  # 캐시를 남기지 않음</code><
             </svg></div>
             <figcaption>
               MP에 등록된 NaMnO₂ 다형체 11개. 바닥은 단사정 C2/m이고 실험의 α-NaMnO₂와
-              같습니다. 2위 Pmmn은 실험의 β상이라, 상위 두 개가 실존 다형체라는 점도 DB의 품질을
-              보여줍니다. 제가 8월 내내 계산한 이상화 R-3m은 원자당 96.6 meV 위에 있었습니다.
+              같습니다. 2위 Pmmn은 실험의 β상입니다. 에너지가 가장 낮은 두 구조가 실제로 합성된 다형체라는 점은
+              데이터베이스의 계산이 실험과 맞는다는 근거입니다. 제가 8월 내내 계산한 이상화 R-3m은 원자당 96.6 meV 위에 있었습니다.
             </figcaption>
           </figure>
 
-          <h2>3. 복선 회수: 왜 예쁜 R-3m이 아니라 비뚤어진 C2/m인가</h2>
-          <p>
-            바닥 구조의 격자는 a = 5.67, b = 2.86, c = 5.76 Å에 β = 113.3°입니다. 직각이
-            아니라 비스듬한 상자예요. 범인은 이 시리즈의 주인공 Mn³⁺입니다.
-            <a href="dft-theory-2.html">이론 [2]</a>의 전자 배치 그림에서 고스핀 d⁴는 위쪽
-            e_g 두 칸에 전자가 <strong>하나만</strong> 들어가 있었습니다. 에너지가 같은 두
-            칸에 전자가 하나뿐인 상태는 불안정해서, 결정은 MnO₆ 팔면체를 한 방향으로 잡아
-            늘여 두 칸의 에너지를 갈라놓습니다. 얀-텔러 효과입니다. 모든 Mn이 같은 방향으로
-            늘어나면 격자 전체가 비뚤어지고, 그 결과가 C2/m입니다. 그렇다면 이 구조를 이완
-            계산했을 때 Mn–O 결합 길이가 제각각 갈라져 있어야 합니다. 이게 오늘 계산의
-            가설이 됐습니다.
-          </p>
+          <h2>3. 왜 가장 안정한 구조가 기울어진 C2/m인가</h2>
+          <p>가장 안정한 구조의 격자는 a = 5.67, b = 2.86, c = 5.76 Å에 β = 113.3°입니다. 축 사이 각이 직각이 아닌, 기울어진 셀입니다. 원인은 Mn³⁺입니다. <a href="dft-theory-2.html">이론 [2]</a>의 전자 배치 그림에서 고스핀 d⁴는 에너지가 높은 d 오비탈 두 개(e_g)에 전자가 <strong>하나만</strong> 들어가 있었습니다. 에너지가 같은 두 오비탈에 전자가 하나뿐인 상태는 불안정해서, 결정은 MnO₆ 팔면체를 한 방향으로 늘여 두 오비탈의 에너지를 갈라놓습니다. 이것이 얀-텔러 효과입니다. 모든 Mn의 팔면체가 같은 방향으로 늘어나면 격자 전체가 기울어지고, 그 결과가 C2/m입니다. 그렇다면 이 구조를 이완 계산했을 때 Mn–O 결합 길이가 짧은 것과 긴 것으로 갈라져 있어야 합니다. 이것이 이번 계산의 가설이 됐습니다.</p>
 
-          <h2>4. 첫 이완 계산 설계: 바깥 루프를 켜다</h2>
-          <p>
-            지금까지는 원자를 고정하고 전자 문제만 풀었습니다(<code>NSW = 0</code>). 이번에는
-            처음으로 바깥 루프를 켭니다. 원자에 걸리는 힘을 계산하고, 힘을 따라 원자와 격자를
-            옮기고, 다시 전자 문제를 풀기를 힘이 사라질 때까지 반복합니다. INCAR에 새로 등장한
-            줄들:
-          </p>
+          <h2>4. 첫 이완 계산 설정: 원자와 격자를 움직이다</h2>
+          <p>지금까지는 원자를 고정하고 전자 상태만 계산했습니다(<code>NSW = 0</code>). 이번에는 처음으로 원자를 움직입니다. 원자에 걸리는 힘을 계산하고, 힘을 따라 원자와 격자를 옮기고, 다시 전자 상태를 계산하기를 힘이 거의 0이 될 때까지 반복합니다. INCAR에 새로 들어간 줄들:</p>
           <pre><code>EDIFF  = 1E-6     ! 힘을 계산하므로 전자 수렴을 한 자릿수 조임
 MAGMOM = 2*0.0 2*4.0 4*0.0   ! 새 셀의 원자 순서(Na2 Mn2 O4)
 NSW    = 100      ! 이온 스텝 최대 100회
@@ -204,27 +181,13 @@ ISIF   = 3        ! 원자 위치 + 격자 모양 + 부피까지 전부 이완
 EDIFFG = -0.02    ! 음수 = 힘 기준. 모든 힘 &lt; 0.02 eV/Å면 종료</code></pre>
           <p>
             <code>ISIF = 3</code>을 켠 이유는 얀-텔러 왜곡이 격자 모양 자체를 바꾸는
-            현상이기 때문입니다. 상자를 고정하면 그 물리를 볼 수 없습니다. U는 실습 [4]와 같은
+            현상이기 때문입니다. 셀 모양을 고정하면 이 왜곡을 볼 수 없습니다. U는 실습 [4]와 같은
             3.9 eV를 그대로 걸었습니다.
           </p>
-          <p>
-            그리고 k-mesh에서 교훈 하나. <a href="dft-practice-3.html">실습 [3]</a>에서
-            "6×6×2 동결"을 선언했지만, 그건 옛 셀(a = 2.95, c = 15.8 Å)의 맞춤복이었습니다.
-            새 셀은 축 길이가 전혀 다르니 같은 규칙(축 길이 × k점 수 ≈ 20~30 Å)을 다시
-            적용하면 5.67×4, 2.86×8, 5.76×4가 모두 약 23으로 맞는 <strong>4×8×4</strong>가
-            됩니다. 동결한 것은 숫자가 아니라 기준이었습니다.
-          </p>
+          <p>k점 격자도 다시 정했습니다. <a href="dft-practice-3.html">실습 [3]</a>에서 6×6×2로 정했지만, 그 값은 옛 셀(a = 2.95, c = 15.8 Å)에 맞춘 것이었습니다. 새 셀은 축 길이가 전혀 다르므로 같은 규칙(축 길이 × k점 수 ≈ 20~30 Å)을 다시 적용하면, 5.67×4, 2.86×8, 5.76×4가 모두 약 23 Å이 되는 <strong>4×8×4</strong>가 됩니다. 고정해야 하는 것은 k점 숫자가 아니라 이 규칙입니다.</p>
 
           <h2>5. 1차 이완: 9스텝, 그리고 부피 +5.9%</h2>
-          <p>
-            계산은 9번의 이온 스텝 끝에 <code>reached required accuracy</code>를 찍고
-            멈췄습니다. 스텝 한도가 아니라 힘 기준을 통과해서 끝났다는 뜻입니다. 매 스텝
-            자기모멘트는 <strong>8.0000</strong>(Mn 2개 × 4 μB)을 유지했고, 원자와 격자가
-            움직이는 동안에도 Mn³⁺ 고스핀이 무너지지 않았습니다. 그리고 F와 E0가 소수점 끝까지
-            같았습니다. 스미어링이 에너지에 아무것도 보태지 않았다는 건 페르미 준위 근처에 걸친
-            상태가 없다는 뜻, 즉 밴드갭이 확실히 열린 절연체라는 판정이 로그 한 줄에서 공짜로
-            나온 겁니다.
-          </p>
+          <p>계산은 9번의 이온 스텝 끝에 <code>reached required accuracy</code>를 찍고 멈췄습니다. 스텝 한도가 아니라 힘 기준을 통과해서 끝났다는 뜻입니다. 매 스텝 자기모멘트는 <strong>8.0000</strong>(Mn 2개 × 4 μB)을 유지했고, 원자와 격자가 움직이는 동안에도 Mn³⁺ 고스핀 상태가 유지됐습니다. 그리고 F와 E0가 소수점 끝까지 같았습니다. 스미어링이 에너지를 바꾸지 않았다는 것은 페르미 준위 근처에 반쯤 찬 상태가 없다는 뜻, 즉 밴드갭이 열린 절연체라는 판정이 로그 한 줄로 나온 것입니다.</p>
 
           <div class="table-scroll">
             <table>
@@ -250,26 +213,26 @@ EDIFFG = -0.02    ! 음수 = 힘 기준. 모든 힘 &lt; 0.02 eV/Å면 종료</c
           <h2>6. 2차 이완: 왜 한 번 더 돌리나</h2>
           <p>
             부피가 6% 변했다면 이완을 한 번 더 해야 합니다. VASP는 계산을 시작할 때의 부피에
-            맞춰 평면파 기저 세트를 만들고 끝까지 그대로 씁니다. 셀이 커지면 그 기저가 새
-            부피에 비해 성겨지고, 응력이 인위적으로 틀어집니다(Pulay stress). 그래서 1차의
-            최종 구조(CONTCAR)를 새 출발점으로 삼아 다시 돌리는 게 정석이고, MP도 모든 구조를
+            맞춰 평면파 기저(파동함수를 나타내는 데 쓰는 사인파 묶음)를 만들고 끝까지 그대로 씁니다. 셀이 커지면 그 기저가 새
+            부피에 비해 부족해지고, 응력이 실제와 다르게 계산됩니다(Pulay stress). 그래서 1차의
+            최종 구조(CONTCAR)를 새 출발점으로 삼아 다시 돌리는 것이 표준 절차이고, MP도 모든 구조를
             이렇게 두 번 이완합니다.
           </p>
           <p>
             2차 이완은 <strong>1스텝</strong> 만에 끝났고 부피는 90.94 Å³ 그대로였습니다. 새
             기저로 다시 계산해도 힘과 응력이 이미 기준 안이었다는 뜻이니 수렴 확정입니다.
-            재밌는 건 구조가 그대로인데 에너지만 셀당 6.9 meV(원자당 약 0.9 meV) 내려갔다는
+            눈여겨볼 점은 구조가 그대로인데 에너지만 셀당 6.9 meV(원자당 약 0.9 meV) 내려갔다는
             점입니다. 1차 계산이 처음 부피용 기저로 커진 셀을 계산하던 만큼의 차이이고, 2차
             이완을 한 이유가 정확히 이 숫자입니다.
           </p>
           <p>
             참고로 준비 명령(폴더 복사, CONTCAR를 POSCAR로)만 치고 "이게 제출인가?" 하고
-            멈칫했습니다. 아닙니다. 폴더를 만들고 파일을 고치는 건 전부 책상 위 작업이고,
-            클러스터 자원을 실제로 쓰는 순간은 <code>qsub</code> 한 줄뿐입니다. 그래서
-            검문소는 항상 qsub 바로 앞에 둡니다.
+            멈칫했습니다. 아닙니다. 폴더를 만들고 파일을 고치는 것은 전부 파일 작업이고,
+            클러스터 자원을 실제로 쓰는 것은 <code>qsub</code> 한 줄뿐입니다. 그래서
+            입력 확인은 항상 qsub 바로 앞에서 합니다.
           </p>
 
-          <h2>7. 하이라이트: 얀-텔러의 지문</h2>
+          <h2>7. 결과: Mn–O 결합 길이로 본 얀-텔러 왜곡</h2>
           <p>
             이제 §3의 가설을 확인할 차례입니다. 이완된 구조에서 Mn마다 주변 산소 6개와의
             거리를 pymatgen으로 재는 10줄짜리 스크립트를 짰습니다.
@@ -317,61 +280,36 @@ Mn#3: 1.970  1.970  1.970  1.970  2.436  2.436</code></pre>
             </svg></div>
             <figcaption>
               이완된 α-NaMnO₂의 MnO₆ 팔면체. 위아래 두 결합(강조색)만 24% 길게 늘어나 있습니다.
-              모든 팔면체가 같은 방향으로 늘어나 쌓이면서 격자 전체가 β = 113°로 비뚤어집니다.
+              모든 팔면체가 같은 방향으로 늘어나 쌓이면서 격자 전체가 β = 113°로 기울어집니다.
             </figcaption>
           </figure>
 
-          <p>
-            <strong>4개 짧고 2개 긴, 교과서 그림 그대로입니다.</strong> 차이가 0.47 Å, 긴
-            결합이 짧은 결합보다 24% 길어서 미세한 떨림이 아니라 팔면체 모양 자체가 바뀐
-            수준입니다. e_g 칸에 들어간 전자 하나가 위아래 산소 쪽을 향하니 그 방향의 반발이
-            커져 두 결합만 늘어난 거죠. 그리고 두 Mn의 패턴이 완전히 같습니다. 팔면체들이 줄을
-            맞춰 같은 방향으로 늘어나 있다는 뜻이고, 이게 격자 전체의 단사정 왜곡을 만든
-            협동 얀-텔러입니다.
-          </p>
-          <p>
-            오늘 만난 세 숫자를 나란히 놓으면 이렇습니다. 자기모멘트 <strong>8.0000</strong>,
-            격자 각 <strong>β = 113.1°</strong>, 결합 길이 <strong>4短 2長</strong>. 서로
-            다른 출력 파일의 다른 줄에서 나온 숫자인데, 전부 같은 한 가지 물리에서 나온
-            겁니다. Mn³⁺ d⁴의 e_g 칸에 전자가 하나라는 사실.
-          </p>
+          <p><strong>짧은 결합 4개와 긴 결합 2개, 교과서 그림 그대로입니다.</strong> 두 길이의 차이는 0.47 Å이고, 긴 결합이 짧은 결합보다 24% 깁니다. e_g 오비탈에 들어간 전자 하나가 위아래 산소 쪽을 향하므로 그 방향의 반발이 커져 두 결합만 늘어난 것입니다. 그리고 두 Mn의 결합 길이가 완전히 같습니다. 팔면체들이 모두 같은 방향으로 늘어나 있다는 뜻이고, 이것이 격자 전체를 단사정으로 기울이는 협동 얀-텔러 왜곡입니다.</p>
+          <p>이번에 나온 세 숫자를 나란히 놓으면 이렇습니다. 자기모멘트 <strong>8.0000</strong>, 격자 각 <strong>β = 113.1°</strong>, 결합 길이 <strong>짧은 것 4개, 긴 것 2개</strong>. 서로 다른 출력 파일의 다른 줄에서 나온 숫자인데, 모두 같은 원인에서 나온 것입니다. Mn³⁺ d⁴의 e_g 오비탈에 전자가 하나라는 사실입니다.</p>
           <p>
             실험 α-NaMnO₂의 Mn–O 거리는 대략 1.93~1.94 Å와 2.39~2.41 Å 수준으로 알려져
             있습니다. 제 계산은 두 결합 모두 1.5~2% 길게 나왔는데, §5에서 본 축별 약 2% 팽창과
-            같은 경향입니다. 왜곡의 패턴과 비율은 정확히 잡았고, 절대 길이만 범함수 특유의
-            팽창을 달고 있다는 판독입니다.
+            같은 경향입니다. 왜곡의 모양과 비율은 실험과 같고, 절대 길이만 범함수 때문에
+            조금 길게 나온다고 판단했습니다.
           </p>
 
           <div class="box obs">
             <p class="box-label">연구와의 연결</p>
-            <p>
-              이 왜곡을 숫자 하나로 요약하면(결합 길이가 평균에서 벌어진 정도의 제곱 평균,
-              흔히 distortion index라고 부릅니다) 여기서는 약 1.1×10⁻²입니다. 제 본 연구의
-              대상인 고엔트로피 조성에서는 Mn³⁺ 옆에 Ni, Fe, Ti 같은 이웃이 섞이면서 이 왜곡이
-              자리마다 다르게, 때로는 약하게 나타날 겁니다. <strong>자리별 왜곡 지수는 해석
-              가능한 특징의 유력한 후보</strong>이고, 오늘 짠 10줄짜리 스크립트가 나중에 수백
-              개 구조에 돌아갈 특징 추출기의 원형입니다.
-            </p>
+            <p>이 왜곡을 숫자 하나로 나타내면(결합 길이가 평균에서 벌어진 정도의 제곱 평균, distortion index라고 부릅니다) 여기서는 약 1.1×10⁻²입니다. 이 연구의 최종 대상인 고엔트로피 조성(Mn 자리에 Ni, Fe, Ti 같은 원소를 섞은 물질)에서는 Mn³⁺ 옆에 다른 원소가 놓이면서 이 왜곡이 자리마다 다르게, 때로는 약하게 나타날 것입니다. <strong>자리별 왜곡 지수는 물성을 설명하는 수치(특징)의 유력한 후보</strong>이고, 이번에 짠 10줄짜리 스크립트가 나중에 수백 개 구조에 쓸 특징 계산 스크립트의 첫 판입니다.</p>
           </div>
 
           <h2>이날 배운 것들</h2>
           <ul>
-            <li><strong>장난감 구조는 세팅 연습용이다.</strong> 이상화 R-3m은 바닥보다 원자당 96.6 meV 위의 가상 물질이었다. 연구의 질문은 진짜 원자 배열에서만 의미가 있다.</li>
-            <li><strong>에러 메시지는 진단서다.</strong> ModuleNotFoundError, AttributeError, ImportError는 각각 설치 안 됨, 이름 없음, 부품 궁합 문제로 전혀 다른 이야기를 한다. 이번 병목은 파이썬 버전이었다.</li>
-            <li><strong>동결한 것은 기준이지 숫자가 아니다.</strong> 셀이 바뀌면 k-mesh는 같은 규칙으로 다시 잰다. 이번 셀은 4×8×4.</li>
+            <li><strong>이상화 구조는 설정 연습용이다.</strong> 이상화 R-3m은 가장 안정한 구조보다 원자당 96.6 meV 높았다. 연구의 질문은 실제 원자 배열에서만 의미가 있다.</li>
+            <li><strong>에러 메시지는 종류까지 읽는다.</strong> ModuleNotFoundError, AttributeError, ImportError는 각각 설치 안 됨, 이름 없음, 버전이 서로 맞지 않음으로 원인이 다르다. 이번 병목은 파이썬 버전이었다.</li>
+            <li><strong>고정하는 것은 k점 숫자가 아니라 규칙이다.</strong> 셀이 바뀌면 k-mesh는 같은 규칙으로 다시 잰다. 이번 셀은 4×8×4.</li>
             <li><strong>부피가 크게 변하면 두 번 이완한다.</strong> 기저 세트가 처음 부피에 묶여 있기 때문이고, 그 차이는 이번에 셀당 6.9 meV였다.</li>
             <li><strong>F = E0는 절연체의 증거다.</strong> 스미어링이 한 일이 없다는 건 갭이 열려 있다는 뜻이다.</li>
-            <li><strong>물리는 여러 출력에 흩어져 있다.</strong> 자기모멘트, 격자 각, 결합 길이가 같은 한 가지 원인을 서로 다른 언어로 말하고 있었다.</li>
+            <li><strong>한 가지 원인이 여러 출력에 나타난다.</strong> 자기모멘트, 격자 각, 결합 길이가 모두 e_g 오비탈의 전자 하나에서 나왔다.</li>
           </ul>
 
           <div class="box">
-            <p style="margin: 0">
-              <strong>다음.</strong> 드디어 첫 물성 예측, 전압 계산입니다. 이 구조에서 Na를
-              하나 빼고(충전을 흉내), V = [E(Na 빠진 구조) + E(Na 금속) − E(원래 구조)] / e로
-              전압을 뽑습니다. <a href="dft-theory-2.html">이론 [2]</a>에서 던져놓은 퀴즈,
-              Na를 빼면 Mn 하나가 4+로 승격되니 자기모멘트가 어떻게 변해야 하는가도 그때
-              실측으로 확인합니다. 사실상 연구 0호 데이터입니다.
-            </p>
+            <p style="margin: 0"><strong>다음.</strong> 첫 물성 계산인 전압입니다. 이 구조에서 Na를 하나 빼고(충전에 해당), V = [E(Na 빠진 구조) + E(Na 금속) − E(원래 구조)] / e로 전압을 구합니다. <a href="dft-theory-2.html">이론 [2]</a>에서 남긴 질문, Na를 빼면 Mn 하나가 4+로 바뀌니 자기모멘트가 어떻게 변해야 하는가도 그때 계산으로 확인합니다. 이 연구의 첫 물성 데이터가 됩니다.</p>
           </div>
 
           <div class="author-card">
@@ -417,7 +355,7 @@ Mn#3: 1.970  1.970  1.970  1.970  2.436  2.436</code></pre>
       </div>
     </footer>
 
-    <script src="../assets/posts.js?v=6953c381"></script>
+    <script src="../assets/posts.js?v=7a5e1927"></script>
     <script src="../assets/site.js?v=4826fb50"></script>
   </body>
 </html>

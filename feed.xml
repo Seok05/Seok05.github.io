@@ -8,52 +8,52 @@
     <lastBuildDate>Fri, 02 Oct 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://seok05.github.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
-      <title>DFT 실습 [12] — 다섯 번 뒤집힌 판정의 끝: Na₀.₇₅MnO₂는 존재한다</title>
+      <title>DFT 실습 [12] — Na₀.₇₅MnO₂는 안정한가: 모든 배치를 계산한 최종 판정</title>
       <link>https://seok05.github.io/posts/dft-practice-12.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-12.html</guid>
       <pubDate>Fri, 02 Oct 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>실습 [9]에서 불안정하다고 결론 낸 Na₀.₇₅MnO₂를 다시 따졌습니다. Na 배열을 셀 모양까지 빠짐없이 열거하고 스핀 배치를 전부 계산하자 안정 상으로 확정됐습니다. 손으로 고른 배열은 바닥보다 30 meV 위에 있었고, 반강자성이 Na를 뺄수록 사라져 전압을 끌어올린다는 것까지 나왔습니다.</description>
+      <description>Na가 4분의 1 빠진 Na₀.₇₅MnO₂는 안정한 상일까. 실습 [9]는 불안정하다고 했지만 같은 방법의 문헌 계산은 안정하다고 했습니다. Na 배열을 모든 셀 모양에서, 스핀 배치를 모든 방향 조합으로 계산하자 볼록 껍질보다 9.1 meV/화학식 아래의 안정 상으로 확정됐습니다.</description>
     </item>
     <item>
-      <title>DFT 실습 [11] — 계산기를 믿기 전에 시험부터: CHGNet과 G1 검증</title>
+      <title>DFT 실습 [11] — 기계학습 퍼텐셜 CHGNet 검증: 순위는 맞히고 차이는 절반으로</title>
       <link>https://seok05.github.io/posts/dft-practice-11.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-11.html</guid>
       <pubDate>Wed, 30 Sep 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>배열의 경우의 수가 폭발하는 문제를 풀려고 기계학습 퍼텐셜 CHGNet을 들였습니다. 결과 장부로 계산을 정리하고, 이미 가진 DFT 답으로 채점하고, 네 원소가 섞인 조성의 배열 10개로 정식 검증을 치렀습니다. 순위 상관 0.92로 통과했지만 믿어도 되는 곳과 안 되는 곳이 분명히 갈렸습니다.</description>
+      <description>원소가 네 가지 섞이면 배열의 경우의 수가 DFT로 다 계산할 수 없을 만큼 늘어납니다. 후보를 먼저 거를 기계학습 퍼텐셜 CHGNet을 DFT 결과와 맞대어 시험했습니다. 같은 조성 안의 배열 순위는 맞혔고(스피어만 0.92), 조성 사이의 에너지와 여러 자리에 퍼진 전하는 틀렸습니다.</description>
     </item>
     <item>
-      <title>DFT 실습 [10] — Ni 하나가 전자를 가져가자, 구멍은 두 자리로 퍼졌다</title>
+      <title>DFT 실습 [10] — Mn 자리에 Ni 하나: Ni는 2+가 되고 Mn 둘이 반씩 산화됐다</title>
       <link>https://seok05.github.io/posts/dft-practice-10.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-10.html</guid>
       <pubDate>Wed, 30 Sep 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>첫 다성분 계산. Mn 하나를 Ni로 바꾸자 Ni는 어떤 출발점에서도 2+를 골랐고, 그 대가로 생긴 구멍은 Mn 둘에 반씩 퍼졌습니다. 얀-텔러가 가수를 연속적으로 따라간다는 것, 비활성 Ni²⁺도 이웃에게 떠밀려 늘어난다는 것, 그리고 +U의 준안정 상태가 일으킨 계산 사고와 해법까지.</description>
+      <description>α-NaMnO₂의 Mn 넷 중 하나를 Ni로 바꿨습니다. Ni는 어느 출발점에서도 Ni²⁺가 됐고, 그만큼 빠진 전자 하나는 두 Mn에 반씩 나뉘었습니다. 얀-텔러 왜곡이 가수에 따라 연속적으로 변한다는 것과, 2차 이완이 준안정 상태에서 출발해 멈춘 사고와 해법도 적었습니다.</description>
     </item>
     <item>
-      <title>DFT 실습 [9] — 볼록 껍질이 세 번 뒤집히기까지: α-NaMnO₂ 전압 계산 총정리</title>
+      <title>DFT 실습 [9] — α-NaMnO₂ 전압 계산 총정리: 계산 27개로 본 구조·자성·전압</title>
       <link>https://seok05.github.io/posts/dft-practice-9.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-9.html</guid>
       <pubDate>Mon, 28 Sep 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>Na를 절반 뺄 때의 전압을 27개의 계산으로 끝까지 따라간 복습용 총정리. 계산 프로토콜, 실험과의 비교, 얀-텔러 계단, 자기 배열의 에너지 지형, 세 번 뒤집힌 볼록 껍질 판정, 오차 예산과 운영 규칙까지 그림 6개와 표 9개로 모았습니다.</description>
+      <description>α-NaMnO₂에서 Na를 절반 뺄 때의 전압을 27개의 계산으로 따라간 복습용 총정리입니다. 계산 설정, 실험과의 구조 비교, 이웃 Mn⁴⁺ 수에 따른 얀-텔러 왜곡, 스핀 배치별 에너지, Na₀.₇₅MnO₂의 안정성 판정, 운영 규칙과 용어 정리를 모았습니다.</description>
     </item>
     <item>
-      <title>DFT 실습 [8] — 이웃을 세었더니 얀-텔러가 계단을 그렸다</title>
+      <title>DFT 실습 [8] — 얀-텔러 왜곡은 이웃 Mn⁴⁺의 개수를 따랐다</title>
       <link>https://seok05.github.io/posts/dft-practice-8.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-8.html</guid>
       <pubDate>Mon, 28 Sep 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>Mn³⁺의 얀-텔러는 왜 Na를 빼면 약해질까. 슈퍼셀로 배열을 바꿔봤더니 배치는 상관없었고, 이웃한 Mn⁴⁺를 0, 2, 4개로 늘리자 긴 결합이 계단처럼 짧아졌습니다. 전하 배치 열거, 그리고 전압이 거꾸로 내려가는 데서 발견한 첫 볼록 껍질까지.</description>
+      <description>Mn³⁺의 얀-텔러 왜곡은 왜 Na를 빼면 약해질까. 이웃 Mn⁴⁺의 배치를 바꿔도 왜곡은 거의 같았고, 이웃 Mn⁴⁺를 0, 2, 4개로 늘리자 긴 결합이 2.436, 2.32, 2.24 Å로 짧아졌습니다. 전하 배치를 모두 계산하는 방법과 처음 계산한 볼록 껍질도 적었습니다.</description>
     </item>
     <item>
-      <title>DFT 실습 [7] — 스핀을 뒤집자 두 구조가 정반대를 골랐다</title>
+      <title>DFT 실습 [7] — 스핀 배치 비교: Na를 빼기 전은 반강자성, 뺀 뒤는 강자성</title>
       <link>https://seok05.github.io/posts/dft-practice-7.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-7.html</guid>
       <pubDate>Sun, 27 Sep 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>실습 [6]의 전압은 두 Mn의 스핀이 같은 방향이라는 가정 위에 서 있었습니다. 뒤집어 보니 원래 구조는 반강자성을, Na를 뺀 구조는 강자성을 골랐고, 바닥 상태끼리 비교한 전압은 2.42 V. 보류했던 Mn#1 판정의 결론과 첫 배열 열거까지.</description>
+      <description>실습 [6]의 전압은 두 Mn의 스핀이 같은 방향이라는 가정으로 계산했습니다. 스핀 방향을 바꿔 보니 Na를 빼기 전 구조는 반강자성이, 뺀 구조는 강자성이 안정했고, 각 조성의 가장 낮은 상태끼리 비교한 전압은 2.42 V였습니다. Mn#1의 가수 판정과 첫 배열 열거까지.</description>
     </item>
     <item>
       <title>DFT 실습 [6] — Na 하나를 빼서 첫 전압을 얻었다: 2.40 V</title>
@@ -61,23 +61,23 @@
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-6.html</guid>
       <pubDate>Sun, 27 Sep 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>α-NaMnO₂에서 Na를 하나 빼고 Na 금속을 기준 전극으로 계산해 첫 전압 2.40 V를 얻었습니다. 대칭을 깨서 Mn³⁺와 Mn⁴⁺를 갈라놓고, 자리별 결합 길이로 얀-텔러가 사라지는 것을 확인하고, Pulay 보정의 부호가 부피를 따라 바뀌는 것까지 본 연구 0호 데이터의 기록.</description>
+      <description>α-NaMnO₂에서 Na를 하나 빼고 Na 금속을 기준 전극으로 계산해 첫 전압 2.40 V를 얻었습니다. 초기 자기모멘트로 대칭을 깨서 두 Mn을 Mn³⁺와 Mn⁴⁺로 나누고, Mn⁴⁺에서 얀-텔러 왜곡이 사라지는 것과 Pulay 보정의 부호가 부피 변화를 따라 바뀌는 것을 확인했습니다.</description>
     </item>
     <item>
-      <title>DFT 실습 [5] — 장난감을 졸업했더니 팔면체가 늘어나 있었다</title>
+      <title>DFT 실습 [5] — 실제 구조로 첫 이완 계산: MnO₆ 팔면체의 얀-텔러 왜곡</title>
       <link>https://seok05.github.io/posts/dft-practice-5.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-5.html</guid>
       <pubDate>Sun, 27 Sep 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>이상화 구조를 버리고 Materials Project에서 진짜 NaMnO₂를 꺼내 왔습니다. 파이썬 버전 충돌을 넘어 다형체 11개를 조회하고, 처음으로 이완 계산을 두 번 돌렸고, Mn–O 결합 여섯 개에서 얀-텔러의 지문(4개 짧고 2개 긴)을 직접 확인했습니다.</description>
+      <description>손으로 만든 이상화 구조 대신 Materials Project에서 실제 NaMnO₂ 구조를 받아 왔습니다. 파이썬 버전 문제를 풀고 다형체 11개를 조회한 뒤 처음으로 이완 계산을 두 번 돌렸고, Mn–O 결합 여섯 개 중 둘만 긴 얀-텔러 왜곡(1.970 Å 넷, 2.436 Å 둘)을 확인했습니다.</description>
     </item>
     <item>
-      <title>DFT 실습 [4] — U를 걸었더니 전자가 제자리로 돌아왔다</title>
+      <title>DFT 실습 [4] — GGA+U 첫 계산: U를 걸자 Mn 자기모멘트가 커졌다</title>
       <link>https://seok05.github.io/posts/dft-practice-4.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-4.html</guid>
       <pubDate>Sun, 27 Sep 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>한 달을 미루고 복귀한 날, 이론 [3]에 걸어둔 가설을 실측으로 회수했습니다. INCAR 여섯 줄(U=3.9 eV)에 Mn d 모멘트가 3.85에서 4.35로. 그리고 GGA와 GGA+U의 에너지를 직접 비교하면 안 되는 이유를 4.5 eV짜리 실물로 확인했습니다.</description>
+      <description>Mn d 오비탈에 U = 3.9 eV를 걸어 이론 [3]의 예측대로 d 전자가 Mn에 더 모이는지 확인했습니다. INCAR 여섯 줄로 Mn d 모멘트가 3.85에서 4.35 μB로 커졌고, GGA와 GGA+U의 총 에너지를 직접 비교하면 안 되는 이유도 4.5 eV 차이로 확인했습니다.</description>
     </item>
     <item>
       <title>첫잔 [11] — 배포를 두 번 했다: 지문이 둘로 갈라진 앱</title>
@@ -168,20 +168,20 @@
       <description>위스키 기록 앱 첫잔의 첫날. 기획서에 적어 둔 &quot;60 무난 · 80 훌륭&quot;은 별 세 개를 100으로 환산한 숫자였습니다. Whiskybase의 실제 구간을 읽고 라벨을 형용사에서 행동으로 바꿨습니다.</description>
     </item>
     <item>
-      <title>Paper [1] — DFT는 왜 녹스는 에너지를 못 맞혔나: GGA+U로 산화 에너지 잡기</title>
+      <title>Paper [1] — GGA는 왜 산화 에너지를 틀리나: O₂ 보정과 금속별 U</title>
       <link>https://seok05.github.io/posts/paper-1-wang2006.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/paper-1-wang2006.html</guid>
       <pubDate>Tue, 25 Aug 2026 00:00:00 GMT</pubDate>
       <category>연구 · Paper</category>
-      <description>첫 논문 리뷰. GGA의 산화 에너지 오차가 왜 둘이고 서로를 가리는지, O₂당 1.36 eV와 금속별 U가 어떻게 분리·결정·검증되는지, 수치와 논증 구조, 저자들이 스스로 그은 한계까지 해부했습니다. (Wang, Maxisch &amp; Ceder, PRB 2006)</description>
+      <description>첫 논문 리뷰. GGA의 산화 에너지 오차가 왜 두 가지이고 서로를 가리는지, O₂당 1.36 eV 보정과 금속별 U를 어떻게 분리하고 정하고 검증하는지, 수치와 논증 구조, 저자들이 밝힌 한계까지 정리했습니다. (Wang, Maxisch &amp; Ceder, PRB 2006)</description>
     </item>
     <item>
-      <title>DFT 실습 [3] — k점 네 개가 물리를 부순 날</title>
+      <title>DFT 실습 [3] — k점 수렴 테스트: 2×2×1에서는 다른 자기 상태로 수렴했다</title>
       <link>https://seok05.github.io/posts/dft-practice-3.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-3.html</guid>
       <pubDate>Tue, 25 Aug 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>빈칸 뚫린 설계도를 그대로 실행한 사고, bash의 공백 문제, 제출 전 검문소 습관, 그리고 2×2×1 mesh에서 자기모멘트가 깨지는 순간까지. 샘플링 부족은 잡음이 아니라 다른 물리를 만든다는 것을 목격한 날.</description>
+      <description>k점 격자 수렴 테스트의 기록입니다. 빈칸이 남은 스크립트를 그대로 실행한 실수, bash의 공백 문제, 제출 전 확인 습관, 그리고 2×2×1에서 자기모멘트가 12가 아니라 10.5로 나와 다른 전자 상태로 수렴한 결과까지 적었습니다.</description>
     </item>
     <item>
       <title>DFT 이론 [3] — GGA는 왜 전압을 1 V씩 틀리는가: +U 보정의 논리</title>
@@ -192,12 +192,12 @@
       <description>표준 DFT의 전압 오차는 잡음이 아니라 한 방향의 계통 편향입니다. 국재화된 d 전자를 차별하는 오차의 정체, O₂ 분자의 별도 오차, 그리고 U=3.9 eV라는 숫자의 출처까지. Wang–Maxisch–Ceder (PRB 2006)를 공부하며 정리한 노트.</description>
     </item>
     <item>
-      <title>DFT 실습 [2] — 폴더 여덟 개로 그린 인생 첫 수렴 곡선</title>
+      <title>DFT 실습 [2] — ENCUT 수렴 테스트: 폴더 여덟 개로 그린 첫 수렴 곡선</title>
       <link>https://seok05.github.io/posts/dft-practice-2.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/dft-practice-2.html</guid>
       <pubDate>Mon, 24 Aug 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>INCAR 열한 줄의 해부, 계산 로그를 4막 드라마로 읽는 법, 그리고 for 반복문 하나로 ENCUT 여덟 점을 돌려 설정값을 감이 아니라 데이터로 확정한 기록. &quot;가짜로 낮은 에너지&quot;에 속지 않는 법도 배웠습니다.</description>
+      <description>INCAR 열한 줄의 뜻, 계산 로그를 네 단계로 읽는 법, 그리고 for 반복문 하나로 ENCUT 여덟 값을 계산해 설정값을 감이 아니라 데이터로 정한 기록입니다. 기저가 부족해 에너지가 오히려 낮게 나오는 경우에 속지 않는 법도 배웠습니다.</description>
     </item>
     <item>
       <title>DFT 이론 [2] — 자기모멘트 12.0은 어떻게 Mn³⁺의 증명이 되는가</title>

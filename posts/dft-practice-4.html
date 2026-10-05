@@ -4,26 +4,26 @@
     <meta charset="utf-8" />
     <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DFT 실습 [4] — U를 걸었더니 전자가 제자리로 돌아왔다 · Seok Lab</title>
+    <title>DFT 실습 [4] — GGA+U 첫 계산: U를 걸자 Mn 자기모멘트가 커졌다 · Seok Lab</title>
     <meta
       name="description"
-      content="한 달을 미루고 복귀한 날, 이론 [3]에 걸어둔 가설을 실측으로 회수했습니다. INCAR에 여섯 줄(U=3.9 eV)을 얹자 Mn의 d 모멘트가 3.85에서 4.35로 올라왔고, GGA와 GGA+U의 에너지를 직접 비교하면 안 되는 이유도 4.5 eV짜리 실물로 확인했습니다."
+      content="NaMnO₂의 Mn d 오비탈에 U = 3.9 eV를 걸어, 이론 [3]의 예측대로 d 전자가 Mn에 더 모이는지 확인했습니다. INCAR에 여섯 줄을 더하자 Mn의 d 모멘트가 3.85에서 4.35 μB로 커졌고, GGA와 GGA+U의 총 에너지를 직접 비교하면 안 되는 이유도 4.5 eV 차이로 확인했습니다."
     />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
     <link rel="stylesheet" href="../assets/blog.css?v=cb450a2b" />
     <link rel="icon" type="image/png" href="../assets/favicon.png" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="DFT 실습 [4] — U를 걸었더니 전자가 제자리로 돌아왔다" />
-    <meta property="og:description" content="한 달을 미루고 복귀한 날, 이론 [3]에 걸어둔 가설을 실측으로 회수했습니다. INCAR 여섯 줄(U=3.9 eV)에 Mn d 모멘트가 3.85에서 4.35로. 그리고 GGA와 GGA+U의 에너지를 직접 비교하면 안 되는 이유를 4.5 eV짜리 실물로 확인했습니다." />
+    <meta property="og:title" content="DFT 실습 [4] — GGA+U 첫 계산: U를 걸자 Mn 자기모멘트가 커졌다" />
+    <meta property="og:description" content="Mn d 오비탈에 U = 3.9 eV를 걸어 이론 [3]의 예측대로 d 전자가 Mn에 더 모이는지 확인했습니다. INCAR 여섯 줄로 Mn d 모멘트가 3.85에서 4.35 μB로 커졌고, GGA와 GGA+U의 총 에너지를 직접 비교하면 안 되는 이유도 4.5 eV 차이로 확인했습니다." />
     <meta property="og:url" content="https://seok05.github.io/posts/dft-practice-4.html" />
     <meta property="og:image" content="https://seok05.github.io/assets/social/dft-practice-4.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="article:published_time" content="2026-09-27T09:00:00+09:00" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DFT 실습 [4] — U를 걸었더니 전자가 제자리로 돌아왔다" />
-    <meta name="twitter:description" content="한 달을 미루고 복귀한 날, 이론 [3]에 걸어둔 가설을 실측으로 회수했습니다. INCAR 여섯 줄(U=3.9 eV)에 Mn d 모멘트가 3.85에서 4.35로. 그리고 GGA와 GGA+U의 에너지를 직접 비교하면 안 되는 이유를 4.5 eV짜리 실물로 확인했습니다." />
+    <meta name="twitter:title" content="DFT 실습 [4] — GGA+U 첫 계산: U를 걸자 Mn 자기모멘트가 커졌다" />
+    <meta name="twitter:description" content="Mn d 오비탈에 U = 3.9 eV를 걸어 이론 [3]의 예측대로 d 전자가 Mn에 더 모이는지 확인했습니다. INCAR 여섯 줄로 Mn d 모멘트가 3.85에서 4.35 μB로 커졌고, GGA와 GGA+U의 총 에너지를 직접 비교하면 안 되는 이유도 4.5 eV 차이로 확인했습니다." />
     <meta name="twitter:image" content="https://seok05.github.io/assets/social/dft-practice-4.jpg" />
   </head>
   <body>
@@ -45,35 +45,31 @@
             <div class="meta-row" style="margin-top: 0">
               <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">VASP 실습</span><span>2026.09.27</span>
             </div>
-            <h1>DFT 실습 [4] — U를 걸었더니 전자가 제자리로 돌아왔다</h1>
-            <p class="lede">
-              고백부터 하겠습니다. 한 달을 미뤘습니다.
-              <a href="dft-practice-3.html">실습 [3]</a>이 8월 25일이었고 오늘이 9월
-              27일입니다. 그런데 복귀에 걸린 시간은 20분이었습니다. 랩노트와 이 블로그의 지난
-              글들이 복구 문서 역할을 해준 덕입니다. 복귀전의 내용도 좋았습니다.
-              <a href="dft-theory-3.html">이론 [3]</a>에 공개적으로 걸어둔 가설, "U는 SIE가
-              퍼뜨린 d 전자를 국재화로 되돌린다"를 제 계산으로 회수한 날입니다.
-            </p>
+            <h1>DFT 실습 [4] — GGA+U 첫 계산: U를 걸자 Mn 자기모멘트가 커졌다</h1>
+            <p class="lede">α-NaMnO₂(MnO₂ 층 사이에 Na가 들어 있는 배터리 양극 물질)를 표준 DFT(GGA)로 계산하면, Mn의 d 전자가 실제보다 넓게 퍼지는 오차가 생깁니다(<a href="dft-theory-3.html">이론 [3]</a>). 이를 보정하는 방법이 d 오비탈에 벌점 U를 거는 GGA+U입니다. 이번에는 같은 구조에 U = 3.9 eV를 걸어, 이론 [3]에 적은 예측("U를 걸면 d 전자가 Mn 원자 쪽에 더 모인다")이 계산에서도 나오는지 확인했습니다. <a href="dft-practice-3.html">실습 [3]</a>(8월 25일) 이후 한 달 만의 계산이었는데, 다시 시작하는 데 20분이 걸렸습니다. 랩노트와 이 블로그의 지난 글 덕분입니다.</p>
           </div>
 
           <figure class="shot wide illus">
             <div class="shot-card"><img src="../assets/illus/dft-practice-4.webp" alt="네잎 모양 d 오비탈" width="1280" height="800" loading="lazy" decoding="async"></div>
-            <figcaption>U를 건 뒤의 d 오비탈. 퍼져 있던 전자가 네잎 모양 제자리로 돌아옵니다.</figcaption>
+            <figcaption>U를 건 뒤의 d 오비탈. 넓게 퍼져 있던 전자가 Mn 둘레의 네잎 모양 오비탈로 다시 모입니다.</figcaption>
           </figure>
 
-          <h2>0. 복귀: 블로그는 미래의 나를 위한 백업이었다</h2>
-          <p>
-            한 달 공백 후에 제일 무서운 건 "어디까지 했더라"입니다. 이번에 확인한 것: 그
-            공포의 해독제는 기억력이 아니라 <strong>기록</strong>이었습니다. 랩노트의 마지막
-            줄(ENCUT=520 / 6×6×2 동결)과 실습 [2], 이론 [3]을 다시 읽는 것으로 상태가
-            복원됐습니다. 심지어 이론 [3]의 마지막 문단에는 다음 할 일까지 적혀 있었습니다.
-            "같은 NaMnO₂에 U=3.9를 걸었을 때와 안 걸었을 때의 비교." 과거의 내가 오늘의
-            나에게 남긴 작업 지시서인 셈입니다.
-          </p>
+          <div class="box">
+            <p class="box-label">이 글에 나오는 말</p>
+            <ul>
+              <li><strong>GGA와 GGA+U</strong>: GGA는 표준 DFT에서 쓰는 근사 범함수 계열입니다(여기서는 PBE). GGA+U는 여기에 d 오비탈의 점유가 0이나 1에서 벗어날수록 에너지를 높이는 벌점 항을 더한 것이고, 그 세기가 U입니다.</li>
+              <li><strong>자기상호작용 오차(SIE)</strong>: 근사 범함수에서 전자가 자기 자신과 반발하는 가짜 항이 남는 오차입니다. 좁은 곳에 모인 d 전자일수록 커서, GGA는 d 전자를 실제보다 넓게 퍼뜨립니다.</li>
+              <li><strong>국재화</strong>: 전자가 한 원자 근처에 모여 있는 것입니다.</li>
+              <li><strong>이온별 자기모멘트와 산소 분극</strong>: 원자마다 둘레의 구 안에서 잰 스핀 밀도입니다. Mn의 값으로 가수를 읽고(<a href="dft-theory-2.html">이론 [2]</a>), 산소에 생긴 작은 값을 산소 분극이라고 부릅니다.</li>
+            </ul>
+          </div>
+
+          <h2>0. 한 달 만의 복귀: 기록으로 다시 시작하기</h2>
+          <p>한 달을 쉬고 나면 가장 먼저 막히는 것이 "어디까지 했더라"입니다. 이번에 확인한 것은, 다시 시작하는 데 필요한 것이 기억이 아니라 <strong>기록</strong>이라는 점입니다. 랩노트의 마지막 줄(ENCUT=520 / 6×6×2 고정)과 실습 [2], 이론 [3]을 다시 읽는 것으로 상태가 복원됐습니다. 이론 [3]의 마지막 문단에는 다음 할 일까지 적혀 있었습니다. "같은 NaMnO₂에 U=3.9를 걸었을 때와 안 걸었을 때의 비교."</p>
 
           <h2>1. 실험 설계: 바꾸는 것은 범함수 하나</h2>
           <p>
-            수렴 테스트 시리즈와 똑같은 변인 통제입니다. 구조, ENCUT, k-mesh를 전부 동결한 채
+            수렴 테스트와 같은 방식으로 변인을 통제합니다. 구조, ENCUT, k-mesh를 전부 고정한 채
             <strong>범함수 쪽만</strong> 움직입니다. GGA 기준값은 실습 [1]의 계산이 이미
             있으니 재활용하고, 새로 돌릴 것은 +U 쪽 하나뿐입니다.
           </p>
@@ -82,7 +78,7 @@ cp -r work/01_NaMnO2_conv/test01 work/02_functional/u39
 cd work/02_functional/u39
 rm -f WAVECAR CHGCAR CHG OUTCAR OSZICAR vasp.log CONTCAR</code></pre>
 
-          <h2>2. INCAR에 여섯 줄: U가 입주하는 순간</h2>
+          <h2>2. INCAR에 더한 여섯 줄</h2>
           <pre><code>LDAU     = .TRUE.
 LDAUTYPE = 2
 LDAUL    = -1  2 -1
@@ -92,26 +88,26 @@ LMAXMIX  = 4</code></pre>
           <ul>
             <li>
               <strong>LDAUTYPE = 2.</strong> Dudarev 방식.
-              <a href="paper-1-wang2006.html">Paper [1]</a>에서 해부한 바로 그 식
+              <a href="paper-1-wang2006.html">Paper [1]</a>에서 살펴본 식
               (U_eff/2)·Σn(1−n)입니다. U와 J의 차이만 들어가는 형식이라 LDAUJ는 0으로 두고
               LDAUU에 U_eff를 직접 씁니다.
             </li>
             <li>
               <strong>LDAUL = -1 2 -1.</strong> 원소별로 어느 오비탈에 걸 것인가. 순서는
               POSCAR의 원소 순서(Na, Mn, O) 그대로이고, Na와 O는 걸지 않고(−1) Mn의 d
-              오비탈(l=2)에만 겁니다. 리뷰에서 배운 원칙, <em>U는 국재화된 d 전자를 위한
-              약이고 퍼진 전자에 걸면 병을 만든다</em>는 것의 실물 구현입니다.
+              오비탈(l=2)에만 겁니다. 논문에서 배운 원칙, <em>U는 한 원자에 모여 있는 d 전자를 위한
+              보정이고 넓게 퍼진 전자에 걸면 결과가 오히려 나빠진다</em>는 것을 그대로 따른 설정입니다.
             </li>
             <li>
-              <strong>LDAUU = 0 3.9 0.</strong> 주인공. Wang, Maxisch, Ceder(2006)가 망간
+              <strong>LDAUU = 0 3.9 0.</strong> U의 값입니다. Wang, Maxisch, Ceder(2006)가 망간
               산화물들의 실험 산화 엔탈피에 피팅해 얻은 값 3.9 eV입니다. 논문 리뷰까지
               해놓고 그 숫자를 제 입력 파일에 직접 적는 기분이 묘하게 좋습니다. "남들이
               쓰길래"가 아니라 출처를 아는 숫자.
             </li>
             <li>
-              <strong>LMAXMIX = 4.</strong> 실무 비법 한 줄. SCF의 밀도 혼합기는 기본
-              설정으로 d 성분을 충분히 섞지 않는데, +U는 d 점유 행렬이 주인공이라 이걸
-              올려줘야 수렴이 안정됩니다. 빼먹으면 +U 계산이 느리게 수렴하거나 진동하는 단골
+              <strong>LMAXMIX = 4.</strong> 수렴을 위한 설정입니다. SCF의 밀도 혼합기는 기본
+              설정으로 d 성분을 충분히 섞지 않는데, +U 계산은 d 오비탈의 점유가 핵심이라 이 값을
+              올려야 수렴이 안정됩니다. 빼먹으면 +U 계산이 느리게 수렴하거나 진동하는 단골
               원인이라고 합니다.
             </li>
           </ul>
@@ -159,67 +155,49 @@ LMAXMIX  = 4</code></pre>
               <text class="svg-label-sm svg-ink" x="545" y="218" text-anchor="middle">GGA+U</text>
             </svg></div>
             <figcaption>
-              U를 걸자 Mn의 스핀은 통통해지고(+0.49 μB), 산소는 반대 방향으로 더 강하게
-              분극됩니다(−0.21 μB). 셀 합계는 양쪽 다 정확히 12.00입니다. 총합은 같은데 그
-              12가 어디에 사는지가 달라졌습니다.
+              U를 걸자 Mn의 모멘트는 커지고(+0.49 μB), 산소는 반대 방향으로 더 강하게
+              분극됩니다(−0.21 μB). 셀 합계는 양쪽 다 정확히 12.00입니다. 총합은 같은데
+              12가 Mn과 O에 나뉘는 비율이 달라졌습니다.
             </figcaption>
           </figure>
 
-          <h2>4. 판독: 가설 회수</h2>
+          <h2>4. 해석: 이론 [3]의 예측과 비교</h2>
           <ul>
             <li>
-              <strong>국재화 복원, 실증.</strong> SIE는 d 전자를 실제보다 퍼뜨리고, U는 그
-              벌점을 상쇄해 전자를 제자리에 앉힌다는 이론 [3]의 핵심 문장이 +0.49 μB라는
-              숫자로 돌아왔습니다. 이 패턴은 Paper [1]의 Table II가 17개 산화물로 보여준
-              것과 같은 방향, 같은 크기(+0.3~0.5 μB)입니다. 그 표의 18번째 행을 제 손으로
-              추가한 셈입니다.
+              <strong>d 전자가 Mn에 더 모였습니다.</strong> SIE는 d 전자를 실제보다 퍼뜨리고, U는 그
+              오차를 상쇄해 d 전자를 Mn 쪽으로 다시 모은다는 이론 [3]의 내용이 +0.49 μB라는
+              숫자로 나왔습니다. Paper [1]의 Table II가 산화물 17개에서 보여 준 것과
+              같은 방향, 같은 크기(+0.3~0.5 μB)입니다.
             </li>
             <li>
-              <strong>산소의 −0.25는 덤으로 얻은 물리.</strong> O 여섯 개가 전부 Mn과 반대
-              방향으로 분극되어 있습니다. Mn의 d 스핀이 산소 2p와 혼성하며 유도한 반평행
-              분극, 즉 초교환(superexchange) 상호작용의 지문입니다.
-              <a href="dft-theory-2.html">이론 [2]</a>에서 "11.9991의 부스러기는 산소로 샌
-              것"이라 했던 그 누수가, +U 세계에서는 이온별 표에 선명하게 찍힙니다.
+              <strong>산소의 −0.25.</strong> O 여섯 개가 전부 Mn과 반대
+              방향으로 분극되어 있습니다. Mn의 d 오비탈이 산소 2p 오비탈과 섞이면서(혼성) 생긴 반대 방향
+              분극이고, 초교환(superexchange) 상호작용에서 나타나는 특징입니다.
+              <a href="dft-theory-2.html">이론 [2]</a>에서 셀 전체 모멘트 11.9991이 12보다 조금 작은 이유를
+              산소 쪽으로 퍼진 모멘트로 설명했는데, +U 계산에서는 그 산소 모멘트가 이온별 표에 뚜렷하게 나타납니다.
             </li>
             <li>
               <strong>왜 4.0이 아니라 4.35인가.</strong> 형식 이온 그림(d⁴ = 4.0)은
               이상화이고, 모멘트를 세는 투영 구 안에 O 2p와 혼성된 성분이 함께 잡히기
               때문입니다. Paper [1] §8.1에서 "d 전자라는 것이 유일하게 정의되지 않는다"고
-              했던 투영 임의성의 실물입니다. 중요한 것은 절대값이 아니라 GGA 대비
+              했던 점, 즉 어떤 범위를 원자에 넣어 세느냐에 따라 값이 달라진다는 점이 여기서 드러납니다. 중요한 것은 절대값이 아니라 GGA 대비
               <em>방향과 크기</em>이고, 그건 교과서와 일치합니다.
             </li>
           </ul>
 
-          <h2>5. 함정: 총 에너지 4.5 eV의 경고</h2>
-          <p>
-            +U 계산의 총 에너지는 −62.13 eV로, GGA의 −66.67 eV보다 <strong>4.5 eV나
-            높게</strong> 나왔습니다. "U를 걸었더니 물질이 불안정해졌다"고 읽으면 완전히
-            틀립니다. U 벌점 항은 에너지 장부의 기준 자체를 옮겨놓기 때문에,
-            <strong>GGA 에너지와 GGA+U 에너지는 애초에 같은 자로 잰 값이 아닙니다.</strong>
-            이론 [3]에서 "청구서 ②: 에너지끼리 호환이 안 됨"이라고 적어뒀던 항목의 실측
-            증거입니다. 실무 규칙으로 번역하면 이렇습니다. +U 세계에서 무언가를 비교하려면
-            <em>비교 대상 전부를 같은 U로</em> 계산해야 하고, 서로 다른 수준의 계산을 한
-            상평형도에 섞으려면 별도의 호환 보정(Materials Project가 하는 그 일)이
-            필요합니다.
-          </p>
+          <h2>5. 주의: GGA+U 에너지는 GGA 에너지와 비교할 수 없다</h2>
+          <p>+U 계산의 총 에너지는 −62.13 eV로, GGA의 −66.67 eV보다 <strong>4.5 eV 높게</strong> 나왔습니다. "U를 걸었더니 물질이 불안정해졌다"고 읽으면 틀립니다. U 벌점 항은 에너지의 기준점 자체를 바꾸기 때문에, <strong>GGA 에너지와 GGA+U 에너지는 처음부터 같은 기준으로 계산한 값이 아닙니다.</strong> 이론 [3]에서 U가 남기는 문제로 적은 "에너지끼리 호환이 안 됨"을 계산으로 확인한 것입니다. 실무 규칙으로 옮기면 이렇습니다. +U 계산끼리 무언가를 비교하려면 <em>비교 대상 전부를 같은 U로</em> 계산해야 하고, 서로 다른 수준의 계산을 한 상평형도에 섞으려면 별도의 보정(Materials Project가 하는 일)이 필요합니다.</p>
 
           <h2>이날 배운 것들</h2>
           <ul>
-            <li><strong>기록이 관성을 이긴다.</strong> 한 달 공백의 복구 비용이 20분이었던 건 랩노트와 블로그 덕이다. 미래의 나는 남이다. 남에게 설명하듯 남겨야 한다.</li>
-            <li><strong>U의 효과는 에너지가 아니라 전자 구조에서 읽는다.</strong> 이온별 모멘트(국재화)와 산소 분극이 관측량이고, GGA vs GGA+U 총 에너지 비교는 무의미하다.</li>
+            <li><strong>기록이 있으면 쉬었다가도 바로 이어 갈 수 있다.</strong> 한 달 공백 뒤 다시 시작하는 데 20분이 걸린 것은 랩노트와 블로그 덕이다. 미래의 나는 남이다. 남에게 설명하듯 남겨야 한다.</li>
+            <li><strong>U의 효과는 에너지가 아니라 전자 구조에서 읽는다.</strong> 이온별 모멘트와 산소 분극으로 보고, GGA vs GGA+U 총 에너지 비교는 무의미하다.</li>
             <li><strong>출처 있는 숫자의 힘.</strong> LDAUU의 3.9는 논문 리뷰로 출처를 확인한 값이라, 결과가 나왔을 때 "왜 이 방향인가"까지 설명할 수 있었다.</li>
-            <li><strong>LMAXMIX = 4.</strong> +U 계산의 수렴 안정용 비법 한 줄. 이런 건 매뉴얼보다 먼저 몸에 새겨두는 게 낫다.</li>
+            <li><strong>LMAXMIX = 4.</strong> +U 계산의 수렴을 안정시키는 설정이다.</li>
           </ul>
 
           <div class="box">
-            <p style="margin: 0">
-              <strong>다음.</strong> 범함수 비교의 나머지 반쪽, 사다리 3단
-              <strong>r2SCAN</strong>입니다. U라는 경험적 손잡이 없이 더 좋은 범함수만으로
-              어디까지 오는지를 같은 구조에서 확인하고, GGA / GGA+U / r2SCAN 세 세계의 Mn
-              모멘트와 격자를 나란히 놓는 것. 본 연구(고엔트로피 Na 층상산화물)의 방법론
-              선택이 걸린 비교라, 이번 시리즈에서 처음으로 "답을 모르는 채" 결과를 기다리는
-              계산이 됩니다.
-            </p>
+            <p style="margin: 0"><strong>다음.</strong> 범함수 비교의 나머지 절반인 <strong>r2SCAN</strong>입니다. r2SCAN은 GGA보다 한 단계 높은 근사(meta-GGA, <a href="dft-explained.html">이론 [1]</a>)로, 경험적으로 정한 U 없이 범함수만으로 어디까지 맞는지를 같은 구조에서 확인합니다. GGA / GGA+U / r2SCAN 세 방법의 Mn 모멘트와 격자를 나란히 놓습니다. 이 연구(고엔트로피 Na 층상 산화물)에서 어떤 방법을 쓸지가 걸린 비교라, 이 시리즈에서 처음으로 "답을 모르는 채" 결과를 기다리는 계산이 됩니다.</p>
           </div>
 
           <div class="author-card">
@@ -265,7 +243,7 @@ LMAXMIX  = 4</code></pre>
       </div>
     </footer>
 
-    <script src="../assets/posts.js?v=6953c381"></script>
+    <script src="../assets/posts.js?v=7a5e1927"></script>
     <script src="../assets/site.js?v=4826fb50"></script>
   </body>
 </html>
