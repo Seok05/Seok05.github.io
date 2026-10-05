@@ -526,28 +526,16 @@ kbd {
   top: calc(var(--header-h) + var(--s-6));
 }
 
-/* 카드 그림: 연구 노트 일러스트를 썸네일과 같은 16:10·모서리 10·1px 선으로. 홈에서 눈이 처음 닿는 자리 */
+/* 프로필 그림: 둥근 96, 배경을 뺀 그림이라 원 안은 썸네일 배경 토큰(테마를 따라간다) */
 .profile-pic {
   display: block;
-  width: 100%;
-  height: auto; /* width·height 속성(480×300)이 aspect-ratio를 덮지 않게 */
-  aspect-ratio: 16 / 10;
+  width: 96px;
+  height: 96px;
   margin-bottom: var(--s-5);
   border: 1px solid var(--line);
-  border-radius: var(--r-md);
+  border-radius: 50%;
   background: var(--thumb-bg);
   object-fit: cover;
-}
-
-/* 종이 위 일러스트라 다크에서는 살짝 낮춘다 */
-:root[data-theme="dark"] .profile-pic {
-  filter: brightness(0.9);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .profile-pic {
-    filter: brightness(0.9);
-  }
 }
 
 .profile-name {
@@ -1823,6 +1811,7 @@ pre,
   height: 48px;
   border: 1px solid var(--line);
   border-radius: 50%;
+  background: var(--thumb-bg);
   object-fit: cover;
 }
 
@@ -2132,13 +2121,29 @@ body.pal-open {
     max-width: calc(var(--w-list) + 2 * var(--gutter));
   }
 
-  /* 가로형 카드: 그림은 뺀다(작게 줄이면 스케치가 흐려진다). 이름·한 줄·소개·링크·처음이라면만 */
+  /* 가로형 카드: 그림 56이 왼쪽, 이름·한 줄이 오른쪽, 소개·링크·처음이라면은 아래 전체 폭 */
   .profile {
     position: static;
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    column-gap: var(--s-4);
+    align-items: center;
   }
 
   .profile-pic {
-    display: none;
+    width: 56px;
+    height: 56px;
+    margin: 0;
+  }
+
+  .profile-text {
+    min-width: 0;
+  }
+
+  .profile-bio,
+  .profile-links,
+  .profile-start {
+    grid-column: 1 / -1;
   }
 
   .profile-links {
