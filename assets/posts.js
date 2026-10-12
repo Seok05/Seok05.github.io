@@ -89,6 +89,20 @@ window.SEOK = {
 
   posts: [
     {
+      slug: "research-2",
+      figure: "5,405,400", // 그날의 숫자: C3 한 조성에서 TM 16자리에 원소를 배치하는 경우의 수
+      cat: "dft",
+      thumb: "assets/thumbs/research-2.webp",
+      tag: "본 연구",
+      date: "2026.10.12",
+      series: "research",
+      order: 2,
+      related: ["dft-practice-11", "dft-practice-12"],
+      title: "연구 [2] — 540만 가지 배열에서 1,034개의 팔면체로: 고르고, 거르고, 확정하는 법",
+      blurb:
+        "고엔트로피 조성은 같은 성분이어도 원자 배치가 수백만 가지입니다. CHGNet으로 3,146개를 거르고 DFT로 180개를 확정한 과정을 단계마다 '왜 그렇게 했는가'와 함께 정리했습니다. 바닥 후보만 고르면 왜 위험한지, Mn³⁺를 어떻게 골라내는지, 지금 검증 중인 함정까지 담았습니다.",
+    },
+    {
       slug: "research-1",
       figure: "1.97/2.44 Å", // 그날의 숫자: α-NaMnO₂ MnO₆의 짧은 결합 넷(1.97 Å)과 긴 결합 둘(2.44 Å)
       cat: "dft",

@@ -574,9 +574,27 @@ def research_1():
     save(fig, "research-1")
 
 
+# ── 연구 [2] 고르고 거르고 확정: 배열 구름(이웃 × 에너지)에서 바닥 후보 10(채운 파랑)과 다양성 후보 20(파란 고리) ──
+def research_2():
+    fig, ax = canvas()
+    rng = np.random.default_rng(7)
+    ax.plot([150, 150, 1150], [700, 120, 120], color=mix(GRAPH, 0.3), lw=2.5, zorder=1, solid_capstyle="round")
+    xs = rng.uniform(190, 1110, 150)
+    ys = 190 + (xs - 190) * 0.45 + rng.normal(0, 55, 150)
+    for x, y in zip(xs, ys):
+        ax.add_patch(Circle((x, min(680, max(150, y))), 9, color=mix(GRAPH, 0.45), zorder=2, lw=0))
+    for k in range(10):  # 바닥 후보: 왼쪽 아래에 뭉친다
+        sphere(ax, 230 + rng.uniform(0, 160), 165 + rng.uniform(0, 45), 15, INDIGO, z=5, shadow=False)
+    for k in range(20):  # 다양성 후보: 가로축 전체에 퍼진다
+        x = 210 + k * 46 + rng.uniform(-10, 10)
+        y = 190 + (x - 190) * 0.45 + rng.normal(0, 45)
+        ax.add_patch(Circle((x, min(670, max(160, y))), 16, fill=False, ec=INDIGO, lw=3, zorder=4))
+    save(fig, "research-2")
+
+
 ALL = [dft_explained, first_dft_run, dft_theory_2, dft_practice_2, dft_theory_3, dft_practice_3, paper_1,
        dft_practice_4, dft_practice_5, dft_practice_6, laptop_to_server, dft_practice_7, dft_practice_8,
-       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12, research_1]
+       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12, research_1, research_2]
 
 if __name__ == "__main__":
     # 함수 이름을 주면 그 그림만 다시 그린다 (예: ... dft_practice_10). --theme=light|dark 로 한 벌만

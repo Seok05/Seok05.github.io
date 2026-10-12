@@ -8,6 +8,14 @@
     <lastBuildDate>Mon, 12 Oct 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://seok05.github.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
+      <title>연구 [2] — 540만 가지 배열에서 1,034개의 팔면체로: 고르고, 거르고, 확정하는 법</title>
+      <link>https://seok05.github.io/posts/research-2.html</link>
+      <guid isPermaLink="true">https://seok05.github.io/posts/research-2.html</guid>
+      <pubDate>Mon, 12 Oct 2026 00:00:00 GMT</pubDate>
+      <category>연구 · DFT</category>
+      <description>고엔트로피 조성은 같은 성분이어도 원자 배치가 수백만 가지입니다. CHGNet으로 3,146개를 거르고 DFT로 180개를 확정한 과정을 단계마다 '왜 그렇게 했는가'와 함께 정리했습니다. 바닥 후보만 고르면 왜 위험한지, Mn³⁺를 어떻게 골라내는지, 지금 검증 중인 함정까지 담았습니다.</description>
+    </item>
+    <item>
       <title>연구 [1] — 고엔트로피 양극재는 왜 얀-텔러를 누를까: 이웃인가, 비율인가</title>
       <link>https://seok05.github.io/posts/research-1.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/research-1.html</guid>
