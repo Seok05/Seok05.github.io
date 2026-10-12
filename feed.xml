@@ -13,7 +13,7 @@
       <guid isPermaLink="true">https://seok05.github.io/posts/research-2.html</guid>
       <pubDate>Mon, 12 Oct 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>고엔트로피 조성은 같은 성분이어도 원자 배치가 수백만 가지입니다. CHGNet으로 3,146개를 거르고 DFT로 180개를 확정한 과정을 단계마다 '왜 그렇게 했는가'와 함께 정리했습니다. 바닥 후보만 고르면 왜 위험한지, Mn³⁺를 어떻게 골라내는지, 지금 검증 중인 함정까지 담았습니다.</description>
+      <description>고엔트로피 조성은 같은 성분이어도 원자 배치가 수백만 가지입니다. CHGNet으로 3,146개를 거르고 DFT로 180개를 확정한 과정을 실제 데이터로 따라갔습니다. 몬테카를로가 바닥을 더 깊게 판 것, CHGNet이 순위는 맞히지만 크기는 작게 본다는 것, 바닥 후보만 봤다면 틀릴 뻔한 상관, 셀 전체 자기모멘트로는 안 보이던 전하 이동까지 담았습니다.</description>
     </item>
     <item>
       <title>연구 [1] — 고엔트로피 양극재는 왜 얀-텔러를 누를까: 이웃인가, 비율인가</title>
