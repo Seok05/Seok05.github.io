@@ -550,9 +550,33 @@ def dft_practice_12():
                 ax.add_patch(Circle((cx, 150), 19, fill=False, ec=mix(GRAPH, 0.35), lw=2, ls=(0, (4, 4)), zorder=5))
     save(fig, "dft-practice-12")
 
+# ── 연구 [1] 이웃인가 비율인가: 가운데 Mn³⁺ 팔면체(긴 결합 둘은 파랑)를 Fe·Ni·Ti·Mn⁴⁺ 이웃 여섯이 둘러싼다 ──
+FE, NI2, TI, MN4 = "#F2992E", "#2FA36B", "#4D94E6", "#CDB8EB"  # 글 안 도해(그림 2)의 범례와 같은 색
+
+
+def research_1():
+    fig, ax = canvas()
+    c = np.array([640, 400])
+    # 이웃 여섯: 육각형, Fe·Ni·Mn⁴⁺·Ti가 섞여 있다
+    for i, col in enumerate((FE, NI2, MN4, TI, FE, NI2)):
+        ang = np.radians(i * 60)
+        p = c + (300 * np.cos(ang), 190 * np.sin(ang))
+        ax.plot([c[0], p[0]], [c[1], p[1]], color=mix(GRAPH, 0.6), lw=2, zorder=1)
+        sphere(ax, p[0], p[1], 40, col, z=3, shadow=False)
+    # 짧은 결합 넷(회색)과 긴 결합 둘(파랑): 1.97 : 2.44
+    for dx, dy in ((-78, -28), (78, 28), (-62, 40), (62, -40)):
+        bond(ax, c, c + (dx, dy), color=GRAPH, lw=7, z=4)
+        sphere(ax, c[0] + dx, c[1] + dy, 17, O, z=6, shadow=False)
+    for sgn in (1, -1):
+        bond(ax, c, (c[0], c[1] + sgn * 150), color=INDIGO, lw=8, z=5)
+        sphere(ax, c[0], c[1] + sgn * 150, 20, O, z=7, shadow=False)
+    sphere(ax, c[0], c[1], 48, MN, z=6)
+    save(fig, "research-1")
+
+
 ALL = [dft_explained, first_dft_run, dft_theory_2, dft_practice_2, dft_theory_3, dft_practice_3, paper_1,
        dft_practice_4, dft_practice_5, dft_practice_6, laptop_to_server, dft_practice_7, dft_practice_8,
-       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12]
+       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12, research_1]
 
 if __name__ == "__main__":
     # 함수 이름을 주면 그 그림만 다시 그린다 (예: ... dft_practice_10). --theme=light|dark 로 한 벌만

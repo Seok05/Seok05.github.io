@@ -5,8 +5,16 @@
     <link>https://seok05.github.io/</link>
     <description>연구하면서 개발하는 Seok의 블로그. 배터리 재료의 DFT 계산과 EValue·첫잔 개발 기록.</description>
     <language>ko</language>
-    <lastBuildDate>Fri, 02 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 12 Oct 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://seok05.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>연구 [1] — 고엔트로피 양극재는 왜 얀-텔러를 누를까: 이웃인가, 비율인가</title>
+      <link>https://seok05.github.io/posts/research-1.html</link>
+      <guid isPermaLink="true">https://seok05.github.io/posts/research-1.html</guid>
+      <pubDate>Mon, 12 Oct 2026 00:00:00 GMT</pubDate>
+      <category>연구 · DFT</category>
+      <description>Mn이 많은 Na 층상 산화물의 수명을 깎는 얀-텔러 왜곡과, 여러 원소를 섞는 고엔트로피 전략이 그것을 누른다는 보고들을 정리했습니다. 그런데 그 이유는 '얀-텔러 이온이 줄어서'와 '특정 이웃이 붙잡아서'로 갈립니다. 두 가지를 떼어 놓도록 조성을 설계한 본 연구의 질문과 접근을 소개합니다.</description>
+    </item>
     <item>
       <title>DFT 실습 [12] — Na₀.₇₅MnO₂는 안정한가: 모든 배치를 계산한 최종 판정</title>
       <link>https://seok05.github.io/posts/dft-practice-12.html</link>

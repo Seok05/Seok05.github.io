@@ -89,6 +89,20 @@ window.SEOK = {
 
   posts: [
     {
+      slug: "research-1",
+      figure: "1.97/2.44 Å", // 그날의 숫자: α-NaMnO₂ MnO₆의 짧은 결합 넷(1.97 Å)과 긴 결합 둘(2.44 Å)
+      cat: "dft",
+      thumb: "assets/thumbs/research-1.webp",
+      tag: "본 연구",
+      date: "2026.10.12",
+      series: "research",
+      order: 1,
+      related: ["dft-practice-11", "dft-practice-12"],
+      title: "연구 [1] — 고엔트로피 양극재는 왜 얀-텔러를 누를까: 이웃인가, 비율인가",
+      blurb:
+        "Mn이 많은 Na 층상 산화물의 수명을 깎는 얀-텔러 왜곡과, 여러 원소를 섞는 고엔트로피 전략이 그것을 누른다는 보고들을 정리했습니다. 그런데 그 이유는 '얀-텔러 이온이 줄어서'와 '특정 이웃이 붙잡아서'로 갈립니다. 두 가지를 떼어 놓도록 조성을 설계한 본 연구의 질문과 접근을 소개합니다.",
+    },
+    {
       slug: "dft-practice-12",
       figure: "−9.1 meV", // 그날의 숫자: Na0.75MnO2의 최종 볼록 껍질 이탈 에너지 (meV/화학식)
       cat: "dft",
