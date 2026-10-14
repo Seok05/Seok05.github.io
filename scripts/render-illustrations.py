@@ -592,9 +592,30 @@ def research_2():
     save(fig, "research-2")
 
 
+# ── 연구 [3] 이웃이 아니라 비율: 여섯 조성의 왜곡이 직선 하나 위에 놓이고, 늘린 직선이 f=1의 α-NaMnO₂(별)에 닿는다 ──
+CHART = ["#332288", "#117733", "#44AA99", "#999933", "#CC6677", "#882255"]  # 글 안 도해의 --chart-1~6(라이트)
+
+
+def research_3():
+    fig, ax = canvas()
+    rng = np.random.default_rng(11)
+    ax.plot([150, 150, 1150], [700, 120, 120], color=mix(GRAPH, 0.3), lw=2.5, zorder=1, solid_capstyle="round")
+    X = lambda f: 190 + f * 920
+    Y = lambda d: 160 + (d - 1.08) / 0.17 * 500
+    line = lambda f: 1.080 + 0.163 * f
+    ax.plot([X(0.03), X(0.55)], [Y(line(0.03)), Y(line(0.55))], color=INDIGO, lw=4, zorder=3, solid_capstyle="round")
+    ax.plot([X(0.55), X(1.0)], [Y(line(0.55)), Y(line(1.0))], color=INDIGO, lw=3, ls=(0, (6, 6)), zorder=3)
+    for f, col in zip((0.47, 0.5, 0.53, 0.375, 0.25, 0.11), CHART):
+        for _ in range(10):
+            x, y = X(f + rng.normal(0, 0.012)), Y(line(f) + rng.normal(0, 0.007))
+            sphere(ax, x, y, 11, col, z=4, shadow=False)
+    ax.plot([X(1.0)], [Y(1.236)], marker="*", ms=42, color=WARM, zorder=6, lw=0, markeredgewidth=0)
+    save(fig, "research-3")
+
+
 ALL = [dft_explained, first_dft_run, dft_theory_2, dft_practice_2, dft_theory_3, dft_practice_3, paper_1,
        dft_practice_4, dft_practice_5, dft_practice_6, laptop_to_server, dft_practice_7, dft_practice_8,
-       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12, research_1, research_2]
+       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12, research_1, research_2, research_3]
 
 if __name__ == "__main__":
     # 함수 이름을 주면 그 그림만 다시 그린다 (예: ... dft_practice_10). --theme=light|dark 로 한 벌만

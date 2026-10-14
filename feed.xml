@@ -5,8 +5,16 @@
     <link>https://seok05.github.io/</link>
     <description>연구하면서 개발하는 Seok의 블로그. 배터리 재료의 DFT 계산과 EValue·첫잔 개발 기록.</description>
     <language>ko</language>
-    <lastBuildDate>Mon, 12 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 14 Oct 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://seok05.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>연구 [3] — 이웃이 아니라 비율이었다: 1,034개 팔면체가 내놓은 답</title>
+      <link>https://seok05.github.io/posts/research-3.html</link>
+      <guid isPermaLink="true">https://seok05.github.io/posts/research-3.html</guid>
+      <pubDate>Wed, 14 Oct 2026 00:00:00 GMT</pubDate>
+      <category>연구 · DFT</category>
+      <description>Mn³⁺의 얀-텔러 왜곡을 정하는 것은 바로 옆 이웃이 아니라 셀 전체의 얀-텔러 이온 비율이었습니다. 직선 하나가 NaMnO₂까지 이어지고, 이웃만 바꾼 세 조성의 왜곡은 0.003 안에서 같았습니다. 왜곡은 고립 성분과 협동 성분으로 나뉘고, 협동 성분만이 비율에 비례해 격자 전체를 변형합니다.</description>
+    </item>
     <item>
       <title>연구 [2] — 540만 가지 배열에서 1,034개의 팔면체로: 고르고, 거르고, 확정하는 법</title>
       <link>https://seok05.github.io/posts/research-2.html</link>

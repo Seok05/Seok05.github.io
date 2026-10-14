@@ -21,6 +21,14 @@
   --warm: #c2570c;
   --warm-soft: #fff4e8;
   --thumb-bg: #eaeef3; /* 썸네일·표지 배경. 그림 파일(assets/thumbs)도 이 색으로 그린다 */
+  /* 글 안 도해의 데이터 계열 색(조성 C1~C6, Tol의 muted 팔레트). 다크에서는 밝힌다. 원소 색(Mn 보라·Fe 주황·Ni 초록·Ti 파랑)은 테마 무관 */
+  --chart-1: #332288;
+  --chart-2: #117733;
+  --chart-3: #44aa99;
+  --chart-4: #999933;
+  --chart-5: #cc6677;
+  --chart-6: #882255;
+  --chart-purple: #5b3e99;
 
   /* 글 속 도해와 스크립트가 쓰는 예전 이름. 뜻은 그대로, 색만 새 체계를 따른다 */
   --ink: var(--text-strong);
@@ -96,6 +104,13 @@
     --warm: #f0a35e;
     --warm-soft: #2a1d10;
     --thumb-bg: #1a1f27;
+    --chart-1: #9b8fe0;
+    --chart-2: #5fc07d;
+    --chart-3: #7fd3c4;
+    --chart-4: #cfcf6c;
+    --chart-5: #e8a0ae;
+    --chart-6: #cf7aa4;
+    --chart-purple: #b39ddb;
     color-scheme: dark;
   }
 }
@@ -114,6 +129,13 @@
   --warm: #f0a35e;
   --warm-soft: #2a1d10;
     --thumb-bg: #1a1f27;
+    --chart-1: #9b8fe0;
+    --chart-2: #5fc07d;
+    --chart-3: #7fd3c4;
+    --chart-4: #cfcf6c;
+    --chart-5: #e8a0ae;
+    --chart-6: #cf7aa4;
+    --chart-purple: #b39ddb;
   color-scheme: dark;
 }
 
