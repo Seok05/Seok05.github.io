@@ -1433,6 +1433,17 @@ figure > img,
   cursor: zoom-in;
 }
 
+/* 도판: 저자가 보낸 래스터 그림(흰 바탕 PNG→webp, assets/research). 흰 판은 캡처처럼 테마와 상관없이 흰색 그대로,
+   모서리 10, 1px 선, 안쪽 8. 글 안에서 인라인 스타일로 흰 바탕을 만들지 않는다(DESIGN.md §4 그림) */
+figure.plate img {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--s-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: #fff;
+}
+
 /* 실제 화면: 폰 · 브라우저 · 카드 · 삽화 */
 figure.shot {
   max-width: 300px;

@@ -68,6 +68,9 @@
 - `feed.xml`·`sitemap.xml`·`robots.txt` — `node scripts/build-meta.mjs`가 posts.js에서 생성.
   같은 스크립트가 HTML 36장의 `assets/blog.css?v=…`·`site.js?v=…`·`posts.js?v=…` 해시, 글꼴 `<link>`(preconnect),
   글의 og·twitter 태그(`assets/social/<slug>.jpg`가 있는 글만)도 찍는다(멱등). 글을 올리거나 제목을 고치거나 CSS·JS를 고치면 다시 돌린다.
+- `assets/research/` — 연구 글의 구조·지도·그래프 그림. 저자가 보낸 PNG를 webp(품질 86)로 바꿔 넣고
+  `<figure class="plate"><img … width height loading="lazy" decoding="async">`로 쓴다. 흰 판·모서리·1px 선은
+  blog.css의 `figure.plate`가 맡으므로(다크에서도 흰 판 그대로) 글 안에 인라인 스타일을 넣지 않는다.
 - `assets/social/<slug>.jpg` — 글의 공유 카드(1200×630). `scripts/render-social.py`가 posts.js와 썸네일로 그린다(DESIGN.md §4 공유 카드).
 - **로고마크**: 층상 산화물 사이를 떠나는 Na 이온(실습 [6]의 2.40 V 이야기). 세 벌이 있다 —
   site.js의 `MARK`(헤더·푸터용, CSS 변수로 테마 대응), `assets/favicon.svg`(파랑 #2f6fed 타일, JS가

@@ -597,19 +597,26 @@ CHART = ["#332288", "#117733", "#44AA99", "#999933", "#CC6677", "#882255"]  # �
 
 
 def research_3():
+    """연구 [3]: 가로 f_JT, 세로 Mn³⁺–O 결합 길이. 긴 결합 둘(파랑)은 직선 2.167 + 0.291 f_JT를 따라 늘어나고
+    짧은 결합 넷(회색)은 거의 평평하다. 점선으로 늘린 직선은 f=1에서 따로 계산한 α-NaMnO₂(별, 2.436 Å)의 조금 위."""
     fig, ax = canvas()
     rng = np.random.default_rng(11)
     ax.plot([150, 150, 1150], [700, 120, 120], color=mix(GRAPH, 0.3), lw=2.5, zorder=1, solid_capstyle="round")
     X = lambda f: 190 + f * 920
-    Y = lambda d: 160 + (d - 1.08) / 0.17 * 500
-    line = lambda f: 1.080 + 0.163 * f
-    ax.plot([X(0.03), X(0.55)], [Y(line(0.03)), Y(line(0.55))], color=INDIGO, lw=4, zorder=3, solid_capstyle="round")
-    ax.plot([X(0.55), X(1.0)], [Y(line(0.55)), Y(line(1.0))], color=INDIGO, lw=3, ls=(0, (6, 6)), zorder=3)
-    for f, col in zip((0.47, 0.5, 0.53, 0.375, 0.25, 0.11), CHART):
+    Y = lambda d: 160 + (d - 1.95) / 0.55 * 500
+    long_ = lambda f: 2.167 + 0.291 * f
+    short = lambda f: 2.000 - 0.03 * f
+    grey = mix(GRAPH, 0.35)
+    ax.plot([X(0.2), X(0.55)], [Y(long_(0.2)), Y(long_(0.55))], color=INDIGO, lw=4, zorder=3, solid_capstyle="round")
+    ax.plot([X(0.55), X(1.0)], [Y(long_(0.55)), Y(long_(1.0))], color=INDIGO, lw=3, ls=(0, (6, 6)), zorder=3)
+    ax.plot([X(0.2), X(0.55)], [Y(short(0.2)), Y(short(0.55))], color=mix(GRAPH, 0.15), lw=4, zorder=3, solid_capstyle="round")
+    ax.plot([X(0.55), X(1.0)], [Y(short(0.55)), Y(short(1.0))], color=mix(GRAPH, 0.15), lw=3, ls=(0, (6, 6)), zorder=3)
+    for f, col in zip((0.47, 0.5, 0.53, 0.375, 0.25), CHART):
         for _ in range(10):
-            x, y = X(f + rng.normal(0, 0.012)), Y(line(f) + rng.normal(0, 0.007))
-            sphere(ax, x, y, 11, col, z=4, shadow=False)
-    ax.plot([X(1.0)], [Y(1.236)], marker="*", ms=42, color=WARM, zorder=6, lw=0, markeredgewidth=0)
+            sphere(ax, X(f + rng.normal(0, 0.012)), Y(long_(f) + rng.normal(0, 0.012)), 11, col, z=4, shadow=False)
+            sphere(ax, X(f + rng.normal(0, 0.012)), Y(short(f) + rng.normal(0, 0.006)), 9, grey, z=4, shadow=False)
+    ax.plot([X(1.0)], [Y(2.436)], marker="*", ms=42, color=WARM, zorder=6, lw=0, markeredgewidth=0)
+    ax.plot([X(1.0)], [Y(1.97)], marker="o", ms=13, color=grey, zorder=6, lw=0, markeredgewidth=0)
     save(fig, "research-3")
 
 

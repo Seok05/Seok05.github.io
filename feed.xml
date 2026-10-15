@@ -8,12 +8,12 @@
     <lastBuildDate>Wed, 14 Oct 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://seok05.github.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
-      <title>연구 [3] — 이웃이 아니라 비율이었다: 1,034개 팔면체가 내놓은 답</title>
+      <title>연구 [3] — 엔트로피가 아니라 얀-텔러 이온의 비율이었다: 늘어나는 것은 긴 결합 둘</title>
       <link>https://seok05.github.io/posts/research-3.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/research-3.html</guid>
       <pubDate>Wed, 14 Oct 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>Mn³⁺의 얀-텔러 왜곡을 정하는 것은 바로 옆 이웃이 아니라 셀 전체의 얀-텔러 이온 비율이었습니다. 직선 하나가 NaMnO₂까지 이어지고, 이웃만 바꾼 세 조성의 왜곡은 0.003 안에서 같았습니다. 왜곡은 고립 성분과 협동 성분으로 나뉘고, 협동 성분만이 비율에 비례해 격자 전체를 변형합니다.</description>
+      <description>얀-텔러 이온 비율이 같은 세 조성은 엔트로피와 이웃이 달라도 Mn–O 결합 길이가 0.006 Å 안에서 같았습니다. 비율을 바꾸면 짧은 결합 넷은 그대로이고 긴 결합 둘만 움직이며, 그 길이는 비율에 대해 직선 하나를 따릅니다.</description>
     </item>
     <item>
       <title>연구 [2] — 540만 가지 배열에서 1,034개의 팔면체로: 고르고, 거르고, 확정하는 법</title>
@@ -24,12 +24,12 @@
       <description>고엔트로피 조성은 같은 성분이어도 원자 배치가 수백만 가지입니다. CHGNet으로 3,146개를 거르고 DFT로 180개를 확정한 과정을 실제 데이터로 따라갔습니다. 몬테카를로가 바닥을 더 깊게 판 것, CHGNet이 순위는 맞히지만 크기는 작게 본다는 것, 바닥 후보만 봤다면 틀릴 뻔한 상관, 셀 전체 자기모멘트로는 안 보이던 전하 이동까지 담았습니다.</description>
     </item>
     <item>
-      <title>연구 [1] — 고엔트로피 양극재는 왜 얀-텔러를 누를까: 이웃인가, 비율인가</title>
+      <title>연구 [1] — 고엔트로피 양극재는 왜 얀-텔러를 누를까: 엔트로피인가, 얀-텔러 이온의 비율인가</title>
       <link>https://seok05.github.io/posts/research-1.html</link>
       <guid isPermaLink="true">https://seok05.github.io/posts/research-1.html</guid>
       <pubDate>Mon, 12 Oct 2026 00:00:00 GMT</pubDate>
       <category>연구 · DFT</category>
-      <description>Mn이 많은 Na 층상 산화물의 수명을 깎는 얀-텔러 왜곡과, 여러 원소를 섞는 고엔트로피 전략이 그것을 누른다는 보고들을 정리했습니다. 그런데 그 이유는 '얀-텔러 이온이 줄어서'와 '특정 이웃이 붙잡아서'로 갈립니다. 두 가지를 떼어 놓도록 조성을 설계한 본 연구의 질문과 접근을 소개합니다.</description>
+      <description>고엔트로피 치환이 얀-텔러 왜곡을 누른다는 보고가 쌓이고, 문헌은 그 이유로 구성 엔트로피를 꼽습니다. 그런데 보고된 조성 14개를 같은 기준으로 다시 계산하면 엔트로피와 얀-텔러 이온 비율이 늘 함께 움직여 왔습니다. 두 변수를 떼어 놓은 조성 설계를 소개합니다.</description>
     </item>
     <item>
       <title>DFT 실습 [12] — Na₀.₇₅MnO₂는 안정한가: 모든 배치를 계산한 최종 판정</title>
