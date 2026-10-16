@@ -620,9 +620,37 @@ def research_3():
     save(fig, "research-3")
 
 
+def research_4():
+    """연구 [4]: TM 층을 위에서 본 삼각 격자. Mn³⁺ 자리(보라)의 진한 막대는 한 방향으로 정렬한 긴 축, 파란 화살표는
+    변형 없는 격자에서 각 자리가 움직이는 방향(긴 축 방향으로 벌어지고 수직으로 모임). 격자 전체가 가로로 늘어난다."""
+    fig, ax = canvas()
+    a = 150.0
+    cx, cy = 640, 400
+    ex, ey = 0.10, -0.07
+    sites = []
+    for j in range(-2, 3):
+        for i in range(-4, 5):
+            x = cx + (i + 0.5 * (j % 2)) * a
+            y = cy + j * a * np.sqrt(3) / 2
+            if 70 < x < 1210 and 40 < y < 760:
+                sites.append((x, y, (i + j) % 2 == 0))
+    for x, y, mn in sites:
+        dx, dy = ex * (x - cx), ey * (y - cy)
+        n = (dx * dx + dy * dy) ** 0.5
+        if n > 4:
+            ux, uy = dx / n, dy / n
+            p0 = (x + ux * 32, y + uy * 32)
+            p1 = (p0[0] + dx * 1.3, p0[1] + dy * 1.3)
+            ax.add_patch(FancyArrowPatch(p0, p1, arrowstyle="simple,head_length=13,head_width=15,tail_width=4.5", color=INDIGO, zorder=7, lw=0))
+        sphere(ax, x, y, 27, mix("#8E66D1", 0.15) if mn else mix(GRAPH, 0.4), z=5, shadow=False)
+        if mn:
+            ax.plot([x - 31, x + 31], [y, y], color=INK, lw=7, solid_capstyle="round", zorder=6)
+    save(fig, "research-4")
+
+
 ALL = [dft_explained, first_dft_run, dft_theory_2, dft_practice_2, dft_theory_3, dft_practice_3, paper_1,
        dft_practice_4, dft_practice_5, dft_practice_6, laptop_to_server, dft_practice_7, dft_practice_8,
-       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12, research_1, research_2, research_3]
+       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12, research_1, research_2, research_3, research_4]
 
 if __name__ == "__main__":
     # 함수 이름을 주면 그 그림만 다시 그린다 (예: ... dft_practice_10). --theme=light|dark 로 한 벌만

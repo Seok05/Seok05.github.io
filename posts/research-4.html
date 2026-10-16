@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>연구 [4] — 팔면체 하나의 늘어남이 격자 전체의 변형이 되기까지 · Seok Lab</title>
+    <meta name="description" content="Mn³⁺의 긴 축이 정렬하면 격자는 얀-텔러 이온 비율에 정비례해 늘어나고, 그 일을 하는 건 늘어남의 협동 성분뿐이었습니다. 늘어나는 방향을 원소 배열이 고르는지는 지금 시험하고 있어, 어디까지 알고 무엇이 남았는지 그대로 적었습니다." />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+    <link rel="stylesheet" href="../assets/blog.css?v=85b04667" />
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="연구 [4] — 팔면체 하나의 늘어남이 격자 전체의 변형이 되기까지" />
+    <meta property="og:description" content="Mn³⁺의 긴 축이 정렬하면 격자는 얀-텔러 이온 비율에 정비례해 늘어나고, 그 일을 하는 건 늘어남의 협동 성분뿐이었습니다. 늘어나는 방향을 원소 배열이 고르는지는 지금 시험하고 있어, 어디까지 알고 무엇이 남았는지 그대로 적었습니다." />
+    <meta property="og:url" content="https://seok05.github.io/posts/research-4.html" />
+    <meta property="og:image" content="https://seok05.github.io/assets/social/research-4.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="article:published_time" content="2026-10-16T09:00:00+09:00" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="연구 [4] — 팔면체 하나의 늘어남이 격자 전체의 변형이 되기까지" />
+    <meta name="twitter:description" content="Mn³⁺의 긴 축이 정렬하면 격자는 얀-텔러 이온 비율에 정비례해 늘어나고, 그 일을 하는 건 늘어남의 협동 성분뿐이었습니다. 늘어나는 방향을 원소 배열이 고르는지는 지금 시험하고 있어, 어디까지 알고 무엇이 남았는지 그대로 적었습니다." />
+    <meta name="twitter:image" content="https://seok05.github.io/assets/social/research-4.jpg" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="site-name" href="../">
+          <img class="avatar-sm" src="../assets/profile.png" alt="" width="30" height="30" />
+          Seok Lab
+          <span class="tagline">연구하면서, 개발합니다</span>
+        </a>
+        <nav class="site-nav"><a href="../">홈</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <article class="content">
+          <div class="post-head">
+            <div class="meta-row" style="margin-top: 0">
+              <a class="chip-cat" href="../?cat=dft">연구 · DFT</a><span class="tag">본 연구</span><span>2026.10.16</span>
+            </div>
+            <h1>연구 [4] — 팔면체 하나의 늘어남이 격자 전체의 변형이 되기까지</h1>
+            <p class="lede"><a href="research-3.html">연구 [3]</a>에서 얀-텔러 이온 비율이 긴 결합의 길이를 정한다는 것을 봤습니다. 그런데 배터리에서 문제가 되는 건 팔면체 하나가 아니라 결정 전체가 늘어났다 줄었다 하는 것입니다. 이 글은 팔면체 하나하나의 늘어남이 어떻게 격자 전체의 변형이 되는지, 그 일을 하는 건 늘어남의 어느 부분인지, 그리고 늘어나는 방향은 무엇이 정하는지를 다룹니다. 마지막 질문은 아직 시험 중이라, 어디까지 알고 무엇이 남았는지 그대로 적었습니다.</p>
+          </div>
+
+<figure class="shot wide illus">
+            <div class="shot-card"><img src="../assets/illus/research-4.webp" alt="전이금속 층을 위에서 본 삼각 격자. Mn³⁺ 자리마다 가로로 정렬한 진한 막대가 있고, 파란 화살표가 가로로는 바깥쪽, 세로로는 안쪽을 가리켜 격자가 가로로 늘어나는 모습" width="1280" height="800" loading="lazy" decoding="async"></div>
+            <figcaption>이 글의 질문을 한 장으로 그렸습니다. 전이금속(TM) 층의 자리들을 위에서 본 모습이고, Mn³⁺ 자리(보라)의 진한 막대는 한 방향으로 정렬한 긴 축입니다. 화살표는 변형이 없는 정삼각형 격자에서 각 자리가 움직이는 방향으로, 긴 축 방향으로는 벌어지고 수직 방향으로는 모여 격자 전체가 그 방향으로 늘어납니다. 실제 변위는 그림 1에 있습니다.</figcaption>
+          </figure>
+
+<div class="box">
+<p class="box-label">이 글에 나오는 말</p>
+<ul>
+<li><strong>얀-텔러 왜곡과 긴 축</strong>: Mn³⁺ 팔면체가 한 축으로 늘어나 에너지를 낮추는 현상입니다. 늘어난 축을 긴 축이라 부르고, 긴 Mn–O 결합 둘이 그 위에 있습니다. <a href="research-3.html">연구 [3]</a>에서 긴 결합의 길이가 2.167 + 0.291 <i>f</i><sub>JT</sub> Å의 직선을 따른다는 것을 봤습니다.</li>
+<li><strong><i>f</i><sub>JT</sub></strong>: 전이금속(TM) 자리 가운데 Mn³⁺가 차지하는 비율입니다. 셀 안에서 실제로 판별된 Mn³⁺로 세며, 이 글의 셀들은 0.0625~0.5이고 α-NaMnO₂는 1입니다.</li>
+<li><strong>바닥 상태</strong>: 같은 조성에서 계산한 배열 가운데 에너지가 가장 낮은 구조입니다.</li>
+<li><strong>단사정 칸과 <i>a</i><sub>Mon</sub>, <i>b</i><sub>Mon</sub></strong>: 긴 축이 정렬한 층을 기술하는 단사정(C2/m) 단위 칸입니다. <i>a</i><sub>Mon</sub>은 긴 축 방향, <i>b</i><sub>Mon</sub>은 그에 수직한 면내 방향의 변 길이이고, 변형이 없는 정삼각형 격자에서는 <i>a</i><sub>Mon</sub>/<i>b</i><sub>Mon</sub> = √3입니다.</li>
+<li><strong>면내 변형</strong>: <i>a</i><sub>Mon</sub>/(√3 <i>b</i><sub>Mon</sub>) − 1입니다. 변형이 없으면 0이고 긴 축 방향으로 늘어날수록 커집니다. α-NaMnO₂의 실험 격자 상수로 계산하면 13.6~14.3%입니다(<a href="research-2.html">연구 [2]</a> 7절).</li>
+<li><strong>정렬도</strong>: 셀 안 Mn³⁺ 긴 축들이 한 방향으로 모인 정도입니다. 모두 나란하면 1입니다.</li>
+<li><strong>고립 성분과 협동 성분</strong>: 긴 결합과 짧은 결합의 차이를 <i>f</i><sub>JT</sub>에 대해 직선으로 맞췄을 때, <i>f</i><sub>JT</sub>와 무관한 절편(0.160 Å)이 고립 성분이고 <i>f</i><sub>JT</sub>에 비례하는 부분(0.320 <i>f</i><sub>JT</sub> Å)이 협동 성분입니다.</li>
+<li><strong>화학식당 에너지</strong>: 셀 에너지를 NaTMO₂ 화학식 단위의 수로 나눈 값입니다(64원자 셀은 16). 크기가 다른 셀의 에너지를 비교할 때 씁니다.</li>
+</ul>
+</div>
+
+<div class="box">
+<p class="box-label">요약</p>
+<p><strong>질문.</strong> Mn³⁺ 팔면체 하나하나의 늘어남은 어떻게 격자 전체의 변형이 되는가. 그 일을 하는 것은 늘어남의 어느 부분이고, 늘어나는 방향은 무엇이 정하는가.</p>
+<p><strong>방법.</strong> <a href="research-2.html">연구 [2]</a>의 DFT 셀 180개에서 전이금속 자리의 변위와 면내 변형을 재어 <i>f</i><sub>JT</sub>에 대해 그렸습니다. 긴 결합과 짧은 결합의 차이를 <i>f</i><sub>JT</sub>에 대해 직선으로 맞춰 고립 성분과 협동 성분으로 나눴습니다. 같은 원자 배열에서 긴 축만 세 방향으로 정렬시킨 구조를 DFT로 이완해 에너지를 비교했습니다.</p>
+<p><strong>답.</strong> 격자는 긴 축 방향으로 늘어나고 수직 방향으로 줄어들며, 면내 변형은 12.4 × <i>f</i><sub>JT</sub> %로 비율에 정비례했습니다(R² 0.95). α-NaMnO₂의 계산값 13.7%는 실험값 13.6~14.3% 안에 있습니다. 늘어남은 고립 성분 0.160 Å과 협동 성분 0.320 <i>f</i><sub>JT</sub> Å으로 나뉘고, 격자를 늘이는 것은 협동 성분뿐입니다. 같은 배열에서 긴 축의 방향을 바꾸면 에너지가 화학식당 5~21 meV 올랐지만, 계산한 셀 거의 모두가 같은 방향을 골라서 이것이 원소 배열의 효과인지 배열을 고른 과정의 편향인지는 아직 시험하고 있습니다.</p>
+</div>
+
+<h2>1. 질문: 팔면체가 늘어나면 격자도 늘어날까</h2>
+<p>층상 구조에서 팔면체들은 모서리를 공유합니다. 그래서 Mn³⁺ 팔면체 하나가 늘어나면 공유한 산소가 움직이고, 이웃도 따라 움직입니다. 모든 Mn³⁺의 긴 축이 한 방향으로 정렬해 있다면(<a href="research-3.html">연구 [3]</a> 그림 1), 그 방향으로 결정 전체가 늘어날 것이라고 예상할 수 있습니다. 정말 그런지, 전이금속 자리들이 실제로 어떻게 움직였는지를 직접 봤습니다.</p>
+<figure class="plate">
+<img src="../assets/research/r4_map.webp" alt="C3 바닥 상태 구조 위에 전이금속 자리의 변위를 화살표로 그린 그림" width="1100" height="1075" loading="lazy" decoding="async" />
+<figcaption><strong>그림 1.</strong> C3의 가장 안정한 구조(DFT)에서 TM 층 하나를 위에서 본 모습. 화살표는 각 전이금속 자리가 변형 없는 정삼각형 격자(실제와 같은 평균 간격 3.08 Å, 회전과 이동은 모든 자리에 가장 잘 맞도록 제거)에서 실제 위치까지 움직인 변위를 8배 키운 것입니다. 실제 변위는 0.07–0.21 Å입니다. 진한 막대는 Mn³⁺의 긴 결합이고, <i>a</i><sub>Mon</sub>은 긴 축의 방향입니다.</figcaption>
+</figure>
+<p>그림 1에서 화살표는 뚜렷한 무늬를 그립니다. 긴 축 방향(가로)으로는 왼쪽 끝 자리가 왼쪽으로, 오른쪽 끝 자리가 오른쪽으로 벌어지고, 그에 수직한 방향(세로)으로는 위아래 자리가 안쪽으로 모입니다. 즉 격자는 <strong>긴 축 방향으로 늘어나고, 수직 방향으로 줄어듭니다.</strong> 가운데 근처의 몇몇 화살표가 비스듬한 것은 자리마다의 국소적인 흔들림입니다. 이제 이 변형이 얼마나 큰지를 재야 합니다.</p>
+
+<h2>2. 얼마나 늘어나나: 비율에 정비례</h2>
+<p>격자가 얼마나 늘어났는지는 표준 척도인 면내 변형, <i>a</i><sub>Mon</sub>/(√3 <i>b</i><sub>Mon</sub>) − 1로 쟀습니다. 단사정 칸의 두 변 길이 비가 변형이 없을 때의 값 √3에서 얼마나 벗어났는지를 나타냅니다(<a href="research-2.html">연구 [2]</a> 7절).</p>
+<figure class="plate">
+<img src="../assets/research/r4_strain.webp" alt="면내 변형 대 얀-텔러 이온 비율" width="1500" height="834" loading="lazy" decoding="async" />
+<figcaption><strong>그림 2.</strong> 180개 셀의 면내 변형 대 <i>f</i><sub>JT</sub>. 채운 원은 긴 축이 잘 정렬된 셀, 빈 원은 정렬도 0.9 미만인 셀 6개입니다. 실선은 원점을 지나는 맞춤 직선(데이터 범위), 점선은 그 연장입니다. 오른쪽 위는 α-NaMnO₂의 DFT 값(원)과 실험값의 범위(막대)입니다.</figcaption>
+</figure>
+<p>그림 2에서 면내 변형은 <strong>원점을 지나는 직선 하나</strong>를 따릅니다. <strong>변형 = 12.4 × <i>f</i><sub>JT</sub> (%)</strong>이고 R²는 0.95입니다. 얀-텔러 이온이 없는 셀(<i>f</i><sub>JT</sub> = 0)은 0.1 ± 0.5%로 사실상 늘어나지 않았습니다. 이 직선의 끝에서 α-NaMnO₂의 DFT 값은 13.7%로, 실험 격자 상수로 계산한 13.6–14.3% 안에 들어옵니다. 계산이 실험과 맞는 기준점이 생겼습니다.</p>
+<p>빈 원도 중요합니다. 긴 축이 한 방향으로 잘 모이지 않은 셀 6개는 <strong>모두 직선 아래</strong>에 있습니다. 얀-텔러 이온 비율이 같아도 긴 축이 제각각이면 격자가 덜 늘어난다는 뜻입니다. 격자를 늘이는 것은 얀-텔러 이온의 수만이 아니라 <strong>그 이온들이 함께 정렬하는 것</strong>입니다. 그렇다면 늘어남의 어느 부분이 그 일을 하는지가 다음 질문입니다.</p>
+
+<h2>3. 어느 부분이 격자를 늘이나: 협동 성분</h2>
+<p><a href="research-3.html">연구 [3]</a>의 직선(긴 결합 = 2.167 + 0.291 <i>f</i><sub>JT</sub> Å)에는 눈여겨볼 점이 있습니다. <i>f</i><sub>JT</sub>가 0에 가까워져도 긴 결합은 짧은 결합보다 깁니다. 얀-텔러 이온이 아주 드물어도 그 하나는 스스로 늘어난다는 뜻입니다. 그래서 긴 결합과 짧은 결합의 차이를 비율에 대해 다시 그렸습니다.</p>
+<figure class="plate">
+<img src="../assets/research/r4_split.webp" alt="긴 결합과 짧은 결합의 차이 대 얀-텔러 이온 비율, 고립 성분과 협동 성분" width="1200" height="907" loading="lazy" decoding="async" />
+<figcaption><strong>그림 3.</strong> 셀 평균 긴 결합과 짧은 결합의 차이 대 <i>f</i><sub>JT</sub>. 오른쪽 괄호는 맞춤 직선을 두 부분으로 나눈 것입니다. 아래는 <i>f</i><sub>JT</sub>와 무관한 고립 성분, 위는 <i>f</i><sub>JT</sub>에 비례하는 협동 성분입니다.</figcaption>
+</figure>
+<p>그림 3의 직선은 <strong>0.160 + 0.320 <i>f</i><sub>JT</sub> Å</strong>입니다(R² 0.89). 0.160 Å는 이웃 얀-텔러 이온이 하나도 없어도 생기는 <strong>고립 성분</strong>이고, 0.320 <i>f</i><sub>JT</sub> Å는 얀-텔러 이온이 많을수록 커지는 <strong>협동 성분</strong>입니다. 협동 성분이 차지하는 몫은 <i>f</i><sub>JT</sub>가 0.25일 때 33%, 0.5일 때 50%, α-NaMnO₂(1)일 때 67%입니다.</p>
+<p>이 분해를 그림 2와 나란히 놓으면 핵심이 보입니다. <i>f</i><sub>JT</sub>가 0.0625인 셀은 팔면체가 이미 0.18 Å만큼 늘어나 있는데도(그림 3 왼쪽 끝), 면내 변형은 0.02%로 사실상 0입니다(그림 2 왼쪽 끝). <strong>홀로 있는 Mn³⁺는 제자리에서만 늘어나고 격자는 늘이지 못합니다.</strong> 격자를 늘이는 것은 비율에 비례하는 협동 성분뿐이고, 그래서 면내 변형도 원점을 지나는 직선이 됩니다.</p>
+<p>여기서 <a href="research-2.html">연구 [2]</a>의 그림 3에서 연결도의 효과처럼 보였던 "다른 무언가"도 풀립니다. 에너지가 낮은 바닥 후보끼리만 보면 Mn³⁺끼리 많이 이어진 셀일수록 왜곡이 컸지만, 그것은 연결도 자체의 효과가 아니었습니다. 같은 조성 안에서 셀끼리 비교하면 <strong>격자가 더 늘어난 셀일수록 긴 결합이 길었고</strong>(C1, C2에서 R² 0.75), 에너지가 낮은 배열들은 이 협동적인 늘어남이 잘 맞는 배열이었던 것입니다. 다만 이 관계는 C3–C5에서는 약했습니다(R² 0.00–0.18). 그래서 논문에서는 보충 자료로 다룹니다.</p>
+
+<h2>4. 방향은 무엇이 정하나</h2>
+<p>마지막 질문은 늘어나는 방향입니다. 층에는 긴 축이 향할 수 있는 방향이 60도 간격으로 셋 있습니다. 순수한 NaMnO₂라면 셋은 대칭적으로 동등합니다. 원소가 섞인 우리 조성에서 무엇이 방향을 고르는지 보려고, 같은 원자 배열을 그대로 두고 긴 축만 세 방향으로 각각 정렬시킨 출발 구조를 DFT로 이완해 에너지를 비교했습니다.</p>
+<figure class="plate">
+<img src="../assets/research/r4_orient.webp" alt="같은 원자 배열에서 긴 축을 세 방향으로 정렬시킨 구조와 에너지" width="1500" height="995" loading="lazy" decoding="async" />
+<figcaption><strong>그림 4.</strong> 위: C1의 같은 원자 배열(같은 원자 집합)을 세 방향으로 정렬시킨 구조. 원소 배치는 같고 긴 축(진한 막대)의 방향만 60도씩 다릅니다. 아래: C1, C2, C3에서 바닥 상태 방향(진한 원)에 대한 나머지 두 방향(옅은 원)의 에너지(화학식당).</figcaption>
+</figure>
+<p>그림 4에서 원소 배치는 세 구조가 똑같고, 긴 축만 가로에서 오른쪽 위, 다시 가파르게 서는 쪽으로 돌아갑니다. 에너지는 세 조성 모두에서 <strong>바닥 상태의 방향이 가장 낮았고</strong>, 다른 방향은 화학식당 C1에서 15.0, 20.5 meV, C2에서 4.7, 5.9 meV, C3에서 14.6, 14.8 meV 높았습니다. 같은 방향으로 출발시킨 대조 계산은 0.2 meV 차이로 원래 결과를 재현했습니다. 세 방향은 서로 동등하지 않은 것입니다.</p>
+<div class="box">
+<p class="box-label">아직 확인 중인 것</p>
+<p>이 결과를 "원소 배열이 방향을 고른다"고 읽고 싶지만, 그러기 전에 걸리는 점이 하나 있습니다. 정렬된 셀 149개 중 <strong>146개가 모두 같은 방향</strong>(셀의 격자 벡터 <i>a</i> 방향)을 골랐습니다. 배열이 방향을 고른다면, 서로 다른 배열 30개는 세 방향으로 고르게 나뉘어야 합니다.</p>
+<p>가장 유력한 설명은 <strong>배열을 고르는 과정의 편향</strong>입니다. 우리는 수백 개 배열을 같은 방향으로 정렬된 상태에서 이완해 에너지가 낮은 것을 골랐습니다. 그러면 "그 방향에 잘 맞는 배열"만 골라졌을 수 있습니다. 이게 맞는지 보려고, <strong>골라지지 않은 무작위 배열</strong>마다 세 방향의 에너지를 비교하는 시험을 지금 돌리고 있습니다.</p>
+<p>이 시험은 실험과도 이어집니다. 우리 C1과 같은 Fe–Mn 조성의 O3형 산화물은 실험에서 평균 구조가 마름모(R-3m)로 보고됩니다 [3]. 반면 계산은 긴 축이 정렬해 격자가 늘어난다고 말합니다. 무작위 배열에서 선호 방향이 세 방향으로 고르게 나뉜다면, 실제 물질에서는 영역마다 다른 방향을 골라 평균이 상쇄되고, 그래서 실험에서는 마름모로 보인다는 설명이 섭니다. 원소가 섞이지 않은 NaMnO₂는 한 방향만 골라서 단사정이 됩니다. 결과가 나오면 이 칸을 채우겠습니다.</p>
+</div>
+
+<h2>정리</h2>
+<ul>
+<li>Mn³⁺의 긴 축이 정렬하면 격자는 긴 축 방향으로 늘어나고 수직 방향으로 줄어든다.</li>
+<li>면내 변형은 얀-텔러 이온 비율에 정비례한다(12.4 × <i>f</i><sub>JT</sub> %). α-NaMnO₂의 계산값은 실험 범위 안에 있고, 긴 축이 덜 정렬된 셀은 덜 늘어난다.</li>
+<li>늘어남은 고립 성분(0.16 Å)과 협동 성분(0.32 <i>f</i><sub>JT</sub> Å)으로 나뉘고, 격자를 늘이는 건 협동 성분뿐이다. 홀로 있는 Mn³⁺는 제자리에서만 늘어난다.</li>
+<li>같은 배열에서 방향을 바꾸면 에너지가 화학식당 5–21 meV 오른다. 이것이 배열의 효과인지, 배열을 고른 과정의 편향인지는 시험 중이다.</li>
+</ul>
+
+<h2>참고문헌</h2>
+<ol class="refs">
+<li>Phillips et al. Collinear Jahn–Teller ordering induces monoclinic distortion in defect-free LiNiO₂. <i>J. Am. Chem. Soc.</i> (2025).</li>
+<li>Parant, J.-P., Olazcuaga, R., Devalette, M., Fouassier, C. &amp; Hagenmuller, P. Sur quelques nouvelles phases de formule Na<sub>x</sub>MnO₂ (x ≤ 1). <i>J. Solid State Chem.</i> 3, 1 (1971).</li>
+<li>Bie, X. et al. Relationship between the structural evolution and electrochemical properties of Na<sub>x</sub>Fe<sub>0.5</sub>Mn<sub>0.5</sub>O₂ (0.67 ≤ x ≤ 0.83). IMLB 2014 (학회 발표).</li>
+<li>Radin, M. D. &amp; Van der Ven, A. Simulating charge, spin, and orbital ordering: application to Jahn–Teller distortions in layered transition-metal oxides. <i>Chem. Mater.</i> 30 (2018).</li>
+</ol>
+
+          <div class="author-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="64" height="64" />
+            <div>
+              <p class="who">Seok</p>
+              <p>
+                연구하면서 개발합니다. 배터리 재료를 원자 단위에서 계산하는 법을 바닥부터 배우는
+                중입니다. → <a href="../?cat=dft">글 더 보기</a>
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="sidebar">
+          <div class="profile-card">
+            <img src="../assets/profile.png" alt="Seok 프로필" width="92" height="92" />
+            <div>
+              <p class="p-name">Seok</p>
+              <p class="p-bio">
+                연구하면서 개발합니다.<br />
+                낮에는 서비스를 만들고, 밤에는 데이터를 들여다봅니다. 그 과정에서 배운 걸 여기에
+                적어요.
+              </p>
+              <a class="p-link" href="https://github.com/Seok05">GitHub</a>
+            </div>
+          </div>
+
+          <nav class="cat-box" aria-label="카테고리">
+            <p class="cat-title">카테고리</p>
+            <ul>
+              <li><a href="../">전체보기</a></li>
+            </ul>
+          </nav>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Seok Lab · 연구하면서, 개발합니다</p>
+        <p>글의 예시 수치는 설명용이며 실제 시세가 아닙니다. · <a href="https://github.com/Seok05">GitHub</a></p>
+      </div>
+    </footer>
+
+    <script src="../assets/posts.js?v=8635c0f9"></script>
+    <script src="../assets/site.js?v=4826fb50"></script>
+  </body>
+</html>
