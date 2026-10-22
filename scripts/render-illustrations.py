@@ -648,9 +648,44 @@ def research_4():
     save(fig, "research-4")
 
 
+def dft_practice_13():
+    """실습 [13]: 노드별 줄에 계산 한 건씩의 막대(간트 차트). 위 세 줄은 큰 노드(앞쪽 파란 바닥 후보, 가운데 빈 이틀,
+    뒤쪽 회색 다양성 후보), 아래 여섯 줄은 6코어 노드(막대가 길다). 가로는 10/3~10/12의 아홉 날."""
+    from matplotlib.patches import FancyBboxPatch
+    fig, ax = canvas()
+    rng = np.random.default_rng(13)
+    X = lambda d: 150 + d * 111.0
+    for d in range(10):
+        ax.plot([X(d), X(d)], [120, 740], color=mix(GRAPH, 0.78), lw=1.5, ls=(0, (4, 6)), zorder=1)
+    ax.plot([X(0), X(9)], [120, 120], color=mix(GRAPH, 0.3), lw=2.5, zorder=2, solid_capstyle="round")
+    grey = mix(GRAPH, 0.25)
+
+    def bar(x0, x1, y, col):
+        ax.add_patch(FancyBboxPatch((x0, y - 15), max(x1 - x0, 10), 30, boxstyle="round,pad=0,rounding_size=5", color=col, lw=0, zorder=4))
+
+    def fill(y, d0, d1, lo, hi, col):
+        d = d0
+        while d < d1:
+            w = rng.uniform(lo, hi)
+            if d + w > d1:
+                break
+            bar(X(d), X(d + w), y, col)
+            d += w + rng.uniform(0.02, 0.05)
+
+    for i, y in enumerate((690, 628, 566)):
+        fill(y, 0.3, 2.6, 0.12, 0.35, INDIGO)
+        if i != 1:
+            fill(y, 4.1, 8.7, 0.12, 0.4, grey)
+    for i, y in enumerate((470, 408, 346, 284, 222, 160)):
+        if i in (0, 1, 3, 4):
+            fill(y, 2.6, 4.0, 0.3, 0.7, INDIGO)
+        fill(y, 4.0 + rng.uniform(0, 0.3), 8.7, 0.35, 1.0, grey)
+    save(fig, "dft-practice-13")
+
+
 ALL = [dft_explained, first_dft_run, dft_theory_2, dft_practice_2, dft_theory_3, dft_practice_3, paper_1,
        dft_practice_4, dft_practice_5, dft_practice_6, laptop_to_server, dft_practice_7, dft_practice_8,
-       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12, research_1, research_2, research_3, research_4]
+       dft_practice_9, dft_practice_10, dft_practice_11, dft_practice_12, research_1, research_2, research_3, research_4, dft_practice_13]
 
 if __name__ == "__main__":
     # 함수 이름을 주면 그 그림만 다시 그린다 (예: ... dft_practice_10). --theme=light|dark 로 한 벌만
