@@ -43,12 +43,12 @@
               <a class="chip-cat" href="../?cat=paper">연구 · Paper</a><span class="tag">논문 리뷰</span><span>2026.08.25</span>
             </div>
             <h1>Paper [1] — GGA는 왜 산화 에너지를 틀리나: O₂ 보정과 금속별 U</h1>
-            <p class="lede">배터리 계산에서 쓰는 U 값(Mn 3.9 eV 등)의 출처인 Wang, Maxisch, Ceder(2006) 논문을 세 번에 걸쳐 읽고 남기는 첫 논문 리뷰입니다. <a href="dft-theory-3.html">DFT 이론 [3]</a>이 이 논문에서 배운 이론의 뼈대를 정리한 글이라면, 이 글은 논문 자체를 처음부터 따라가며 수치와 그림의 역할, 논증이 쌓이는 순서, 저자들이 스스로 밝힌 한계까지 정리한 기록입니다. 길지만, 이 논문은 그럴 가치가 있습니다.</p>
+            <p class="lede">배터리 계산에서 쓰는 U 값(Mn 3.9 eV 등)이 어디서 왔는지 찾다 보면 Wang, Maxisch, Ceder(2006) 논문에 닿습니다. 세 번에 걸쳐 읽고 남기는 첫 논문 리뷰입니다. <a href="dft-theory-3.html">DFT 이론 [3]</a>이 이 논문에서 배운 이론의 뼈대를 정리한 글이라면, 이 글은 논문을 처음부터 따라가면서 수치와 그림이 하는 역할, 논증이 쌓이는 순서, 저자들이 직접 밝힌 한계까지 정리한 기록입니다. 길지만 그만큼 읽을 가치가 있는 논문이었습니다.</p>
           </div>
 
           <figure class="shot wide illus">
             <div class="shot-card"><img src="../assets/illus/paper-1-wang2006.webp" alt="산화되는 금속 구와 다가오는 산소 분자" width="1280" height="800" loading="lazy" decoding="async"></div>
-            <figcaption>금속이 산화될 때의 에너지. GGA는 O₂ 쪽과 산화물 쪽에서 각각 틀리고, 두 오차는 서로를 가립니다.</figcaption>
+            <figcaption>금속이 산화될 때의 에너지. GGA는 O₂ 쪽과 산화물 쪽에서 각각 틀리고, 두 오차가 서로를 가립니다.</figcaption>
           </figure>
 
           <div class="box obs">
@@ -64,32 +64,31 @@
 
 <h2>0. 세 문장 요약</h2>
 <ol>
-<li>GGA로 전이금속 산화물의 산화 에너지를 계산하면 <strong>최대 1 eV 이상 틀리는데</strong>, 원인이 하나가 아니라 <strong>두 개</strong>다. O₂ 분자를 과하게 안정하게 계산하는 오차와, 3d 전자의 자기상호작용/상관 오차.</li>
-<li>이 두 오차는 <strong>부호가 반대</strong>라서 서로를 가린다. 저자들은 d 전자가 없는 산화물(MgO, Li₂O 등)만으로 O₂ 오차를 <strong>O₂당 1.36 eV</strong>로 분리해내고, 그것을 걷어낸 뒤 남은 오차를 GGA+U로 처리했다.</li>
-<li>이렇게 얻은 U 값은 금속별로 <strong>좁은 범위에 모였고</strong>(V 3.1 ~ Ni 6.4 eV), 피팅에 쓰지 않은 <strong>밴드갭과 자기모멘트까지 함께 개선</strong>됐다. 이 "산소 보정 + 전이금속별 U" 레시피가 이후 대규모 소재 계산 데이터베이스의 표준이 됐다.</li>
+<li>GGA로 전이금속 산화물의 산화 에너지를 계산하면 <strong>최대 1 eV 넘게 틀리는데</strong>, 원인이 하나가 아니라 <strong>두 개</strong>입니다. O₂ 분자를 너무 안정하게 계산하는 오차와, 3d 전자의 자기상호작용/상관 오차입니다.</li>
+<li>두 오차는 <strong>부호가 반대</strong>라서 서로를 가립니다. 저자들은 d 전자가 없는 산화물(MgO, Li₂O 등)만으로 O₂ 오차를 <strong>O₂당 1.36 eV</strong>로 따로 뽑아냈고, 그걸 걷어낸 뒤 남은 오차를 GGA+U로 처리했습니다.</li>
+<li>이렇게 얻은 U 값은 금속별로 <strong>좁은 범위에 모였고</strong>(V 3.1 ~ Ni 6.4 eV), 피팅에 쓰지 않은 <strong>밴드갭과 자기모멘트까지 같이 좋아졌습니다</strong>. 이 "산소 보정 + 전이금속별 U" 방식이 이후 대규모 소재 계산 데이터베이스의 표준이 됐습니다.</li>
 </ol>
 
 <h2>1. 왜 이 논문을 읽어야 하나</h2>
-<p>금속이나 산화물이 산소와 반응해 더 높은 산화 상태가 될 때 나오는 에너지를 <strong>산화 에너지</strong>라고 한다. 예를 들어 철은 산소에 전자를 내주며 산화되고, 이때 에너지가 나온다. 이 에너지가 이 논문의 주제다.</p>
-<p>이 값이 왜 중요한가. 배터리, 촉매, 부식, 야금 정련, 심지어 광합성과 대사까지 전부 산화·환원 반응이 결정한다. 그리고 소재 개발의 관점에서 결정적인 것은 이것이다:</p>
+<p>금속이나 산화물이 산소와 반응해서 더 높은 산화 상태가 될 때 나오는 에너지를 <strong>산화 에너지</strong>라고 합니다. 예를 들어 철은 산소에 전자를 내주며 산화되고, 이때 에너지가 나옵니다. 이 에너지가 논문의 주제입니다.</p>
+<p>이 값이 왜 중요할까요. 배터리, 촉매, 부식, 야금 정련, 심지어 광합성과 대사까지 전부 산화·환원 반응으로 정해집니다. 그리고 소재 개발 입장에서 중요한 건 이것입니다.</p>
 <div class="box kept">
-<p>후보 물질 수백~수천 개를 일일이 합성해서 측정할 수는 없다. <strong>계산으로 미리 걸러내야 한다.</strong></p>
+<p>후보 물질 수백~수천 개를 일일이 합성해서 측정할 수는 없으니, <strong>계산으로 미리 걸러 내야 합니다.</strong></p>
 </div>
-<p>특히 리튬이온 배터리 양극재의 경우, 산화 에너지가 곧 <strong>전지 전압</strong>이다. 양극에서 Li⁺ 하나와 전자 하나를 빼서 Li 금속 음극에 붙이는 반응 에너지를 전자 전하로 나누면 그게 평균 전압이다.</p>
+<p>특히 리튬이온 배터리 양극재에서는 산화 에너지가 곧 <strong>전지 전압</strong>입니다. 양극에서 Li⁺ 하나와 전자 하나를 빼서 Li 금속 음극에 붙이는 반응 에너지를 전자 전하로 나누면 평균 전압이 됩니다.</p>
 <pre><code>Li_x MO₂ → Li_(x−1) MO₂ + Li(금속)
 
 V_avg = [ E(Li_(x−1)MO₂) + E(Li금속) − E(Li_x MO₂) ] / e
 </code></pre>
-<p>그래서 이 반응 에너지를 1.5 eV 틀리면 <strong>4 V 양극재를 2.5 V로 예측</strong>한다는 뜻이다. 순위가 뒤죽박죽이 되니, 계산으로 스크리닝한다는 목적 자체가 무너진다. 그리고 실제로 GGA는 그 정도로 틀렸다. 이 논문 도입부가 인용하는 숫자가 정확히 <strong>4 eV 중 1.5 eV</strong>다.</p>
+<p>그래서 이 반응 에너지를 1.5 eV 틀리면 <strong>4 V 양극재를 2.5 V로 예측</strong>하게 됩니다. 순위가 뒤죽박죽이 되니 계산으로 스크리닝한다는 목적 자체가 성립하지 않습니다. 그런데 실제로 GGA가 그 정도로 틀렸습니다. 논문 도입부가 인용하는 숫자가 정확히 <strong>4 eV 중 1.5 eV</strong>입니다.</p>
 
 <h2>2. 배경: DFT의 정확도는 "오차 상쇄"에 기댄다</h2>
-<p>여기서 많은 사람이 놓치는 전제를 짚어야 한다.</p>
+<p>여기서 많이들 놓치는 전제를 하나 짚고 가겠습니다.</p>
 <div class="box obs">
-<p><strong>📖 용어 | 오차 상쇄 (error cancellation)</strong>
-GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당 수 eV씩 틀린다. 그런데 아무도 신경 쓰지 않는다. 우리가 실제로 쓰는 건 항상 <strong>에너지 차이</strong>(반응 에너지, 상 안정성, 전압)이기 때문이다. 반응의 좌변과 우변이 전자 입장에서 비슷한 환경이면, 같은 크기의 오차가 양쪽에 똑같이 얹혀서 뺄 때 지워진다. 논문 도입부의 표현대로, DFT의 성공은 "in large part due to the cancellation of errors in energy differences"다.</p>
+<p><strong>📖 용어 | 오차 상쇄 (error cancellation)</strong> GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당 수 eV씩 차이가 납니다. 그런데 이걸 신경 쓰는 사람은 없습니다. 실제로 쓰는 건 항상 <strong>에너지 차이</strong>(반응 에너지, 상 안정성, 전압)이기 때문입니다. 반응의 좌변과 우변이 전자 입장에서 비슷한 환경이면, 같은 크기의 오차가 양쪽에 똑같이 얹혀서 빼면 지워집니다. 논문 도입부 표현대로 DFT의 성공은 "in large part due to the cancellation of errors in energy differences"입니다.</p>
 </div>
-<p>같은 조성의 두 결정 구조 중 어느 것이 안정한지 비교할 때는 이 상쇄가 거의 완벽하게 작동한다. 결합 성격도 d 전자 개수도 같으니까.</p>
-<p><strong>그런데 산화·환원은 사정이 다르다.</strong> 전자가 성격이 완전히 다른 두 장소 사이를 옮겨간다.</p>
+<p>같은 조성의 두 결정 구조 중 어느 쪽이 안정한지 비교할 때는 이 상쇄가 거의 완벽하게 작동합니다. 결합 성격도 d 전자 개수도 같으니까요.</p>
+<p><strong>그런데 산화·환원은 사정이 다릅니다.</strong> 전자가 성격이 완전히 다른 두 장소 사이를 옮겨 가기 때문입니다.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -128,11 +127,11 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>논문의 표현이 이것이다: <strong>"systematic and noncanceling errors."</strong> 계통적이고(랜덤이 아니어서 평균으로 사라지지 않고), 상쇄되지 않는(그래서 계산을 더 정밀하게 해도 줄지 않는) 오차. 보정하지 않으면 절대 사라지지 않는다는 선언이며, 이 논문이 존재하는 이유다.</p>
+<p>논문은 이걸 <strong>"systematic and noncanceling errors"</strong>라고 표현합니다. 계통적이고(무작위가 아니라 평균을 내도 사라지지 않고), 상쇄되지 않는(그래서 계산을 더 정밀하게 해도 줄지 않는) 오차라는 뜻입니다. 보정하지 않으면 절대 사라지지 않는다는 얘기이고, 이 논문이 쓰인 이유이기도 합니다.</p>
 
 <h2>3. 범인은 둘이다</h2>
 <h3>3.1 오차 ①: O₂ 분자 과잉결합 (overbinding)</h3>
-<p>GGA는 O₂ 분자를 실제보다 강하게 묶는다. 논문의 숫자:</p>
+<p>GGA는 O₂ 분자를 실제보다 강하게 묶습니다. 논문에 나온 숫자는 이렇습니다.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -162,21 +161,18 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </table>
 </div>
 <div class="box obs">
-<p><strong>💡 눈여겨볼 논증</strong>
-왜 굳이 "선행 GGA 계산값 −5.99 eV"와 비교하는가? 실험과 비교하는 게 목적이라면 불필요한 비교다. 이건 <strong>자기 계산의 결백 증명</strong>이다. 컷오프, k-메시, PAW 유사포텐셜, 스핀 편극 중 뭘 잘못 잡아서 나온 숫자라면 논문 전체가 무너진다. 문헌값을 0.03 eV 안에서 재현했으니 <strong>"구현 오차(implementation error)"가 아니라 "방법 오차(method error)"</strong> 임이 확정된다. 논문을 읽을 때 이런 문장은 "저자가 자기 계산의 결백을 증명하는 중"이라고 읽으면 된다.</p>
+<p><strong>💡 눈여겨볼 논증</strong> 왜 굳이 "선행 GGA 계산값 −5.99 eV"와 비교했을까요? 실험과 비교하는 게 목적이라면 필요 없는 비교입니다. 이건 <strong>자기 계산에 실수가 없다는 걸 보여 주는</strong> 비교입니다. 컷오프, k-메시, PAW 유사포텐셜, 스핀 편극 중 하나라도 잘못 잡아서 나온 숫자라면 논문 전체를 믿을 수 없게 됩니다. 문헌값을 0.03 eV 안에서 재현했으니 <strong>"구현 오차(implementation error)"가 아니라 "방법 오차(method error)"</strong>라는 게 확실해집니다. 논문에서 이런 문장을 만나면 저자가 자기 계산을 검증하는 중이라고 읽으면 됩니다.</p>
 </div>
-<p><strong>부호를 따라가 보자.</strong> 반응물 O₂가 실제보다 안정하게(낮게) 계산되면, 거기서 출발해 생성물로 내려가는 낙차가 줄어든다. 즉 계산된 산화 에너지가 <strong>실제보다 덜 음수</strong>가 된다. 논문의 표현: "makes calculated oxidation energies less negative than experimental values."</p>
-<p>그리고 결정적으로, 이 오차는 <strong>O₂ 하나당 일정한 상수</strong>다. O₂는 어느 반응에서나 똑같은 O₂이기 때문이다. 그래서 <strong>고치기 쉽다.</strong></p>
+<p><strong>부호를 따라가 보겠습니다.</strong> 반응물 O₂가 실제보다 안정하게(낮게) 계산되면, 거기서 출발해 생성물로 내려가는 낙차가 줄어듭니다. 그래서 계산된 산화 에너지가 <strong>실제보다 덜 음수</strong>가 됩니다. 논문 표현으로는 "makes calculated oxidation energies less negative than experimental values."입니다.</p>
+<p>그리고 중요한 건 이 오차가 <strong>O₂ 하나당 일정한 상수</strong>라는 점입니다. O₂는 어느 반응에서나 똑같은 O₂이기 때문입니다. 그래서 <strong>고치기 쉽습니다.</strong></p>
 <h3>3.2 오차 ②: 3d 전자의 자기상호작용 / 상관 오차</h3>
-<p>이쪽이 본질적이고 어렵다.</p>
+<p>이쪽이 본질적이고 어렵습니다.</p>
 <div class="box obs">
-<p><strong>📖 용어 | self-interaction error (SIE, 자기상호작용 오차)</strong>
-정확한 이론에서는 전자가 자기 자신의 전하와 밀어내는 항(Hartree)이 교환항(exchange)에 의해 정확히 상쇄된다. 전자가 자기 자신을 밀어낼 수는 없으니 당연하다. 그런데 LDA/GGA는 교환항이 근사값이라 이 상쇄가 불완전하다. <strong>결과적으로 전자가 자기 자신의 밀도로부터 가짜 반발력을 느낀다.</strong></p>
-<p>가짜 반발이 있으면 전자는 좁은 곳에 뭉쳐 있기를 싫어한다. 뭉치면 자기 자신과 겹치는 정도가 커지니까. 그래서 GGA는 <strong>국재화된 상태를 실제보다 불안정하게 계산하고, 전자 밀도를 억지로 퍼뜨린다.</strong> 밴드갭이 실제보다 작게(종종 0으로) 나오는 것도 같은 뿌리다.</p>
-<p><strong>📖 용어 | correlation energy (상관 에너지)</strong>
-교환-상관 에너지 중 교환을 뺀 나머지. <strong>평균장(mean-field) 그림이 놓치는 전부</strong>를 뜻한다. 평균장은 "전자 하나가 나머지 전자들이 만든 <em>평균</em> 전기장 속에서 움직인다"고 보는 근사인데, 실제 전자는 평균이 아니라 <strong>순간순간 다른 전자가 정확히 어디 있는지에 반응</strong>해서 비켜난다. 그 실시간 회피 동작의 누락분이 상관 에너지다.</p>
+<p><strong>📖 용어 | self-interaction error (SIE, 자기상호작용 오차)</strong> 정확한 이론에서는 전자가 자기 자신의 전하와 밀어내는 항(Hartree)이 교환항(exchange)으로 정확히 상쇄됩니다. 전자가 자기 자신을 밀어낼 수는 없으니 당연합니다. 그런데 LDA/GGA는 교환항이 근사값이라 이 상쇄가 불완전합니다. <strong>그래서 전자가 자기 자신의 밀도로부터 가짜 반발력을 느낍니다.</strong></p>
+<p>가짜 반발이 있으면 전자는 좁은 곳에 뭉쳐 있기를 싫어합니다. 뭉치면 자기 자신과 겹치는 정도가 커지니까요. 그래서 GGA는 <strong>국재화된 상태를 실제보다 불안정하게 계산하고, 전자 밀도를 억지로 퍼뜨립니다.</strong> 밴드갭이 실제보다 작게(종종 0으로) 나오는 것도 같은 원인입니다.</p>
+<p><strong>📖 용어 | correlation energy (상관 에너지)</strong> 교환-상관 에너지에서 교환을 뺀 나머지이고, <strong>평균장(mean-field) 그림이 놓치는 부분 전부</strong>를 뜻합니다. 평균장은 전자 하나가 나머지 전자들이 만든 <em>평균</em> 전기장 속에서 움직인다고 보는 근사인데, 실제 전자는 평균이 아니라 <strong>그 순간 다른 전자가 정확히 어디 있는지에 반응</strong>해서 비켜 갑니다. 그 순간순간 피하는 효과를 빠뜨린 몫이 상관 에너지입니다.</p>
 </div>
-<p>이 논문이 도입부에서는 SIE라고 하고 결과부에서는 correlation error라고 해서 헷갈릴 수 있는데, <strong>같은 고장을 두 방향에서 본 것</strong>이다.</p>
+<p>이 논문은 도입부에서는 SIE라고 하고 결과부에서는 correlation error라고 해서 헷갈릴 수 있는데, <strong>같은 문제를 두 방향에서 본 것</strong>입니다.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -200,10 +196,10 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>둘 다 결론이 "GGA는 전자를 실제보다 퍼뜨린다"로 같고, 결정적으로 <strong>처방도 하나</strong>다(뒤에 나올 +U 항 하나가 둘을 동시에 건드린다).</p>
+<p>둘 다 결론이 "GGA는 전자를 실제보다 퍼뜨린다"로 같고, 무엇보다 <strong>처방도 하나</strong>입니다(뒤에 나올 +U 항 하나가 둘을 같이 건드립니다).</p>
 <h3>3.3 왜 하필 3d인가, U/W 비율</h3>
-<p>전이금속(Ti, V, Cr, Mn, Fe, Co, Ni, Cu)은 3d 오비탈을 어중간하게 채워가는 원소들이다. 그래서 산화 상태가 여러 개 가능하다. Fe²⁺도 되고 Fe³⁺도 된다. 배터리가 작동하는 원리가 바로 이것이다.</p>
-<p>그리고 d 오비탈은 s, p에 비해 <strong>좁고 뭉쳐 있다.</strong> 이걸 정량화하면 두 에너지의 경쟁이 된다.</p>
+<p>전이금속(Ti, V, Cr, Mn, Fe, Co, Ni, Cu)은 3d 오비탈을 어중간하게 채워 가는 원소들입니다. 그래서 산화 상태가 여러 개 가능합니다. Fe²⁺도 되고 Fe³⁺도 됩니다. 배터리가 작동하는 원리가 바로 이것입니다.</p>
+<p>그리고 d 오비탈은 s, p에 비해 <strong>좁고 뭉쳐 있습니다.</strong> 이걸 정량적으로 보면 두 에너지의 경쟁이 됩니다.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -228,24 +224,23 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </table>
 </div>
 <ul>
-<li><strong>W ≫ U</strong>. 일반 금속(Al, Li의 sp 밴드). 전자가 넓게 퍼져 마주칠 확률이 낮다. 상관이 약하고 <strong>GGA가 잘 맞는다.</strong></li>
-<li><strong>U ≳ W</strong>. 전이금속 산화물의 3d 밴드. 3d는 이웃과 겹침이 작아 밴드폭이 좁은데(수 eV) U는 그와 비슷하거나 더 크다. "옆 원자에 전자가 있는지"가 에너지를 지배한다. <strong>평균장으로는 원리적으로 담을 수 없는 영역</strong>이고, 이런 물질을 강상관계(strongly correlated system)라 부른다.</li>
+<li><strong>W ≫ U</strong>. 일반 금속(Al, Li의 sp 밴드)입니다. 전자가 넓게 퍼져 있어서 서로 마주칠 확률이 낮습니다. 상관이 약하고 <strong>GGA가 잘 맞습니다.</strong></li>
+<li><strong>U ≳ W</strong>. 전이금속 산화물의 3d 밴드입니다. 3d는 이웃과 겹침이 작아 밴드폭이 좁은데(수 eV) U는 그와 비슷하거나 더 큽니다. 옆 원자에 전자가 있느냐가 에너지를 좌우합니다. <strong>평균장으로는 원리적으로 담을 수 없는 영역</strong>이고, 이런 물질을 강상관계(strongly correlated system)라고 부릅니다.</li>
 </ul>
-<p>정리하면 <strong>국재화 = 좁은 밴드폭 = 상대적으로 큰 U = 상관이 지배</strong>라는 사슬이다.</p>
+<p>정리하면 <strong>국재화 = 좁은 밴드폭 = 상대적으로 큰 U = 상관이 지배</strong>라는 관계입니다.</p>
 <div class="box obs">
-<p><strong>📖 용어 | hybridization (혼성)</strong>
-엄밀히 말하면 "산화물 속 금속의 3d 전자"라는 표현은 정확하지 않다. 금속의 3d와 산소의 2p는 공간적으로 겹치고 에너지도 비슷해서 서로 섞인다. 실제 전자 상태는 <strong>"금속 d + 산소 p" 혼합물</strong>이다. 논문 표현: "the localized orbitals formed by the metal 3d orbital and oxygen 2p ligands."</p>
-<p>그리고 SIE의 <strong>크기가 이 혼성 정도에 따라 크게 달라진다.</strong> 혼성이 약하면(이온적) 전자가 금속에 갇혀 SIE가 크고, 혼성이 강하면(공유결합적) 전자가 주변 산소에 퍼져 SIE가 작다. 물질마다 다르다는 뜻이고, 그래서 <strong>보편적인 상수 보정이 불가능</strong>하다. 이것이 metal별로 다른 U가 필요한 근본 이유다.</p>
+<p><strong>📖 용어 | hybridization (혼성)</strong> 엄밀히 말하면 "산화물 속 금속의 3d 전자"라는 표현은 정확하지 않습니다. 금속의 3d와 산소의 2p는 공간적으로 겹치고 에너지도 비슷해서 서로 섞입니다. 실제 전자 상태는 <strong>"금속 d + 산소 p" 혼합물</strong>입니다. 논문 표현으로는 "the localized orbitals formed by the metal 3d orbital and oxygen 2p ligands."입니다.</p>
+<p>그리고 SIE의 <strong>크기가 이 혼성 정도에 따라 크게 달라집니다.</strong> 혼성이 약하면(이온적) 전자가 금속에 갇혀 SIE가 크고, 혼성이 강하면(공유결합적) 전자가 주변 산소에 퍼져서 SIE가 작습니다. 물질마다 다르다는 뜻이라 <strong>모든 물질에 같은 상수로 보정할 수는 없습니다</strong>. 금속마다 다른 U가 필요한 근본적인 이유가 이것입니다.</p>
 </div>
 <h3>3.4 그리고 두 오차는 서로를 가린다</h3>
-<p>이게 논문 전체 구성을 결정한 사실이다. <strong>두 오차의 부호가 반대다.</strong></p>
+<p>이 사실이 논문 전체의 구성을 정했습니다. <strong>두 오차의 부호가 반대입니다.</strong></p>
 <pre><code>                     ΔH를 위로 밀기            ΔH를 아래로 밀기
                      (덜 음수, 산화 억제)       (더 음수, 산화 촉진)
   오차 ① O₂ 과잉결합       ●───────────────►
   오차 ② 3d SIE                              ◄───────────────●
                               합쳐서 관측되는 것 = 일부만 남음
 </code></pre>
-<p>수치 예로 보면(설명용 가상값):</p>
+<p>숫자로 예를 들면 이렇습니다(설명용 가상값).</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -270,12 +265,12 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>계산 결과를 실험과 비교하면 우리가 보는 건 마지막 줄 하나, +0.4다. 이게 (+1.4, −1.0)에서 왔는지 (+0.5, −0.1)에서 왔는지 알 방법이 없다. <strong>미지수가 둘인데 식이 하나</strong>다. 심지어 "오차가 작아 보이니 괜찮은 계산"이라고 착각할 위험까지 있다.</p>
-<p>논문 Discussion에 이 위험이 명시적으로 경고돼 있는데, 이게 이 논문에서 가장 인용할 만한 문장이라고 본다:</p>
+<p>계산 결과를 실험과 비교하면 보이는 건 마지막 줄 하나, +0.4뿐입니다. 이게 (+1.4, −1.0)에서 왔는지 (+0.5, −0.1)에서 왔는지 알 방법이 없습니다. <strong>미지수는 둘인데 식은 하나</strong>입니다. 심지어 오차가 작아 보이니 괜찮은 계산이라고 착각할 위험까지 있습니다.</p>
+<p>논문 Discussion에 이 위험이 분명하게 적혀 있는데, 제가 보기엔 이 논문에서 가장 인용할 만한 문장입니다.</p>
 <div class="box kept">
 <p><strong>"Note that if an uncorrected O₂ energy is used, the pure GGA results in Fig. 2 would be in better agreement with experiment, due to the cancellation of two substantial errors... This cancellation is rather arbitrary and cannot be relied upon to get accurate results."</strong></p>
 </div>
-<p><strong>보정을 하지 않은 GGA가 우연히 더 잘 맞는다.</strong> 우연히 맞는 답을 성공으로 착각하면, 두 오차의 크기 비율이 달라지는 새로운 계에서 예측이 무너진다. 계산 연구에서 "맞았다"와 "맞을 이유가 있다"를 구분해야 하는 이유의 교과서적 사례다.</p>
+<p><strong>보정하지 않은 GGA가 우연히 더 잘 맞는다는 겁니다.</strong> 우연히 맞은 답을 성공으로 착각하면, 두 오차의 크기 비율이 달라지는 새로운 계에서 예측이 틀어집니다. 계산 연구에서 "맞았다"와 "맞을 이유가 있다"를 구분해야 하는 이유를 보여 주는 교과서적인 사례입니다.</p>
 
 <h2>4. 방법</h2>
 <h3>4.1 계산 세팅</h3>
@@ -323,7 +318,7 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>마지막 항목이 실무적으로 중요하다. 혼합 원가가 산화물에서는 같은 결정학적 사이트에 Fe²⁺와 Fe³⁺가 섞여 앉는데, 대칭성을 강제하면 계산이 그 전하 분리를 찾지 못하고 "평균 원자가"라는 물리적으로 틀린 해에 갇힌다.</p>
+<p>마지막 항목이 실제로 계산할 때 중요합니다. 혼합 원자가 산화물에서는 같은 결정학적 자리에 Fe²⁺와 Fe³⁺가 섞여 앉는데, 대칭을 강제하면 계산이 그 전하 분리를 찾지 못하고 "평균 원자가"라는 물리적으로 틀린 해에 갇힙니다.</p>
 <h3>4.2 대상 물질과 자성 구조 (Table I)</h3>
 <div class="table-scroll">
 <table>
@@ -418,19 +413,18 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </table>
 </div>
 <ul>
-<li><strong>AFM</strong> = 반강자성(이웃 스핀이 반대), <strong>FM</strong> = 강자성, <strong>FiM</strong> = 준강자성(반대지만 크기가 달라 알짜 자기모멘트 존재), <strong>NM/DM</strong> = 비자성/반자성</li>
-<li>β-MnO₂는 실제로 나선형(helimagnetic) 자성인데 실용적 이유로 강자성으로 가정했다고 명시.</li>
-<li><strong>Ti 산화물은 의도적으로 제외.</strong> 이유는 §7에서.</li>
+<li><strong>AFM</strong> = 반강자성(이웃 스핀이 반대), <strong>FM</strong> = 강자성, <strong>FiM</strong> = 준강자성(반대지만 크기가 달라서 알짜 자기모멘트가 있음), <strong>NM/DM</strong> = 비자성/반자성</li>
+<li>β-MnO₂는 실제로 나선형(helimagnetic) 자성인데, 실용적인 이유로 강자성으로 가정했다고 적혀 있습니다.</li>
+<li><strong>Ti 산화물은 일부러 뺐습니다.</strong> 이유는 §7에 나옵니다.</li>
 </ul>
 <h3>4.3 GGA+U가 실제로 하는 일</h3>
 <div class="box obs">
-<p><strong>📖 용어 | GGA+U</strong>
-범함수가 아니다. <strong>"DFT + 모델 패치"</strong> 구조다. 먼저 GGA로 전체 계산을 하고, 나온 파동함수를 각 전이금속 사이트의 <strong>원자형 d 오비탈에 투영(project)</strong> 해서 점유 행렬 n을 뽑는다. 그리고 그 점유수에 <strong>허바드 모형(Hubbard model)</strong> 의 에너지 항을 얹는다. 전체는 제일원리 계산이고, d 부분공간만 골라 모형 해밀토니안으로 덧칠하는 것이다.</p>
+<p><strong>📖 용어 | GGA+U</strong> 범함수가 아니라 <strong>"DFT + 모델 보정"</strong> 구조입니다. 먼저 GGA로 전체를 계산하고, 나온 파동함수를 전이금속 자리마다 <strong>원자형 d 오비탈에 투영(project)</strong>해서 점유 행렬 n을 뽑습니다. 그 점유수에 <strong>허바드 모형(Hubbard model)</strong>의 에너지 항을 얹습니다. 전체는 제일원리 계산이고, d 부분공간만 골라서 모형 해밀토니안으로 덧붙이는 셈입니다.</p>
 </div>
-<p>논문 식 (1)을 정리하면 본질적으로 이렇다(Dudarev 형식, Ref. 11):</p>
+<p>논문 식 (1)을 정리하면 본질적으로 이렇습니다(Dudarev 형식, Ref. 11).</p>
 <pre><code>E^(GGA+U) = E^(GGA) + (U_eff / 2) · Σᵢ nᵢ(1 − nᵢ)
 </code></pre>
-<p>이 함수의 성격을 보자.</p>
+<p>이 함수가 어떤 성격인지 보겠습니다.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -459,37 +453,35 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>즉 이 항은 <strong>"점유수를 0이나 1로 몰아라"</strong> 는 명령이다. 어중간하게 0.4, 0.6으로 흐릿하게 퍼진 상태에 벌금을 물린다.</p>
-<p>이것이 정확히 필요한 처방인 이유: GGA의 병이 <strong>점유수를 뭉개는 것</strong>이었다. SIE 때문에 전자가 한 자리에 온전히 앉기를 싫어해 여러 자리에 0.5씩 나눠 앉으려 한다. 식 (1)은 그 뭉개기에 가격을 매겨 전자를 제자리에 앉힌다.</p>
-<p>스펙트럼 언어로는 같은 항이 <strong>점유된 d 준위를 U/2 내리고 빈 준위를 U/2 올린다.</strong> 그래서 밴드갭이 대략 U만큼 열린다. <strong>에너지 관점(분수 점유 벌금)과 스펙트럼 관점(갭 열기)은 같은 항의 두 얼굴</strong>이다.</p>
-<p>파라미터에 대해:
-- <strong>Ū</strong> = 같은 사이트의 쿨롱 반발(구면 평균), <strong>J̄</strong> = 훈트 교환 결합
-- 실제로 들어가는 건 차이인 <strong>U_eff = Ū − J̄</strong> 하나뿐. 논문도 "The calculated total energies are insensitive to J̄ when U_eff is fixed"라고 명시. 실무에서 "U를 4로 줬다"는 거의 항상 U_eff를 말한다.</p>
+<p>그러니까 이 항은 <strong>점유수를 0이나 1로 몰아가는</strong> 항입니다. 0.4, 0.6처럼 어중간하게 흐릿하게 퍼진 상태에 벌점을 줍니다.</p>
+<p>이게 딱 필요한 보정인 이유는 GGA의 문제가 <strong>점유수를 뭉개는 것</strong>이었기 때문입니다. SIE 때문에 전자가 한 자리에 온전히 앉기를 싫어해서 여러 자리에 0.5씩 나눠 앉으려고 합니다. 식 (1)은 그렇게 뭉개는 데 벌점을 줘서 전자를 제자리에 앉힙니다.</p>
+<p>스펙트럼으로 보면 같은 항이 <strong>점유된 d 준위를 U/2 내리고 빈 준위를 U/2 올립니다.</strong> 그래서 밴드갭이 대략 U만큼 열립니다. <strong>에너지로 보면 분수 점유에 대한 벌점이고, 스펙트럼으로 보면 갭을 여는 것인데, 둘은 같은 항을 다르게 본 것</strong>입니다.</p>
+<p>파라미터는 이렇습니다. - <strong>Ū</strong> = 같은 자리의 쿨롱 반발(구면 평균), <strong>J̄</strong> = 훈트 교환 결합 - 실제로 들어가는 건 둘의 차이인 <strong>U_eff = Ū − J̄</strong> 하나뿐입니다. 논문도 "The calculated total energies are insensitive to J̄ when U_eff is fixed"라고 적었습니다. 실제로 "U를 4로 줬다"고 하면 거의 항상 U_eff를 말합니다.</p>
 <h3>4.4 대상 반응을 고른 방식, 도구의 유효 범위에 주장을 맞추기</h3>
-<p>논문이 다루는 반응은 식 (2)의 형태다.</p>
+<p>논문이 다루는 반응은 식 (2)의 형태입니다.</p>
 <pre><code>MOₓ + (y−x)/2 · O₂ → MO_y
 
 ΔH_o = [ E(MO_y) − E(MOₓ) − (y−x)/2 · E(O₂) ] / [ (y−x)/2 ]      ... 식 (3)
 </code></pre>
-<p><strong>양쪽이 모두 산화물</strong>이다. 원소 금속에서 출발하는 생성 반응(<code>Fe + O₂ → Fe₂O₃</code>)이 실험 데이터가 훨씬 풍부한데도 그쪽을 피했다. 왜?</p>
-<p>+U는 <strong>금속에 적용할 수 없다.</strong> 금속에서는 d 상태가 넓은 밴드를 이루고 <strong>분수 점유가 인공물이 아니라 실제 물리</strong>다. 페르미 준위를 가로지르는 밴드는 원래 점유수가 어중간하다. 그런데 식 (1)은 분수 점유에 무조건 벌금을 물리니, 금속에 걸면 <strong>없는 갭을 억지로 열고 국재화되지 않은 전자를 억지로 가둔다.</strong> 고치는 게 아니라 새 오차를 만든다.</p>
-<p>이 결정의 흔적이 논문 곳곳에 남아 있다.</p>
+<p><strong>양쪽이 모두 산화물</strong>입니다. 원소 금속에서 출발하는 생성 반응(<code>Fe + O₂ → Fe₂O₃</code>)의 실험 데이터가 훨씬 많은데도 그쪽을 피했습니다. 왜 그랬을까요?</p>
+<p>+U는 <strong>금속에는 쓸 수 없기</strong> 때문입니다. 금속에서는 d 상태가 넓은 밴드를 이루고 <strong>분수 점유가 계산의 결함이 아니라 실제 물리</strong>입니다. 페르미 준위를 가로지르는 밴드는 원래 점유수가 어중간합니다. 그런데 식 (1)은 분수 점유에 무조건 벌점을 주니, 금속에 걸면 <strong>없는 갭을 억지로 열고 국재화되지 않은 전자를 억지로 가둡니다.</strong> 고치는 게 아니라 새 오차를 만드는 겁니다.</p>
+<p>이 결정의 흔적이 논문 곳곳에 남아 있습니다.</p>
 <ul>
-<li><strong>제목</strong>이 "formation energies"가 아니라 <strong>"oxidation energies"</strong> 다.</li>
-<li><strong>Fig. 1과 Fig. 2의 역할 분담.</strong> Fig. 1은 금속 → 산화물이지만 <strong>순수 GGA(U 없음)</strong> 이고 O₂ 보정값을 뽑는 데만 쓰인다. Fig. 2는 <strong>산화물 → 산화물</strong>이고 여기서만 U를 켠다. <strong>금속이 등장하는 곳에는 U를 쓰지 않는다</strong>는 원칙이 그림 구성에 반영돼 있다.</li>
-<li>Fig. 2의 반응식은 예외 없이 산화물끼리다. <code>2VO+O₂→2VO₂</code>, <code>2Cr₂O₃+3O₂→4CrO₃</code>, <code>4FeO+O₂→2Fe₂O₃</code>, ...</li>
+<li><strong>제목</strong>이 "formation energies"가 아니라 <strong>"oxidation energies"</strong>입니다.</li>
+<li><strong>Fig. 1과 Fig. 2의 역할 분담.</strong> Fig. 1은 금속 → 산화물이지만 <strong>순수 GGA(U 없음)</strong>이고, O₂ 보정값을 뽑는 데만 씁니다. Fig. 2는 <strong>산화물 → 산화물</strong>이고 여기서만 U를 켭니다. <strong>금속이 나오는 곳에는 U를 쓰지 않는다</strong>는 원칙이 그림 구성에 그대로 반영돼 있습니다.</li>
+<li>Fig. 2의 반응식은 예외 없이 산화물끼리입니다. <code>2VO+O₂→2VO₂</code>, <code>2Cr₂O₃+3O₂→4CrO₃</code>, <code>4FeO+O₂→2Fe₂O₃</code>, ...</li>
 </ul>
-<p>그리고 범위를 좁혔으니 당연한 반박이 온다. <em>"양쪽이 다 산화물이면 환경이 비슷하니 오차가 상쇄돼서, 애초에 연구할 오차가 남지 않은 게 아니냐?"</em> 논문은 바로 그 자리에서 방어한다. 이 반응들도 <strong>금속 3d에서 산소 2p로 전자가 이동</strong>하므로 국재화된 d 전자의 개수가 여전히 달라지고, 따라서 오차가 살아 있다.</p>
+<p>범위를 좁히면 당연히 반박이 나옵니다. <em>"양쪽이 다 산화물이면 환경이 비슷해서 오차가 상쇄되니, 애초에 연구할 오차가 안 남는 것 아니냐?"</em> 논문은 바로 그 자리에서 답합니다. 이 반응들도 <strong>금속 3d에서 산소 2p로 전자가 이동</strong>하니 국재화된 d 전자의 개수가 여전히 달라지고, 그래서 오차가 남아 있다는 겁니다.</p>
 <div class="box kept">
-<p>논문에서 방법론 단락을 읽을 때는 늘 이 짝을 찾으면 좋다. <strong>무엇을 포기했고(금속 반응), 포기하고도 현상이 남았음을 어떻게 논증하는가(d 전자 개수 변화).</strong></p>
+<p>논문에서 방법 부분을 읽을 때는 이런 짝을 찾아보면 좋습니다. <strong>무엇을 포기했는지(금속 반응), 그리고 포기하고도 현상이 남아 있다는 걸 어떻게 보이는지(d 전자 개수 변화)</strong>입니다.</p>
 </div>
 
 <h2>5. 결과 ①: O₂ 보정값 뽑기 (Fig. 1)</h2>
 <h3>5.1 정규화가 이 결과를 성립시킨다</h3>
-<p>Fig. 1의 y축은 그냥 생성 에너지가 아니라 <strong>반응에 참여한 O₂ 하나당</strong> 생성 에너지다(식 3의 분모).</p>
-<p>이게 결정적이다. 잡으려는 오차는 O₂ <strong>하나당</strong> 발생하므로, Al₂O₃(O₂ 1.5개 소비)는 오차가 1.5배, Li₂O(0.5개)는 0.5배로 들어온다. 화학식 단위당으로 플롯했다면 이 오차가 <strong>화학양론에 비례해 흩어져 그냥 산포로 보였을</strong> 것이다. O₂당으로 나누면 스케일링이 정확히 상쇄되고, 오차가 <strong>모든 물질에 대해 같은 크기의 수직 이동</strong>으로 나타난다. 예쁘게 그리려는 미용이 아니라, <strong>가설을 검출 가능한 형태로 만드는 조작</strong>이다.</p>
+<p>Fig. 1의 y축은 그냥 생성 에너지가 아니라 <strong>반응에 참여한 O₂ 하나당</strong> 생성 에너지입니다(식 3의 분모).</p>
+<p>이게 중요합니다. 잡으려는 오차가 O₂ <strong>하나당</strong> 생기니, Al₂O₃(O₂ 1.5개 소비)에는 오차가 1.5배, Li₂O(0.5개)에는 0.5배로 들어갑니다. 화학식 단위당으로 그렸다면 이 오차가 <strong>화학양론에 비례해서 흩어져 그냥 산포처럼 보였을</strong> 겁니다. O₂당으로 나누면 이 배율이 정확히 상쇄돼서, 오차가 <strong>모든 물질에서 같은 크기의 수직 이동</strong>으로 나타납니다. 보기 좋게 그리려는 게 아니라 <strong>가설을 확인할 수 있는 형태로 만드는 작업</strong>입니다.</p>
 <h3>5.2 그래프의 기하학이 곧 가설 검정</h3>
-<p>계산값(y) vs 실험값(x) 플롯(parity plot)에서:</p>
+<p>계산값(y)과 실험값(x)을 비교하는 그래프(parity plot)에서는 이렇게 읽습니다.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -518,8 +510,8 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>저자들의 가설은 "O₂ 오차는 상수"였고, 그렇다면 비전이금속 산화물 데이터는 <strong>기울기 1의 직선</strong>에 놓여야 한다. 기울기가 1.2쯤 나왔다면 상수 가설은 그 자리에서 죽었을 것이다.</p>
-<p>실제로 Fig. 1 inset에서 Li₂O, Na₂O, MgO, CaO, Al₂O₃가 대각선과 평행한 선에 나란히 앉았다. <strong>가설 통과, 절편이 곧 보정값.</strong></p>
+<p>저자들의 가설은 O₂ 오차가 상수라는 것이었고, 그렇다면 비전이금속 산화물 데이터는 <strong>기울기 1의 직선</strong> 위에 놓여야 합니다. 기울기가 1.2쯤 나왔다면 상수 가설은 바로 기각됐을 겁니다.</p>
+<p>실제로 Fig. 1 inset에서 Li₂O, Na₂O, MgO, CaO, Al₂O₃가 대각선과 평행한 선 위에 나란히 놓였습니다. <strong>가설은 통과했고, 그 절편이 바로 보정값입니다.</strong></p>
 <h3>5.3 얻은 값과 남는 잔차</h3>
 <div class="table-scroll">
 <table>
@@ -545,9 +537,9 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>저자들은 이 잔차를 숨기지 않고 명시하고, 원인을 추정한다: <strong>O₂가 O²⁻로 바뀔 때 산소 p 오비탈에 전자를 넣는 과정의 GGA 오차.</strong></p>
-<p>근거가 있는 추정이다. <strong>DFT에서 음이온은 악명 높게 어렵다.</strong> 고립된 O⁻나 O²⁻는 대부분의 범함수에서 결합조차 하지 않는다. SIE 때문에 여분의 전자가 튀어나간다. 고체 안에서는 마델룽 전기장이 붙잡아주지만, <strong>전자를 산소에 얹는 에너지 자체의 오차는 남는다.</strong> 그래서 저자들은 결합 에너지 차이(0.79)로 보정하지 않고, 일부러 실험 생성 엔탈피에 <strong>피팅</strong>해서 "이 산소 p 상관 오차까지 함께 포함시키는" 방식을 택했다고 Discussion에서 밝힌다.</p>
-<p>여기서 개념적으로 중요한 결론이 나온다. 흔히 "O₂ 보정"이라 부르는 1.36 eV는 사실 <strong>두 개가 뭉친 값</strong>이다.</p>
+<p>저자들은 이 잔차를 숨기지 않고 적어 두고, 원인도 추정합니다. <strong>O₂가 O²⁻로 바뀔 때 산소 p 오비탈에 전자를 넣는 과정의 GGA 오차</strong>라는 겁니다.</p>
+<p>근거가 있는 추정입니다. <strong>DFT에서 음이온은 다루기 어렵기로 유명합니다.</strong> 고립된 O⁻나 O²⁻는 대부분의 범함수에서 결합조차 하지 않습니다. SIE 때문에 여분의 전자가 튀어 나가 버립니다. 고체 안에서는 마델룽 전기장이 붙잡아 주지만, <strong>전자를 산소에 얹는 에너지 자체의 오차는 남습니다.</strong> 그래서 저자들은 결합 에너지 차이(0.79)로 보정하지 않고, 일부러 실험 생성 엔탈피에 <strong>피팅</strong>해서 이 산소 p 상관 오차까지 함께 포함시키는 방식을 택했다고 Discussion에서 밝힙니다.</p>
+<p>여기서 개념적으로 중요한 결론이 나옵니다. 흔히 "O₂ 보정"이라고 부르는 1.36 eV는 사실 <strong>두 가지가 합쳐진 값</strong>입니다.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -571,26 +563,26 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>이름은 O₂ 보정인데 절반 가까이는 <strong>산화물 쪽 산소</strong>에서 온다. 그래서 후속 연구들이 이걸 O₂ 에너지 수정이 아니라 <strong>경험적 음이온 보정(anion correction)</strong> 으로 취급하고, 대규모 계산 DB들이 이 보정을 산화물 속 <strong>산소 원자당</strong> 값(1.36을 2로 나눈 ~0.7 eV 수준)으로 구현한다. 구현 위치가 다른 것이다.</p>
+<p>이름은 O₂ 보정인데 절반 가까이는 <strong>산화물 쪽 산소</strong>에서 옵니다. 그래서 후속 연구들은 이걸 O₂ 에너지 수정이 아니라 <strong>경험적 음이온 보정(anion correction)</strong>으로 다루고, 대규모 계산 DB들은 이 보정을 산화물 속 <strong>산소 원자당</strong> 값(1.36을 2로 나눈 ~0.7 eV 수준)으로 구현합니다. 보정을 어디에 적용하느냐가 다른 겁니다.</p>
 <h3>5.4 SiO₂ 이탈이 이 단락의 가장 강한 증거다</h3>
-<p>논문이 한 문장으로 슬쩍 지나가는 부분: "The minor deviation of SiO₂ from the constant shift can be attributed to the high Si–O bond covalency in that oxide." 실은 §5.3 주장의 <strong>결정적 증거</strong>다.</p>
-<p>논리를 따라가 보자. 1.36 eV가 <strong>전부 O₂ 분자에서만</strong> 왔다면, 산화물 쪽 결합이 이온성이든 공유성이든 상관없어야 한다. O₂는 어느 반응에서나 똑같은 O₂이므로 <strong>모든 비전이금속 산화물이 예외 없이 직선에 앉아야</strong> 한다.</p>
-<p>그런데 실제로 이탈한 것은 <strong>가장 공유결합적인 산화물 하나</strong>였다. 공유결합에서는 산소가 전자 2개를 온전히 받지 않고 부분적으로만 받으므로, "O²⁻ 형성 오차" 성분이 작아지고 상수 이동에서 벗어난다.</p>
-<p><strong>이탈자의 신원이 메커니즘을 지목한다.</strong> 이탈한 게 MgO였다면 저자들의 설명은 성립하지 않았을 것이다. 논문에서 예외를 볼 때는 늘 <strong>"왜 하필 이 물질이 예외인가"</strong> 를 물어야 하는 이유다. 예외의 패턴이 종종 본론보다 정보량이 많다.</p>
+<p>논문이 한 문장으로 슬쩍 지나가는 부분이 있습니다. "The minor deviation of SiO₂ from the constant shift can be attributed to the high Si–O bond covalency in that oxide." 그런데 이게 사실 §5.3 주장의 <strong>가장 강한 증거</strong>입니다.</p>
+<p>논리를 따라가 보겠습니다. 1.36 eV가 <strong>전부 O₂ 분자에서만</strong> 왔다면, 산화물 쪽 결합이 이온성이든 공유성이든 상관없어야 합니다. O₂는 어느 반응에서나 똑같은 O₂이니 <strong>비전이금속 산화물은 예외 없이 직선 위에 놓여야</strong> 합니다.</p>
+<p>그런데 실제로 벗어난 건 <strong>가장 공유결합적인 산화물 하나</strong>였습니다. 공유결합에서는 산소가 전자 2개를 온전히 받지 않고 일부만 받으니, "O²⁻ 형성 오차" 성분이 작아져서 상수 이동에서 벗어난 겁니다.</p>
+<p><strong>어느 물질이 벗어났는지가 메커니즘을 가리킵니다.</strong> 벗어난 게 MgO였다면 저자들의 설명은 성립하지 않았을 겁니다. 논문에서 예외를 볼 때 늘 <strong>왜 하필 이 물질이 예외인지</strong> 물어봐야 하는 이유입니다. 예외가 보여 주는 패턴이 본론보다 더 많은 걸 알려 줄 때가 많습니다.</p>
 <h3>5.5 실전 적용 시 부호</h3>
-<p>계산값이 실험보다 O₂당 1.36 eV <strong>덜 음수</strong>이므로, 보정은 계산 생성 에너지를 O₂당 1.36 eV <strong>내리는</strong> 것이고, 이는 곧</p>
+<p>계산값이 실험보다 O₂당 1.36 eV <strong>덜 음수</strong>이니, 보정은 계산 생성 에너지를 O₂당 1.36 eV <strong>내리는</strong> 것이고, 이건 곧</p>
 <pre><code>E(O₂)_보정 = E(O₂)_GGA + 1.36 eV
 </code></pre>
-<p>로 <strong>O₂ 기준 에너지를 올려주는</strong> 것과 같다. "O₂가 너무 안정하게 계산됐으니 올려준다"고 기억하면 방향이 틀리지 않는다.</p>
+<p>로 <strong>O₂ 기준 에너지를 올려 주는</strong> 것과 같습니다. O₂가 너무 안정하게 계산됐으니 올려 준다고 기억하면 방향을 헷갈리지 않습니다.</p>
 
 <h2>6. 결과 ②: U 결정 (Fig. 2)</h2>
-<p>O₂ 보정을 걷어내고 나면 남은 어긋남은 순수하게 3d 탓이다. 그리고 이때 <strong>부호가 뒤집힌다.</strong></p>
+<p>O₂ 보정을 걷어 내고 나면 남은 어긋남은 순수하게 3d 때문입니다. 그리고 이때 <strong>부호가 뒤집힙니다.</strong></p>
 <ul>
-<li>보정 전(Fig. 1, 금속→산화물): GGA가 산화 에너지를 <strong>과소평가</strong></li>
-<li>보정 후(Fig. 2, U=0): GGA가 산화 에너지를 <strong>과대평가</strong>, 최대 <strong>1 eV</strong></li>
+<li>보정 전(Fig. 1, 금속→산화물): GGA가 산화 에너지를 <strong>작게 평가</strong></li>
+<li>보정 후(Fig. 2, U=0): GGA가 산화 에너지를 <strong>크게 평가</strong>, 최대 <strong>1 eV</strong></li>
 </ul>
-<p>이 부호 반전이 실은 보정이 제대로 작동했다는 증거다. 가려져 있던 두 번째 오차가 노출된 것이다. 논문의 표현: "all GGA oxidation energies are too negative, indicating that GGA penalizes the reduced state where more 3d orbitals are filled."</p>
-<p><strong>U를 켜면 왜 고쳐지는가.</strong> GGA에서 국재화된 d 전자 하나하나가 가짜 자기반발 벌점을 지고 있고, +U가 그 벌점을 보상한다. 그러니 <strong>국재화된 d 전자가 많은 쪽(환원 상태)이 보상을 더 많이 받아</strong> 안정화된다. 그러면 <code>ΔH = E(산화물) − E(환원물)</code>에서 빼는 항이 낮아지니 ΔH가 덜 음수가 된다. Fig. 2의 모든 곡선이 U가 커질수록 위로 올라가는 것이 이것이며, 실험값 수평선과 만나는 지점이 그 금속의 U다.</p>
+<p>이렇게 부호가 뒤집히는 게 오히려 보정이 제대로 작동했다는 증거입니다. 가려져 있던 두 번째 오차가 드러난 겁니다. 논문 표현으로는 "all GGA oxidation energies are too negative, indicating that GGA penalizes the reduced state where more 3d orbitals are filled."입니다.</p>
+<p><strong>U를 켜면 왜 고쳐질까요.</strong> GGA에서는 국재화된 d 전자 하나하나가 가짜 자기반발 벌점을 지고 있고, +U가 그 벌점을 보상해 줍니다. 그러니 <strong>국재화된 d 전자가 많은 쪽(환원 상태)이 보상을 더 많이 받아서</strong> 더 안정해집니다. 그러면 <code>ΔH = E(산화물) − E(환원물)</code>에서 빼는 항이 낮아지니 ΔH가 덜 음수가 됩니다. Fig. 2의 곡선이 전부 U가 커질수록 위로 올라가는 게 이 때문이고, 실험값 수평선과 만나는 지점이 그 금속의 U입니다.</p>
 <h3>6.1 Fig. 2에서 얻은 U</h3>
 <div class="table-scroll">
 <table>
@@ -641,13 +633,13 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </table>
 </div>
 <h3>6.2 여기가 이 논문의 핵심 주장이다</h3>
-<p>V, Mn, Fe는 산화 반응이 <strong>여러 개</strong> 있다(예: VO → V₂O₃ → VO₂ → V₂O₅). 만약 U가 그냥 숫자놀음이라면 반응마다 전혀 다른 U가 필요했을 것이다.</p>
-<p>그런데 <strong>한 금속 안에서는 U가 좁은 범위에 모였다.</strong> V는 3.0–3.3(폭 0.3), Fe는 3.9–4.1(폭 0.2). 논문의 표현: "The U values that bring the calculated oxidation energies in agreement with experimental results are <strong>remarkably consistent</strong> for a given transition metal, which implies that the U values of different oxidation states may lie close together."</p>
-<p>이것의 실용적 의미가 크다. 산화 상태가 달라져도 U가 거의 같다면, <strong>한 번 결정한 U를 그 금속의 다른 화합물·다른 산화 단계에 전이해 쓸 수 있다.</strong> 논문이 "This could make the GGA+U with the U values fitted here of practical value in predicting the potential and energy of redox processes more accurately"라고 쓴 게 그 얘기다. 실제로 이후 대규모 계산 DB가 "전이금속별 U 테이블"을 유지하는 근거가 여기서 나왔다.</p>
+<p>V, Mn, Fe는 산화 반응이 <strong>여러 개</strong> 있습니다(예: VO → V₂O₃ → VO₂ → V₂O₅). U가 그냥 맞추기 위한 숫자라면 반응마다 전혀 다른 U가 필요했을 겁니다.</p>
+<p>그런데 <strong>한 금속 안에서는 U가 좁은 범위에 모였습니다.</strong> V는 3.0–3.3(폭 0.3), Fe는 3.9–4.1(폭 0.2)입니다. 논문 표현으로는 "The U values that bring the calculated oxidation energies in agreement with experimental results are <strong>remarkably consistent</strong> for a given transition metal, which implies that the U values of different oxidation states may lie close together."입니다.</p>
+<p>실제로 쓸 때 이게 중요합니다. 산화 상태가 달라져도 U가 거의 같다면, <strong>한 번 정한 U를 그 금속의 다른 화합물이나 다른 산화 단계에 그대로 가져다 쓸 수 있습니다.</strong> 논문이 "This could make the GGA+U with the U values fitted here of practical value in predicting the potential and energy of redox processes more accurately"라고 쓴 게 이 얘기입니다. 실제로 이후 대규모 계산 DB가 전이금속별 U 표를 유지하는 근거가 여기서 나왔습니다.</p>
 
 <h2>7. 결과 ③: 독립 검증 (Table II), 이게 없으면 그냥 커브 피팅이다</h2>
-<p>여기가 논문의 신뢰성을 결정하는 부분이다. 산화 에너지 하나에 맞춰 뽑은 U가, <strong>피팅에 전혀 쓰지 않은 다른 관측량</strong>도 개선하는지 확인한다.</p>
-<p>논문이 사용한 U (Table II, 물질계마다 동일한 값 적용):</p>
+<p>논문을 얼마나 믿을 수 있는지가 여기서 갈립니다. 산화 에너지 하나에 맞춰 뽑은 U가 <strong>피팅에 전혀 쓰지 않은 다른 관측량</strong>도 좋아지게 하는지 확인합니다.</p>
+<p>논문이 쓴 U(Table II, 물질계마다 같은 값 적용)입니다.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -816,7 +808,7 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p><strong>주목할 점:</strong> FeO, CoO는 GGA에서 밴드갭이 <strong>0</strong>, 즉 금속으로 나온다. 실제로는 2 eV대의 절연체다. 이건 단순한 수치 오차가 아니라 <strong>물질의 종류를 틀리게 예측하는 것</strong>이다. +U가 이걸 고쳤다.</p>
+<p><strong>눈여겨볼 점:</strong> FeO, CoO는 GGA에서 밴드갭이 <strong>0</strong>, 그러니까 금속으로 나옵니다. 실제로는 2 eV대의 절연체입니다. 단순한 수치 오차가 아니라 <strong>물질의 종류 자체를 틀리게 예측한 것</strong>입니다. +U가 이걸 바로잡았습니다.</p>
 <h3>7.2 자기모멘트 M (μ_B / 전이금속 원자)</h3>
 <div class="table-scroll">
 <table>
@@ -904,11 +896,11 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>전반적으로 <strong>+U가 자기모멘트를 실험값 쪽으로 끌어올린다.</strong> 방향이 일관된 것도 중요하다. SIE가 전자를 퍼뜨려 국재 모멘트를 축소시키고 있었고, +U가 국재화를 복원하니 모멘트가 커지는 것이다. CuO가 0(비자성)에서 0.53(실험 0.68)으로 살아나는 것이 특히 상징적이다.</p>
+<p>전반적으로 <strong>+U가 자기모멘트를 실험값 쪽으로 끌어올립니다.</strong> 방향이 일관된 것도 중요합니다. SIE가 전자를 퍼뜨려서 국재 모멘트를 줄이고 있었고, +U가 국재화를 되돌리니 모멘트가 커지는 겁니다. CuO가 0(비자성)에서 0.53(실험 0.68)으로 살아나는 게 특히 인상적입니다.</p>
 <h3>7.3 이 표가 왜 결정적인가</h3>
-<p>U는 <strong>산화 에너지 하나</strong>에 맞춰 뽑은 값이다. 밴드갭과 자기모멘트는 피팅에 전혀 쓰이지 않았다. 그런데 같은 U가 이들도 개선한다.</p>
-<p>만약 U가 커브 피팅용 손잡이였다면 이런 일이 일어날 이유가 없다. <strong>하나의 관측량에 맞춘 파라미터가 물리적으로 무관한 다른 관측량까지 고친다면, 그 파라미터는 실제 물리(전자 국재화)를 담고 있다는 뜻이다.</strong> 초록의 "reasonable and consistent values of U"라는 표현이 실은 이 표를 가리킨다.</p>
-<p>논문의 논증 구조를 정리하면 이렇다.</p>
+<p>U는 <strong>산화 에너지 하나</strong>에 맞춰 뽑은 값입니다. 밴드갭과 자기모멘트는 피팅에 전혀 쓰지 않았습니다. 그런데 같은 U로 이것들도 좋아집니다.</p>
+<p>U가 그냥 곡선 맞추기용 변수였다면 이런 일이 생길 이유가 없습니다. <strong>관측량 하나에 맞춘 파라미터가 물리적으로 상관없는 다른 관측량까지 고친다면, 그 파라미터가 실제 물리(전자 국재화)를 담고 있다는 뜻입니다.</strong> 초록의 "reasonable and consistent values of U"라는 표현이 사실 이 표를 가리킵니다.</p>
+<p>논문의 논증 구조를 정리하면 이렇습니다.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -937,19 +929,18 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>③이 없으면 ②는 그냥 커브 피팅이다.</p>
+<p>③이 없으면 ②는 그냥 곡선 맞추기입니다.</p>
 
 <h2>8. 한계와 경계, 저자들이 스스로 그은 선</h2>
-<p>좋은 논문의 특징은 안 되는 것을 명시하는 것이다. 이 논문은 그걸 꽤 성실히 한다.</p>
+<p>좋은 논문은 안 되는 걸 분명히 적어 둡니다. 이 논문은 그걸 꽤 성실하게 합니다.</p>
 <h3>8.1 투영 오비탈의 임의성, U는 코드 사이에서 전이되지 않는다</h3>
-<p>논문 본문: "it suffers somewhat from the arbitrary nature of the projection orbitals, which are atomiclike, rather than the true one-electron orbitals."</p>
-<p>핵심 문제: <strong>"d 전자"라는 게 유일하게 정의되지 않는다.</strong> 실제 코온-샴 상태는 금속 d와 산소 2p가 섞인 혼성 오비탈인데, 거기서 "d 성분만" 떼어내려면 기준을 정해야 한다. 원자형 오비탈의 반경, PAW 구 반경, 바니어 함수, LMTO 부분파 등. 선택마다 점유 행렬이 달라지고, 그러면 E_U도 달라진다.</p>
+<p>논문 본문에는 이렇게 적혀 있습니다. "it suffers somewhat from the arbitrary nature of the projection orbitals, which are atomiclike, rather than the true one-electron orbitals."</p>
+<p>핵심 문제는 <strong>"d 전자"가 하나로 정의되지 않는다</strong>는 점입니다. 실제 코온-샴 상태는 금속 d와 산소 2p가 섞인 혼성 오비탈인데, 거기서 d 성분만 떼어 내려면 기준을 정해야 합니다. 원자형 오비탈의 반경, PAW 구 반경, 바니어 함수, LMTO 부분파 같은 것들입니다. 무엇을 고르느냐에 따라 점유 행렬이 달라지고, 그러면 E_U도 달라집니다.</p>
 <div class="box obs">
-<p>⚠️ <strong>실무 주의</strong>
-<strong>이 논문의 U 값을 그대로 쓰려면 같은 구현(VASP + PAW + 이 논문의 투영 방식)을 써야 한다.</strong> 다른 코드나 다른 투영자에서의 U = 4.0 eV는 같은 물리를 뜻하지 않는다. 논문이 §4.1의 세팅을 꼼꼼히 명시한 이유, 그리고 이 값들이 특정 워크플로에 묶여 전파된 이유가 이것이다.</p>
+<p>⚠️ <strong>실무 주의</strong> <strong>이 논문의 U 값을 그대로 쓰려면 같은 구현(VASP + PAW + 이 논문의 투영 방식)을 써야 합니다.</strong> 다른 코드나 다른 투영자에서의 U = 4.0 eV는 같은 물리를 뜻하지 않습니다. 논문이 §4.1의 설정을 꼼꼼히 적어 둔 이유, 그리고 이 값들이 특정 워크플로와 묶여서 퍼진 이유가 이것입니다.</p>
 </div>
 <h3>8.2 금속에는 쓸 수 없다, Ti 산화물 제외</h3>
-<p>논문은 Ti 산화물을 아예 다루지 않았고 이유를 밝힌다: "Ti oxides have weakly localized d-orbital electrons, and when reduced are almost always metallic, where GGA+U might not be an appropriate approach."</p>
+<p>논문은 Ti 산화물을 아예 다루지 않았고, 이유를 이렇게 밝힙니다. "Ti oxides have weakly localized d-orbital electrons, and when reduced are almost always metallic, where GGA+U might not be an appropriate approach."</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -973,14 +964,14 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>Ti는 3d 전자가 적고 퍼져 있어 FLL 가정이 깨진다. <strong>다룰 수 없는 것을 억지로 다루지 않고 범위에서 빼는 것</strong>이 정직한 처리다.</p>
+<p>Ti는 3d 전자가 적고 퍼져 있어서 FLL 가정이 깨집니다. <strong>다룰 수 없는 걸 억지로 다루지 않고 범위에서 빼는 것</strong>이 정직한 처리입니다.</p>
 <h3>8.3 Cu는 구조적으로 안 된다</h3>
-<p>CuO(0.5 vs 1.4 eV)와 Cu₂O(0.6 vs 2.4 eV)의 밴드갭은 +U로도 크게 부족하다. 논문도 "The electronic structure of Cu oxides is challenging and it is not surprising that even GGA+U does not obtain good band gaps"라고 인정한다.</p>
-<p>배경을 조금 덧붙이면, 늦은 전이금속으로 갈수록 금속 d 준위가 산소 2p에 가까워져 혼성이 극심해지고, 정공이 사실상 산소에 앉는다(전하이동형 절연체). <strong>원자형 d에 U를 걸어 고칠 수 있는 문제의 범위 밖</strong>이다. §8.1의 투영 문제가 가장 심하게 드러나는 자리다.</p>
+<p>CuO(0.5 vs 1.4 eV)와 Cu₂O(0.6 vs 2.4 eV)의 밴드갭은 +U로도 크게 모자랍니다. 논문도 "The electronic structure of Cu oxides is challenging and it is not surprising that even GGA+U does not obtain good band gaps"라고 인정합니다.</p>
+<p>배경을 조금 덧붙이면, 뒤쪽 전이금속으로 갈수록 금속 d 준위가 산소 2p에 가까워져서 혼성이 아주 강해지고, 정공이 사실상 산소에 앉습니다(전하이동형 절연체). <strong>원자형 d에 U를 걸어서 고칠 수 있는 문제의 범위를 벗어난 경우</strong>입니다. §8.1의 투영 문제가 가장 심하게 드러나는 곳이기도 합니다.</p>
 <h3>8.4 Fe₃O₄는 과보정된다</h3>
-<p>밴드갭이 GGA 0 → GGA+U 1.7 eV인데 실험값은 <strong>0.07 eV</strong>다. 거의 금속에 가까운 물질을 절연체로 만들어버렸다. 논문은 A/B 사이트 간 <strong>비화학양론과 전하 무질서(charge disorder)</strong> 때문일 수 있다고 추정한다. 혼합 원자가 스피넬은 +U의 난제로 남는다.</p>
+<p>밴드갭이 GGA 0 → GGA+U 1.7 eV인데 실험값은 <strong>0.07 eV</strong>입니다. 거의 금속에 가까운 물질을 절연체로 만들어 버렸습니다. 논문은 A/B 자리 사이의 <strong>비화학양론과 전하 무질서(charge disorder)</strong> 때문일 수 있다고 추정합니다. 혼합 원자가 스피넬은 +U로도 풀기 어려운 문제로 남아 있습니다.</p>
 <h3>8.5 0 K 계산 vs 상온 실험</h3>
-<p>계산은 0 K, 실험 생성 엔탈피는 상온이다. 저자들이 열용량을 적분해 이 차이를 직접 확인했다.</p>
+<p>계산은 0 K이고 실험 생성 엔탈피는 상온 값입니다. 저자들이 열용량을 적분해서 이 차이를 직접 확인했습니다.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -1005,24 +996,24 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </tbody>
 </table>
 </div>
-<p>1.36 eV(≈131 kJ/mol)에 비하면 대부분 무해한 크기다. 다만 Co₃O₄ 반응은 예외여서, 이를 반영하면 <strong>Co의 U가 3.3 → 3.5 eV로 바뀐다</strong>고 명시해뒀다. 이런 걸 각주로 숨기지 않고 본문에 쓰는 게 좋은 논문이다.</p>
+<p>1.36 eV(≈131 kJ/mol)에 비하면 대부분 무시할 만한 크기입니다. 다만 Co₃O₄ 반응은 예외라서, 이걸 반영하면 <strong>Co의 U가 3.3 → 3.5 eV로 바뀐다</strong>고 적어 뒀습니다. 이런 걸 각주로 숨기지 않고 본문에 쓰는 점이 좋았습니다.</p>
 <h3>8.6 준경험적(semiempirical)이라는 사실</h3>
-<p>보정값 1.36 eV는 실험 생성 엔탈피에 <strong>피팅한 값</strong>이고, U도 실험 산화 에너지에 <strong>맞춘 값</strong>이다. 저자들이 결론에서 인정한다: "Although GGA+U is semiempirical in nature, it has been found to improve the accuracy in predicting the energetics of redox processes from first principles."</p>
-<p>그리고 전제 조건이 붙는다. 이 상수는 <strong>기체 O₂를 기준으로 하는 반응</strong>에만 전이된다. 결론부의 경고:</p>
+<p>보정값 1.36 eV는 실험 생성 엔탈피에 <strong>피팅한 값</strong>이고, U도 실험 산화 에너지에 <strong>맞춘 값</strong>입니다. 저자들도 결론에서 인정합니다. "Although GGA+U is semiempirical in nature, it has been found to improve the accuracy in predicting the energetics of redox processes from first principles."</p>
+<p>그리고 전제 조건이 붙습니다. 이 상수는 <strong>기체 O₂를 기준으로 하는 반응</strong>에만 그대로 쓸 수 있습니다. 결론부에 이런 경고가 있습니다.</p>
 <div class="box kept">
 <p>"GGA will be considerably more in error when calculating reactions where 3d metals (oxides) are oxidized by means other than oxygen."</p>
 </div>
-<p>U 값 역시 <strong>산화물 → 산화물 반응에서만 보정된 값</strong>이다. 인산염·불화물·황화물 등 다른 음이온 환경에서는 별도 보정이 필요할 수 있고, 실제로 후속 연구들이 그렇게 확인했다.</p>
+<p>U 값 역시 <strong>산화물 → 산화물 반응으로 보정한 값</strong>입니다. 인산염·불화물·황화물처럼 음이온 환경이 다르면 따로 보정해야 할 수 있고, 실제로 후속 연구들에서 그렇게 확인됐습니다.</p>
 
 <h2>9. 유산, 왜 20년 뒤에도 인용되는가</h2>
-<p>이 논문의 결과물은 사실 아주 단순한 레시피 두 줄이다.</p>
+<p>이 논문이 남긴 건 사실 아주 단순한 두 줄짜리 방법입니다.</p>
 <pre><code>1. 산소 기준 에너지에 상수 보정을 넣는다      (O₂당 ~1.36 eV, 또는 산소 원자당 ~0.7 eV)
 2. 전이금속별로 정해진 U를 적용한다           (V 3.1 / Cr 3.5 / Mn 4.0 / Fe 4.0 / Co 3.3 / Ni 6.4 / Cu 4.0)
 </code></pre>
-<p>이 두 줄이 대규모 계산 소재 데이터베이스(Materials Project 등)가 산화물의 형성 에너지·상평형·전압을 계산할 때 쓰는 보정 스킴의 직접적 조상이다. 배터리 양극재 전압 예측이 실험과 맞아떨어지게 된 것도 이 보정에 크게 기댄다.</p>
-<p><strong>방법론적으로 배울 점</strong>을 정리하면:</p>
+<p>이 두 줄이 대규모 계산 소재 데이터베이스(Materials Project 등)가 산화물의 형성 에너지·상평형·전압을 계산할 때 쓰는 보정 방식의 직접적인 원조입니다. 배터리 양극재 전압 예측이 실험과 맞게 된 것도 이 보정 덕이 큽니다.</p>
+<p><strong>방법론에서 배울 점</strong>을 정리하면 이렇습니다.</p>
 <ol>
-<li><strong>오차가 여럿일 때는 하나씩 끄고 재라.</strong> 이 논문은 변수 통제를 양방향으로 했다.</li>
+<li><strong>오차가 여럿이면 하나씩 끄고 재 봅니다.</strong> 이 논문은 변수 통제를 양쪽 방향으로 했습니다.</li>
 </ol>
 <div class="table-scroll">
 <table>
@@ -1052,16 +1043,16 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 </div>
 <ol>
 <li>
-<p><strong>순환논리를 피하는 데이터 분리.</strong> 보정값의 출처(비전이금속 산화물)와 측정 대상(전이금속 산화물)이 데이터상 완전히 분리돼 있다.</p>
+<p><strong>순환논리를 피하려면 데이터를 나눠 씁니다.</strong> 보정값을 뽑은 데이터(비전이금속 산화물)와 측정 대상(전이금속 산화물)이 완전히 분리돼 있습니다.</p>
 </li>
 <li>
-<p><strong>피팅한 파라미터는 독립 관측량으로 검증해라.</strong> Table II가 없다면 이 논문은 커브 피팅이다.</p>
+<p><strong>피팅한 파라미터는 독립적인 관측량으로 검증합니다.</strong> Table II가 없었다면 이 논문은 곡선 맞추기였을 겁니다.</p>
 </li>
 <li>
-<p><strong>우연히 맞는 답을 성공으로 착각하지 마라.</strong> 보정 없는 GGA가 더 잘 맞는다는 §3.4의 경고가 이 논문에서 가장 널리 인용될 자격이 있는 문장이다.</p>
+<p><strong>우연히 맞은 답을 성공으로 착각하지 않습니다.</strong> 보정 없는 GGA가 더 잘 맞는다는 §3.4의 경고가 이 논문에서 가장 널리 인용될 만한 문장입니다.</p>
 </li>
 <li>
-<p><strong>도구의 유효 범위에 주장의 범위를 맞춰라.</strong> +U가 금속에서 무효하다는 것을 알았기 때문에, 반응을 산화물 → 산화물로 제한하고 Ti를 뺐다.</p>
+<p><strong>주장의 범위를 도구가 통하는 범위에 맞춥니다.</strong> +U가 금속에서 통하지 않는다는 걸 알았기 때문에 반응을 산화물 → 산화물로 제한하고 Ti를 뺐습니다.</p>
 </li>
 </ol>
 
@@ -1129,11 +1120,11 @@ GGA로 계산한 <strong>절대</strong> 총에너지는 진짜 값과 원자당
 
 <h2>11. 다음에 읽을 것</h2>
 <ul>
-<li><strong>F. Zhou, M. Cococcioni, C. A. Marianetti, D. Morgan, G. Ceder</strong>, <em>PRB</em> <strong>70</strong>, 235121 (2004). 이 논문의 직계 부모. LDA+U로 산화환원 전위(배터리 전압)를 예측한 연구. 배터리 쪽 관심이면 이걸 먼저.</li>
-<li><strong>S. L. Dudarev et al.</strong>, <em>PRB</em> <strong>57</strong>, 1505 (1998). 이 논문이 쓴 +U 형식(식 1)의 원전.</li>
-<li><strong>V. I. Anisimov, J. Zaanen, O. K. Andersen</strong>, <em>PRB</em> <strong>44</strong>, 943 (1991). LDA+U의 원논문.</li>
-<li><strong>A. Rohrbach, J. Hafner, G. Kresse</strong>, <em>J. Phys.: Condens. Matter</em> <strong>15</strong>, 979 (2003). LDA+U와 GGA+U의 비교.</li>
-<li><strong>B. Hammer, L. B. Hansen, J. K. Nørskov</strong>, <em>PRB</em> <strong>59</strong>, 7413 (1999). GGA의 O₂ 과잉결합 문제를 다룬 고전(RPBE).</li>
+<li><strong>F. Zhou, M. Cococcioni, C. A. Marianetti, D. Morgan, G. Ceder</strong>, <em>PRB</em> <strong>70</strong>, 235121 (2004). 이 논문의 바로 앞 연구입니다. LDA+U로 산화환원 전위(배터리 전압)를 예측했습니다. 배터리 쪽에 관심이 있으면 이걸 먼저 보시면 됩니다.</li>
+<li><strong>S. L. Dudarev et al.</strong>, <em>PRB</em> <strong>57</strong>, 1505 (1998). 이 논문이 쓴 +U 형식(식 1)의 원전입니다.</li>
+<li><strong>V. I. Anisimov, J. Zaanen, O. K. Andersen</strong>, <em>PRB</em> <strong>44</strong>, 943 (1991). LDA+U의 원논문입니다.</li>
+<li><strong>A. Rohrbach, J. Hafner, G. Kresse</strong>, <em>J. Phys.: Condens. Matter</em> <strong>15</strong>, 979 (2003). LDA+U와 GGA+U를 비교한 논문입니다.</li>
+<li><strong>B. Hammer, L. B. Hansen, J. K. Nørskov</strong>, <em>PRB</em> <strong>59</strong>, 7413 (1999). GGA의 O₂ 과잉결합 문제를 다룬 고전(RPBE)입니다.</li>
 </ul>
 
 <p><em>본 리뷰는 Wang, Maxisch, Ceder, PRB 73, 195107 (2006)의 내용을 정리한 것이며, 인용된 수치는 모두 원논문의 Table I, Table II, Fig. 1, Fig. 2 및 본문에서 가져왔습니다. §8.3의 전하이동형 절연체 관련 부연과 §9의 후속 연구 언급은 원논문 범위를 넘어선 리뷰어의 보충입니다.</em></p>
