@@ -51,7 +51,7 @@
             </p>
           </div>
 
-          <h2>131MB짜리 헛발질</h2>
+          <h2>131MB가 된 첫 조치</h2>
           <p>
             프로젝트 폴더를 뒤지니 병 그림 원본 PNG가 97개, 131MB나 들어 있었습니다. 코드는 WebP 76개만
             참조하는데 PNG 원본이 옆에 그대로 있었던 겁니다. 지웠습니다. assets 폴더는 146MB에서 14MB가
@@ -63,7 +63,7 @@
             좋았지만, 문제를 푼 건 아니었습니다.
           </p>
 
-          <h2>진짜 원인은 네 개의 CPU</h2>
+          <h2>진짜 원인, 아키텍처 네 개</h2>
           <p>
             APK를 열어 보고 알았습니다. universal APK라 네 가지 아키텍처의 네이티브 라이브러리가 전부
             들어 있었습니다. arm64가 18.7MB, armeabi-v7a가 12.9MB, x86이 19.8MB, x86_64가 20.1MB.
@@ -72,7 +72,7 @@
           </p>
           <p>arm64 하나로만 빌드하자 52MB가 됐습니다. 반으로 줄이는 데 코드는 한 줄도 안 고쳤습니다.</p>
 
-          <h2>52MB의 해부</h2>
+          <h2>52MB 안에 든 것</h2>
           <figure>
             <div class="fig-scroll"><svg viewBox="0 0 640 150" role="img" aria-label="APK 52MB의 구성: dex 28.2, lib 18.7, res 18.2, JS 4.3MB">
               <text class="svg-label-sm svg-faint" x="24" y="30">arm64 단일 APK 52MB (합계는 압축 전 크기)</text>
