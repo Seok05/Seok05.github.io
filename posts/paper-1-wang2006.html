@@ -578,8 +578,8 @@ V_avg = [ E(Li_(x−1)MO₂) + E(Li금속) − E(Li_x MO₂) ] / e
 <h2>6. 결과 ②: U 결정 (Fig. 2)</h2>
 <p>O₂ 보정을 걷어 내고 나면 남은 어긋남은 순수하게 3d 때문입니다. 그리고 이때 <strong>부호가 뒤집힙니다.</strong></p>
 <ul>
-<li>보정 전(Fig. 1, 금속→산화물): GGA가 산화 에너지를 <strong>작게 평가</strong></li>
-<li>보정 후(Fig. 2, U=0): GGA가 산화 에너지를 <strong>크게 평가</strong>, 최대 <strong>1 eV</strong></li>
+<li>보정 전(Fig. 1, 금속→산화물): GGA가 산화 에너지를 <strong>작게 평가합니다</strong>.</li>
+<li>보정 후(Fig. 2, U=0): GGA가 산화 에너지를 <strong>크게 평가합니다</strong>. 최대 <strong>1 eV</strong>까지 틀립니다.</li>
 </ul>
 <p>이렇게 부호가 뒤집히는 게 오히려 보정이 제대로 작동했다는 증거입니다. 가려져 있던 두 번째 오차가 드러난 겁니다. 논문 표현으로는 "all GGA oxidation energies are too negative, indicating that GGA penalizes the reduced state where more 3d orbitals are filled."입니다.</p>
 <p><strong>U를 켜면 왜 고쳐질까요.</strong> GGA에서는 국재화된 d 전자 하나하나가 가짜 자기반발 벌점을 지고 있고, +U가 그 벌점을 보상해 줍니다. 그러니 <strong>국재화된 d 전자가 많은 쪽(환원 상태)이 보상을 더 많이 받아서</strong> 더 안정해집니다. 그러면 <code>ΔH = E(산화물) − E(환원물)</code>에서 빼는 항이 낮아지니 ΔH가 덜 음수가 됩니다. Fig. 2의 곡선이 전부 U가 커질수록 위로 올라가는 게 이 때문이고, 실험값 수평선과 만나는 지점이 그 금속의 U입니다.</p>
