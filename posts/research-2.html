@@ -85,7 +85,7 @@
 </tbody></table></div>
 <figcaption><strong>표 1.</strong> 조성별 배치의 수와 실제로 남긴 셀의 수. 가능한 배치는 16!을 원소별 개수의 계승으로 나눈 값이고, 대칭으로 같은 배열이 섞여 있습니다. 원소가 둘뿐인 C1·C6은 배치 자체가 적어서, 600개를 뽑으면 대칭상 같은 배열이 많이 겹쳐 절반 정도만 남았습니다.</figcaption>
 </figure>
-<p>그렇다고 540만 개를 다 DFT로 계산할 수는 없습니다. 64원자 셀 DFT 한 건이 노드 하나에서 수십 시간이 걸리기 때문입니다. 그래서 <strong>싼 계산으로 넓게 거르고, 비싼 계산으로 좁게 확정하는</strong> 두 단계로 갔습니다.</p>
+<p>그렇다고 540만 개를 다 DFT로 계산할 수는 없습니다. 64원자 셀 DFT 한 건이 노드에 따라 중앙값 3~11시간, 길게는 하루 넘게 걸리기 때문입니다(<a href="dft-practice-13.html">실습 [13]</a>). 그래서 <strong>싼 계산으로 넓게 거르고, 비싼 계산으로 좁게 확정하는</strong> 두 단계로 갔습니다.</p>
 <figure>
 <div class="fig-scroll"><svg viewBox="0 0 660 262" role="img" aria-label="배열을 고르고 거르고 확정하는 단계별 개수 (로그 눈금)">
 <line x1="250.0" y1="20" x2="250.0" y2="214" class="svg-stroke-rule" stroke-width="0.5" stroke-dasharray="3 4" />
